@@ -1,0 +1,4430 @@
+openapi: 3.0.2
+info:
+  title: Automox Console API
+  description: API for use with the Automox Console
+  version: "2021-08-10"
+  contact:
+    name: Automox Support
+    email: support@automox.com
+servers:
+  - url: "https://console.automox.com/api"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  responses:
+    Error:
+      description: Invalid Request
+      content:
+        application/json:
+          schema:
+            properties:
+              errors:
+                type: array
+                maxItems: 1
+                items:
+                  type: string
+          example:
+            errors:
+              - Validation Error
+    Unauthorized:
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            properties:
+              errors:
+                type: array
+                maxItems: 1
+                items:
+                  type: string
+          example:
+            errors:
+              - Unauthorized
+    UnauthorizedAction:
+      description: You do not have permission to perform this action.
+      content:
+        application/json:
+          schema:
+            description: ""
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+            required:
+              - errors
+          examples:
+            Unauthorized for this action.:
+              value:
+                errors:
+                  - Unauthorized
+    RateLimit:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            properties:
+              errors:
+                type: array
+                maxItems: 1
+                items:
+                  type: string
+          example:
+            errors:
+              - Too Many Requests!
+    NotFound:
+      description: Entity not found
+      content:
+        application/json:
+          schema:
+            properties:
+              errors:
+                type: array
+                maxItems: 1
+                items:
+                  type: string
+          example:
+            errors:
+              - Not found.
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              errors:
+                type: array
+                maxItems: 1
+                items:
+                  type: string
+          example:
+            errors:
+              - Bad Request
+  schemas:
+    ApiKey:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        is_enabled:
+          type: boolean
+        expires_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            firstname:
+              type: string
+            lastname:
+              type: string
+            email:
+              type: string
+    Command:
+      type: object
+      required:
+        - args
+        - command_type_name
+        - exec_time
+      example:
+        command_type_name: InstallUpdate
+        args: KB12345 KB67890
+        exec_time: "2017-06-29T16:39:50.951Z"
+      properties:
+        id:
+          type: integer
+          format: int64
+        server_id:
+          type: integer
+          format: int64
+        policy_id:
+          type: integer
+          format: int64
+        command_id:
+          type: integer
+          format: int64
+        command_type_name:
+          type: string
+          enum:
+            - InstallUpdate
+            - Reboot
+          description: Type of command being issued
+        args:
+          type: string
+          nullable: true
+          example: '"KB12345 KB67890"'
+          description: "List of patches to apply, or NULL if issuing a Reboot"
+        response:
+          type: string
+        response_time:
+          type: string
+          format: date-time
+        create_time:
+          type: string
+          format: date-time
+        exec_time:
+          type: string
+          nullable: true
+          format: date-time
+          example: "2017-06-29T16:39:50.951Z"
+          description: "Time to execute the command, or NULL if issuing a Reboot"
+    DeviceStatus:
+      type: object
+      properties:
+        device_status:
+          type: string
+        agent_status:
+          type: string
+        policy_status:
+          type: string
+        policy_statuses:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              compliant:
+                type: boolean
+    DataExtract:
+      description: A DataExtract job
+      type: object
+      x-examples:
+        DataExtract Example:
+          id: 75
+          organization_id: 1
+          user_id: 1
+          status: queued
+          is_completed: false
+          created_at: "2021-03-30T16:03:04.608690+0000"
+          download_expires_at: null
+          download_url: null
+          parameters:
+            start_time: "2021-02-03T00:00:00+0000"
+            end_time: "2021-03-18T16:19:00+0000"
+      properties:
+        id:
+          type: integer
+        organization_id:
+          type: integer
+        user_id:
+          type: integer
+        status:
+          type: string
+          minLength: 1
+          enum:
+            - queued
+            - running
+            - complete
+            - failed
+            - canceled
+            - expired
+        is_completed:
+          type: boolean
+        created_at:
+          type: string
+          minLength: 1
+          format: date-time
+        download_expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        download_url:
+          type: string
+          nullable: true
+        parameters:
+          type: object
+          required:
+            - start_time
+            - end_time
+          properties:
+            start_time:
+              type: string
+              format: date-time
+            end_time:
+              type: string
+              format: date-time
+      required:
+        - id
+        - organization_id
+        - user_id
+        - status
+        - is_completed
+        - created_at
+        - download_expires_at
+        - download_url
+        - parameters
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          description: Event type
+          example: system.add
+        user_id:
+          type: integer
+          format: int64
+        server_id:
+          type: integer
+          format: int64
+        organization_id:
+          type: integer
+          format: int64
+        policy_id:
+          type: integer
+          format: int64
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/EventData"
+            - $ref: "#/components/schemas/SystemEventData"
+            - $ref: "#/components/schemas/NotificationResponseData"
+            - $ref: "#/components/schemas/NotificationSentData"
+            - $ref: "#/components/schemas/PatchAppliedData"
+            - $ref: "#/components/schemas/PatchFailedData"
+            - $ref: "#/components/schemas/PolicyActionData"
+            - $ref: "#/components/schemas/UserData"
+            - $ref: "#/components/schemas/SlackData"
+            - $ref: "#/components/schemas/SamlData"
+            - $ref: "#/components/schemas/OrgEndpointLimitData"
+        server_name:
+          type: string
+        policy_name:
+          type: string
+        policy_type_name:
+          type: string
+        create_time:
+          type: string
+          format: date-time
+    EventData:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        orgname:
+          type: string
+        ip:
+          type: string
+        os:
+          type: string
+        systemname:
+          type: string
+        text:
+          type: string
+        status:
+          type: integer
+          format: int64
+        patches:
+          type: string
+    SystemEventData:
+      type: object
+      properties:
+        ip:
+          type: string
+        os:
+          type: string
+        systemname:
+          type: string
+    NotificationResponseData:
+      type: object
+      properties:
+        response:
+          type: string
+        notification_id:
+          type: string
+    NotificationSentData:
+      type: object
+      properties:
+        scheduled_time:
+          type: string
+          format: date-time
+        notification_id:
+          type: string
+        last_process_time:
+          type: string
+          format: date-time
+    PolicyActionData:
+      type: object
+      properties:
+        text:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int64
+    PatchAppliedData:
+      type: object
+      properties:
+        ip:
+          type: string
+        os:
+          type: string
+        patches:
+          type: string
+        systemname:
+          type: string
+    PatchFailedData:
+      type: object
+      properties:
+        ip:
+          type: string
+        os:
+          type: string
+        failure:
+          type: string
+        systemname:
+          type: string
+    UserData:
+      type: object
+      properties:
+        email:
+          type: string
+        orgname:
+          type: string
+        lastname:
+          type: string
+          nullable: true
+        trialend:
+          type: string
+          format: date-time
+          nullable: true
+        firstname:
+          type: string
+          nullable: true
+        trialstart:
+          type: string
+          format: date-time
+          nullable: true
+    SamlData:
+      type: object
+    SlackData:
+      type: object
+    OrgEndpointLimitData:
+      type: object
+    NonCompliant:
+      type: object
+      properties:
+        nonCompliant:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int64
+            none:
+              type: integer
+              format: int64
+            low:
+              type: integer
+              format: int64
+            medium:
+              type: integer
+              format: int64
+            high:
+              type: integer
+              format: int64
+            critical:
+              type: integer
+              format: int64
+            other:
+              type: integer
+              format: int64
+            devices:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                  name:
+                    type: string
+                  customName:
+                    type: string
+                  serverCreateTime:
+                    type: string
+                    format: date-time
+                  lastRefreshTime:
+                    type: string
+                    format: date-time
+                  connected:
+                    type: boolean
+                  needsReboot:
+                    type: boolean
+                  groupId:
+                    type: integer
+                    format: int64
+                  os_family:
+                    type: string
+                  policies:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int64
+                        name:
+                          type: string
+                        type:
+                          type: string
+                        reasonForFail:
+                          type: string
+                        policyCreateTime:
+                          type: string
+                          format: date-time
+                        severity:
+                          type: string
+                        packages:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                format: int64
+                              name:
+                                type: string
+                              severity:
+                                type: string
+                              packageVersionId:
+                                type: integer
+                                format: int64
+                              createTime:
+                                type: string
+                                format: date-time
+    Organization:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        addr1:
+          type: string
+        addr2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zipcode:
+          type: string
+        country:
+          type: string
+        create_time:
+          type: string
+          format: date-time
+        access_key:
+          type: string
+        server_limit:
+          type: integer
+          format: int64
+        stripe_cust:
+          type: string
+        cc_last:
+          type: string
+        cc_exp:
+          type: string
+        cc_brand:
+          type: string
+        cc_name:
+          type: string
+        billing_interval:
+          type: integer
+          format: int64
+        billing_interval_count:
+          type: integer
+          format: int64
+        trial_end_time:
+          type: string
+          format: date-time
+        trial_expired:
+          type: boolean
+        sub_plan:
+          type: string
+        sub_systems:
+          type: string
+        sub_create_time:
+          type: string
+        sub_end_time:
+          type: string
+        next_bill_time:
+          type: string
+        rate_id:
+          type: integer
+          format: int64
+        parent_id:
+          type: integer
+          format: int64
+        bill_overages:
+          type: boolean
+        metadata:
+          type: object
+        legacy_billing:
+          type: boolean
+        billing_name:
+          type: string
+        billing_email:
+          type: string
+        billing_phone:
+          type: string
+        device_limit:
+          type: number
+          description: "If your organization has a server limit (you will have contacted support for this), then this is the value for your organization. Otherwise, null."
+        device_count:
+          type: number
+          description: The current number of installed devices for your organization
+    Packages:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        server_id:
+          type: integer
+          format: int64
+        package_id:
+          type: integer
+          format: int64
+        software_id:
+          type: integer
+          format: int64
+        installed:
+          type: boolean
+        ignored:
+          type: boolean
+        deferred_until:
+          type: string
+          nullable: true
+          format: date-time
+        name:
+          type: string
+        display_name:
+          type: string
+        version:
+          type: string
+        repo:
+          type: string
+        group_ignored:
+          type: boolean
+        group_deferred_until:
+          type: string
+          nullable: true
+          format: date-time
+        cves:
+          type: array
+          items:
+            type: string
+        cve_score:
+          type: string
+          nullable: true
+        severity:
+          type: string
+          nullable: true
+        package_version_id:
+          type: integer
+          format: int64
+        os_name:
+          type: string
+        os_version:
+          type: string
+        os_version_id:
+          type: integer
+          format: int64
+        create_time:
+          type: string
+          format: date-time
+        requires_reboot:
+          type: boolean
+        patch_classification_category_id:
+          type: integer
+          nullable: true
+          format: int64
+        patch_scope:
+          type: string
+          nullable: true
+        is_uninstallable:
+          type: boolean
+        secondary_id:
+          type: string
+        is_managed:
+          type: boolean
+        impact:
+          type: integer
+          format: int64
+        organization_id:
+          type: integer
+          format: int64
+        agent_severity:
+          type: string
+          nullable: true
+    Patches:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        packageVersionId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        severity:
+          type: string
+        cve:
+          type: string
+        createTime:
+          type: string
+          format: date-time
+        patchTime:
+          type: string
+          format: date-time
+        needsApproval:
+          type: boolean
+    Policy:
+      type: object
+      required:
+        - name
+        - organization_id
+        - policy_type_name
+        - schedule_days
+        - schedule_time
+        - configuration
+        - notes
+        - server_groups
+      properties:
+        configuration:
+          $ref: "#/components/schemas/PolicyConfiguration"
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        notes:
+          type: string
+        organization_id:
+          type: integer
+          format: int64
+        policy_type_name:
+          type: string
+        schedule_days:
+          type: integer
+          format: int64
+        schedule_weeks_of_month:
+          type: integer
+          format: int64
+        schedule_months:
+          type: integer
+          format: int64
+        schedule_time:
+          type: string
+        next_remediation:
+          type: string
+          format: date-time
+          nullable: true
+        server_groups:
+          type: array
+          items:
+            type: integer
+            format: int64
+    UpdateAndCreatePolicyConfiguration:
+      type: object
+      required:
+        - auto_patch
+        - patch_rule
+        - auto_reboot
+        - notify_user
+      properties:
+        auto_patch:
+          type: boolean
+        patch_rule:
+          type: string
+        auto_reboot:
+          type: boolean
+        filter_type:
+          type: string
+        notify_user:
+          type: boolean
+        evaluation_code:
+          type: string
+          nullable: true
+        include_optional:
+          type: boolean
+        remediation_code:
+          type: string
+          nullable: true
+        installation_code:
+          type: string
+          nullable: true
+        notify_reboot_user:
+          type: boolean
+        notify_deferred_reboot_user:
+          type: boolean
+        custom_notification_max_delays:
+          type: integer
+          format: int64
+        custom_notification_patch_message:
+          type: string
+          maxLength: 125
+        custom_notification_reboot_message:
+          type: string
+          maxLength: 125
+        custom_notification_deferment_periods:
+          type: array
+          items:
+            type: integer
+        custom_notification_patch_message_mac:
+          type: string
+          maxLength: 70
+        custom_notification_reboot_message_mac:
+          type: string
+          maxLength: 70
+        custom_pending_reboot_notification_message:
+          type: string
+          maxLength: 125
+        notify_user_message_timeout:
+          type: integer
+          default: 15
+          minimum: 15
+          maximum: 480
+        notify_user_auto_deferral_enabled:
+          type: boolean
+        notify_deferred_reboot_user_message_timeout:
+          type: integer
+          default: 15
+          minimum: 15
+          maximum: 480
+        notify_deferred_reboot_user_auto_deferral_enabled:
+          type: boolean
+        custom_pending_reboot_notification_max_delays:
+          type: integer
+        custom_pending_reboot_notification_message_mac:
+          type: string
+          maxLength: 70
+        custom_pending_reboot_notification_deferment_periods:
+          type: array
+          items:
+            type: integer
+    PatchPolicyConfiguration:
+      type: object
+      required:
+        - auto_patch
+        - notify_user
+        - auto_reboot
+      properties:
+        auto_patch:
+          type: boolean
+        notify_user:
+          type: boolean
+        missed_patch_window:
+          type: boolean
+        auto_reboot:
+          type: boolean
+        filters:
+          type: array
+          items:
+            type: string
+        filter_type:
+          type: string
+        advanced_filter:
+          type: array
+          items:
+            type: string
+        severity_filter:
+          type: array
+          items:
+            type: string
+        include_optional:
+          type: boolean
+        notify_reboot_user:
+          type: boolean
+        notify_deferred_reboot_user:
+          type: boolean
+        custom_notification_patch_message:
+          type: string
+        custom_notification_patch_message_mac:
+          type: string
+        custom_notification_reboot_message:
+          type: string
+        custom_notification_reboot_message_mac:
+          type: string
+        custom_notification_max_delays:
+          type: integer
+          format: int64
+        custom_notification_deferment_periods:
+          type: array
+          items:
+            type: integer
+            format: int64
+        custom_pending_reboot_notification_message:
+          type: string
+        custom_pending_reboot_notification_message_mac:
+          type: string
+        custom_pending_reboot_notification_max_delays:
+          type: integer
+          format: int64
+        custom_pending_reboot_notification_deferment_periods:
+          type: array
+          items:
+            type: integer
+            format: int64
+        notify_user_message_timeout:
+          type: integer
+          default: 15
+          minimum: 15
+          maximum: 480
+        notify_deferred_reboot_user_message_timeout:
+          type: integer
+          default: 15
+          minimum: 15
+          maximum: 480
+        notify_user_auto_deferral_enabled:
+          type: boolean
+          default: false
+        notify_deferred_reboot_user_auto_deferral_enabled:
+          type: boolean
+          default: false
+    RequiredSoftwarePolicyConfiguration:
+      type: object
+      required:
+        - auto_patch
+        - notify_user
+      properties:
+        auto_patch:
+          type: boolean
+        notify_user:
+          type: boolean
+        missed_patch_window:
+          type: boolean
+        os_family:
+          type: string
+        package_name:
+          type: string
+        package_version:
+          type: string
+        installation_code:
+          type: string
+    CustomPolicyConfiguration:
+      type: object
+      required:
+        - auto_patch
+        - notify_user
+      properties:
+        auto_patch:
+          type: boolean
+        notify_user:
+          type: boolean
+        missed_patch_window:
+          type: boolean
+        os_family:
+          type: string
+        test_code:
+          type: string
+        evaluation_code:
+          type: string
+    PolicyConfiguration:
+      oneOf:
+        - $ref: "#/components/schemas/PatchPolicyConfiguration"
+        - $ref: "#/components/schemas/RequiredSoftwarePolicyConfiguration"
+        - $ref: "#/components/schemas/CustomPolicyConfiguration"
+        - $ref: "#/components/schemas/UpdateAndCreatePolicyConfiguration"
+      example:
+        auto_patch: true
+        notify_user: true
+        missed_patch_window: true
+        os_family: Windows
+        test_code: ""
+        evaluation_code: ""
+    PolicyDeviceFiltersPreview:
+      type: object
+      properties:
+        device_filters:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                enum:
+                  - tag
+                  - hostname
+                  - ip_addr
+                  - os_family
+              op:
+                type: string
+                enum:
+                  - in
+                  - not_in
+                  - like_any
+                  - not_like_any
+              value:
+                type: array
+                items:
+                  oneOf:
+                    - type: string
+                    - type: boolean
+                    - type: array
+                    - type: number
+        server_groups:
+          type: array
+          items:
+            type: integer
+    PolicyDeviceFiltersOutput:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              uuid:
+                type: string
+              name:
+                type: string
+              custom_name:
+                type: string
+              os_version:
+                type: string
+              os_family:
+                type: string
+              server_group:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  organization_id:
+                    type: integer
+                  name:
+                    type: string
+                  refresh_interval:
+                    type: integer
+                  parent_server_group_id:
+                    type: integer
+              tags:
+                type: array
+                items:
+                  type: string
+              ip_addr:
+                type: string
+              ip_addrs_private:
+                type: array
+                items:
+                  type: string
+        size:
+          type: integer
+    PolicyStats:
+      type: object
+      properties:
+        compliant:
+          type: integer
+          format: int64
+        noncompliant:
+          type: integer
+          format: int64
+        organization_id:
+          type: integer
+          format: int64
+        pending:
+          type: integer
+          format: int64
+        policy_id:
+          type: integer
+          format: int64
+        policy_name:
+          type: string
+        policy_type_name:
+          type: string
+    PrePatch:
+      type: object
+      properties:
+        prepatch:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int64
+            needsAttention:
+              type: integer
+              format: int64
+            none:
+              type: integer
+              format: int64
+            low:
+              type: integer
+              format: int64
+            medium:
+              type: integer
+              format: int64
+            high:
+              type: integer
+              format: int64
+            critical:
+              type: integer
+              format: int64
+            other:
+              type: integer
+              format: int64
+            devices:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                  name:
+                    type: string
+                  createTime:
+                    type: string
+                    format: date-time
+                  group:
+                    type: string
+                  connected:
+                    type: boolean
+                  needsReboot:
+                    type: boolean
+                  os_family:
+                    type: string
+                  compliant:
+                    type: boolean
+                  patches:
+                    $ref: "#/components/schemas/Patches"
+    Server:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        os_version_id:
+          type: integer
+          format: int64
+        server_group_id:
+          type: integer
+          format: int64
+        organization_id:
+          type: integer
+          format: int64
+        uuid:
+          type: string
+        name:
+          type: string
+        instance_id:
+          type: string
+        refresh_interval:
+          type: integer
+          format: int64
+        last_update_time:
+          type: string
+        last_refresh_time:
+          type: string
+        uptime:
+          type: integer
+          format: int64
+        needs_reboot:
+          type: boolean
+        timezone:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        deleted:
+          type: boolean
+        create_time:
+          type: string
+          format: date-time
+        os_version:
+          type: string
+        os_name:
+          type: string
+        os_family:
+          type: string
+        ip_addrs:
+          type: array
+          items:
+            type: string
+        ip_addrs_private:
+          type: array
+          items:
+            type: string
+        patches:
+          type: integer
+          format: int64
+        details:
+          $ref: "#/components/schemas/ServerDetail"
+        agent_version:
+          type: string
+        custom_name:
+          type: string
+        exception:
+          type: boolean
+        total_count:
+          type: integer
+          format: int64
+        policy_status:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              organization_id:
+                type: integer
+                format: int64
+              policy_id:
+                type: integer
+                format: int64
+              server_id:
+                type: integer
+                format: int64
+              policy_name:
+                type: string
+              policy_type_name:
+                type: string
+              status:
+                type: integer
+                format: int64
+              result:
+                type: string
+              create_time:
+                type: string
+              next_remediation:
+                type: string
+                format: date-time
+                nullable: true
+        last_scan_failed:
+          type: boolean
+        pending:
+          type: boolean
+        compliant:
+          type: boolean
+        display_name:
+          type: string
+        commands:
+          type: array
+          items:
+            $ref: "#/components/schemas/Command"
+        pending_patches:
+          type: integer
+          format: int64
+        connected:
+          type: boolean
+        last_process_time:
+          type: string
+        next_patch_time:
+          type: string
+        notification_count:
+          type: integer
+        reboot_notification_count:
+          type: integer
+        patch_deferral_count:
+          type: integer
+        is_delayed_by_notification:
+          type: boolean
+        reboot_is_delayed_by_notification:
+          type: boolean
+        is_delayed_by_user:
+          type: boolean
+        reboot_is_delayed_by_user:
+          type: boolean
+        last_disconnect_time:
+          type: string
+          format: date-time
+        needs_attention:
+          type: boolean
+        serial_number:
+          type: string
+        status:
+          $ref: "#/components/schemas/DeviceStatus"
+        last_logged_in_user:
+          type: string
+    ServerWithPolicies:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        os_version_id:
+          type: integer
+          format: int64
+        server_group_id:
+          type: integer
+          format: int64
+        organization_id:
+          type: integer
+          format: int64
+        uuid:
+          type: string
+        name:
+          type: string
+        instance_id:
+          type: string
+        refresh_interval:
+          type: integer
+          format: int64
+        last_update_time:
+          type: string
+        last_refresh_time:
+          type: string
+        uptime:
+          type: integer
+          format: int64
+        needs_reboot:
+          type: boolean
+        timezone:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        deleted:
+          type: boolean
+        create_time:
+          type: string
+          format: date-time
+        os_version:
+          type: string
+        os_name:
+          type: string
+        os_family:
+          type: string
+        ip_addrs:
+          type: array
+          items:
+            type: string
+        ip_addrs_private:
+          type: array
+          items:
+            type: string
+        patches:
+          type: integer
+          format: int64
+        details:
+          $ref: "#/components/schemas/ServerDetail"
+        agent_version:
+          type: string
+        custom_name:
+          type: string
+        exception:
+          type: boolean
+        total_count:
+          type: integer
+          format: int64
+        server_policies:
+          type: array
+          items:
+            $ref: "#/components/schemas/Policy"
+        policy_status:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              organization_id:
+                type: integer
+                format: int64
+              policy_id:
+                type: integer
+                format: int64
+              server_id:
+                type: integer
+                format: int64
+              policy_name:
+                type: string
+              policy_type_name:
+                type: string
+              status:
+                type: integer
+                format: int64
+              result:
+                type: string
+              create_time:
+                type: string
+              next_remediation:
+                type: string
+                format: date-time
+                nullable: true
+        last_scan_failed:
+          type: boolean
+        pending:
+          type: boolean
+        compliant:
+          type: boolean
+        display_name:
+          type: string
+        commands:
+          type: array
+          items:
+            $ref: "#/components/schemas/Command"
+        pending_patches:
+          type: integer
+          format: int64
+        connected:
+          type: boolean
+        last_process_time:
+          type: string
+        next_patch_time:
+          type: string
+        notification_count:
+          type: integer
+        reboot_notification_count:
+          type: integer
+        patch_deferral_count:
+          type: integer
+        is_delayed_by_notification:
+          type: boolean
+        reboot_is_delayed_by_notification:
+          type: boolean
+        is_delayed_by_user:
+          type: boolean
+        reboot_is_delayed_by_user:
+          type: boolean
+        last_disconnect_time:
+          type: string
+          format: date-time
+        needs_attention:
+          type: boolean
+        serial_number:
+          type: string
+        status:
+          $ref: "#/components/schemas/DeviceStatus"
+        last_logged_in_user:
+          type: string
+    ServerDetail:
+      type: object
+      properties:
+        CPU:
+          type: string
+        DISKS:
+          type: array
+          items:
+            type: object
+            properties:
+              SIZE:
+                type: string
+              TYPE:
+                type: string
+        MODEL:
+          type: string
+        NICS:
+          type: array
+          items:
+            type: object
+            properties:
+              CONNECTED:
+                type: boolean
+              DEVICE:
+                type: string
+              IPS:
+                type: array
+                items:
+                  type: string
+              MAC:
+                type: string
+              TYPE:
+                type: string
+              VENDOR:
+                type: string
+        RAM:
+          type: string
+        SERIAL:
+          type: string
+        SERVICETAG:
+          type: string
+        VENDOR:
+          type: string
+        VERSION:
+          type: string
+    ServerList:
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int64
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Server"
+    ServerGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+        organization_id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        refresh_interval:
+          type: integer
+        parent_server_group_id:
+          type: integer
+        ui_color:
+          type: string
+        notes:
+          type: string
+        enable_os_auto_update:
+          type: boolean
+          nullable: true
+        server_count:
+          type: integer
+        wsus_config:
+          $ref: "#/components/schemas/WsusConfig"
+        policies:
+          type: array
+          items:
+            type: integer
+    ServerGroupCreateOrUpdateRequest:
+      type: object
+      required:
+        - name
+        - refresh_interval
+        - parent_server_group_id
+      properties:
+        name:
+          description: Name of the group
+          type: string
+        refresh_interval:
+          description: "Frequency of device refreshes (scans) in minutes. Minimum: 360 Maximum: 1440"
+          type: integer
+          minimum: 360
+          maximum: 1440
+        parent_server_group_id:
+          description: "ID of the parent group Use the organization's Default Group ID to make this a top-level group. See Note: Default Group ID"
+          type: integer
+        ui_color:
+          description: "The highlight color for the group. Primarily used on the System Management view. Format: #059F1D See Note UI Color"
+          type: string
+        notes:
+          description: Use to define notes that are displayed while editing the policy
+          type: string
+        enable_os_auto_update:
+          description: "Enforce automatic update settings Options: null: Keep Device's Setting true: Enable OS automatic updates false: Disable OS automatic updates"
+          type: boolean
+        enable_wsus:
+          description: "Enforce WSUS settings for Windows devices Options: null: Keep Device's Setting true: force WSUS false: force Windows Update"
+          type: boolean
+          nullable: true
+        wsus_server:
+          description: 'WSUS server address. Use with enable_wsus. Format: "https://myserver.com:8530"'
+          type: string
+        policies:
+          description: List of Policies to link to this group.
+          type: array
+          items:
+            type: integer
+    SoftwareApprovals:
+      type: object
+      required:
+        - manual_approval
+      properties:
+        id:
+          type: integer
+          format: int64
+        software_version_id:
+          type: integer
+          format: int64
+        policy_id:
+          type: integer
+          format: int64
+        manual_approval:
+          type: boolean
+          description: "true = Approved, false = Rejected"
+        manual_approval_time:
+          type: string
+          format: date-time
+        auto_approval:
+          type: boolean
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        features:
+          type: object
+          properties:
+            mo:
+              type: boolean
+        prefs:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: integer
+                format: int64
+              pref_name:
+                type: string
+              value:
+                type: string
+        orgs:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserOrgs"
+        tags:
+          type: array
+          items:
+            type: string
+        saml_enabled:
+          type: boolean
+        rbac_roles:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              name:
+                type: string
+              organization_id:
+                type: integer
+                format: int64
+    UserOrgs:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        access_key:
+          type: string
+        trial_end_time:
+          type: string
+          format: date-time
+        trial_expired:
+          type: boolean
+    Worklet:
+      type: object
+      required:
+        - name
+        - category
+        - os_family
+        - creator
+        - is_verified
+      example:
+        name: Add Network Printer
+        category: Configuration
+        os_family: Linux
+        creator: B. Ross
+        keywords:
+          - printer
+          - network
+          - share
+        is_verified: true
+        create_time: "2021-03-25T20:04:42+0000"
+        update_time: "2021-03-25T20:04:42+0000"
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        keywords:
+          type: array
+          items:
+            type: string
+        os_family:
+          type: string
+        creator:
+          type: string
+        is_verified:
+          type: boolean
+        create_time:
+          type: string
+          format: date-time
+        update_time:
+          type: string
+          format: date-time
+    WorkletDetails:
+      type: object
+      required:
+        - name
+        - category
+        - os_family
+        - creator
+        - is_verified
+      example:
+        name: Add Network Printer
+        category: Configuration
+        os_family: Linux
+        creator: B. Ross
+        keywords:
+          - printer
+          - network
+          - share
+        is_verified: true
+        evaluation_code: |
+          exit 1
+        remediation_code: |
+          echo "Hello World"
+        create_time: "2021-03-25T20:04:42+0000"
+        update_time: "2021-03-25T20:04:42+0000"
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        keywords:
+          type: array
+          items:
+            type: string
+        os_family:
+          type: string
+        creator:
+          type: string
+        is_verified:
+          type: boolean
+        evaluation_code:
+          type: string
+        remediation_code:
+          type: string
+        create_time:
+          type: string
+          format: date-time
+        update_time:
+          type: string
+          format: date-time
+    WsusConfig:
+      type: object
+      nullable: true
+      properties:
+        id:
+          type: integer
+          format: int64
+        server_group_id:
+          type: integer
+          format: int64
+        is_managed:
+          type: boolean
+          nullable: true
+        server_url:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+        updated_at:
+          type: string
+security:
+  - bearerAuth: []
+tags:
+  - name: API Keys
+    description: Actions involving API key objects.
+  - name: Approvals
+    description: Actions involving manual approvals.
+  - name: Commands
+    description: Issues a command to an Automox device.
+  - name: Devices
+    description: Actions for Automox Servers/Endpoints.
+  - name: Events
+    description: Lists Event Objects for the Authenticated User.
+  - name: Extracts
+    description: Actions for Data Extracts
+  - name: Groups
+    description: Actions for Automox Groups.
+  - name: Organizations
+    description: Actions for Automox Organizations.
+  - name: Packages
+    description: Software Package Actions.
+  - name: Policies
+    description: Actions for Automox Policies.
+  - name: Reports
+    description: Retrieves Automox Reports.
+  - name: Users
+    description: Actions for Automox Users.
+  - name: Worklets
+    description: Community Worklets.
+x-tagGroups:
+  - name: Endpoint Management
+    tags:
+      - Commands
+      - Devices
+      - Packages
+      - Worklets
+  - name: Group Management
+    tags:
+      - Groups
+  - name: Organization Management
+    tags:
+      - Approvals
+      - Events
+      - Extracts
+      - Organizations
+      - Reports
+  - name: Policy Management
+    tags:
+      - Policies
+  - name: User Management
+    tags:
+      - API Keys
+      - Users
+paths:
+  /events:
+    get:
+      tags:
+        - Events
+      summary: Retrieve All Event Objects for the Authenticated User
+      description: "Events Include: Policy Actions, Device Addition/Removal, User Addition/Removal"
+      operationId: getEvents
+      parameters:
+        - name: page
+          in: query
+          description: The page of results you wish to be returned with page numbers starting at 0.
+          required: false
+          schema:
+            type: integer
+        - name: countOnly
+          in: query
+          description: Retrieve only the total count of events for the organization
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+        - name: policyId
+          in: query
+          description: Retrieve events for a specific policy
+          required: false
+          schema:
+            type: integer
+        - name: serverId
+          in: query
+          description: Retrieve events for a specific device
+          required: false
+          schema:
+            type: integer
+        - name: userId
+          in: query
+          description: Retrieve events for a specific user
+          required: false
+          schema:
+            type: integer
+        - name: eventName
+          in: query
+          description: Name for the event type
+          required: false
+          schema:
+            type: string
+            enum:
+              - org.exceeded_endpoint_limit
+              - saml.user.create
+              - slack.app.added
+              - slack.app.reinstalled
+              - system.add
+              - system.delete
+              - system.group.action
+              - system.notification.response
+              - system.notification.sent
+              - system.patch.applied
+              - system.patch.failed
+              - system.patch.uninstall
+              - system.policy.action
+              - user.create
+              - user.login
+              - user.logout
+              - user.removed
+        - name: startDate
+          in: query
+          description: "Limit responses to include only events after this date (YYYY-MM-DD)"
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          description: "Limit responses to include only events before this date (YYYY-MM-DD)"
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: limit
+          in: query
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter."
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+        - name: o
+          in: query
+          description: Limit response to a specific Automox organization
+          required: true
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/events?o=0000&limit=2&startDate=2019-05-04&endDate=2019-05-07"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /servers:
+    get:
+      tags:
+        - Devices
+      summary: List All Devices
+      description: "This retrieves a detailed list of all devices (server objects) for the authenticated user."
+      operationId: getDevices
+      parameters:
+        - name: groupId
+          in: query
+          description: Filter based on membership to a specific Server Group ID
+          required: false
+          schema:
+            type: integer
+        - name: PS_VERSION
+          in: query
+          description: Shows version of PowerShell running on the device, if applicable.
+          required: false
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID. Response will include devices for the specified Automox Organization
+          required: true
+          schema:
+            type: integer
+        - name: pending
+          in: query
+          description: "Filter based on status of pending patches. Format: pending=1"
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+        - name: patchStatus
+          in: query
+          description: "Filter based on presence of ANY available patches that aren't already installed. Value must be 'missing' Format: patchStatus=missing"
+          required: false
+          schema:
+            type: string
+        - name: policyId
+          in: query
+          description: Filter based on association to a given Policy ID
+          required: false
+          schema:
+            type: integer
+        - name: exception
+          in: query
+          description: Filter based on device's Exception status
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+        - name: managed
+          in: query
+          description: Filter based on device's Managed status. Unmanaged indicates no linked policies.
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+        - name: limit
+          in: query
+          description: "A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter."
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+        - name: page
+          in: query
+          description: The page of results you wish to be returned with page numbers starting at 0.
+          required: true
+          schema:
+            type: integer
+            default: 0
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+                "Content-Type" = "application/json"
+            }
+            $body = @"
+            {
+                "name": "API Modified",
+                "refresh_interval": 1380,
+                "parent_server_group_id": 23500,
+                "ui_color": "#E9FF03",
+                "notes": "3 Policies, Lemonade Color, Force WinUpdate",
+                "enable_os_auto_update": false,
+              "enable_wsus": false,
+                "policies": [
+                    18627,
+                    22645,
+                    25754
+                ]
+            }
+            "@
+
+            $url = "https://console.automox.com/api/servergroups/123456?o=0000"
+
+            Invoke-WebRequest -Method Put -Uri $url -Headers $headers -Body $body
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ServerList"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  "/servers/{id}":
+    get:
+      tags:
+        - Devices
+      summary: List a Specific Device
+      description: Returns a specific device (server object) for the authenticated user.
+      operationId: getServer
+      parameters:
+        - name: id
+          in: path
+          description: Server ID for the specified device
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the specified device
+          required: true
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/servers/123456?o=0000"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerWithPolicies"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+    put:
+      tags:
+        - Devices
+      summary: "Updates a device (server object)."
+      description: "Updates a device (server object)."
+      operationId: updateDevice
+      parameters:
+        - name: id
+          in: path
+          description: Server ID for the specified device
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the specified device
+          required: false
+          schema:
+            type: integer
+      requestBody:
+        description: Device update
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - server_group_id
+                - exception
+              properties:
+                server_group_id:
+                  description: Server Group ID of the group to which the device should belong
+                  type: integer
+                exception:
+                  description: Set the exception property for the device
+                  type: boolean
+                tags:
+                  description: List of tags
+                  type: array
+                  items:
+                    type: string
+                custom_name:
+                  description: Custom name that will display in the console instead of the hostname
+                  type: string
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+                "Content-Type" = "application/json"
+            }
+            $body = @"
+            {
+                "server_group_id": 12345,
+                "tags": [
+                    "Tag1",
+                    "Tag2",
+                    "Tag3"
+                ],
+                "custom_name": null,
+                "exception": false
+            }
+            "@
+            $url = "https://console.automox.com/api/servers/123456?o=0000"
+
+            Invoke-WebRequest -Method Put -Uri $url -Headers $headers -Body $body
+      responses:
+        "204":
+          description: Update Successful
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+    delete:
+      tags:
+        - Devices
+      summary: Deletes a device (server object).
+      description: Deletes a device (server object). The associated command queue will be purged. Any pending custom commands for the device are removed.
+      operationId: deleteDevice
+      parameters:
+        - name: id
+          in: path
+          description: Server ID for the specified device
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the specified device
+          required: true
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/servers/123456?o=0000"
+
+            Invoke-WebRequest -Method Delete -Uri $url -Headers $headers
+      responses:
+        "204":
+          description: Delete Successful
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /servers/{id}/packages:
+    get:
+      tags:
+        - Devices
+        - Packages
+      summary: List Software Packages for Specific Device
+      description: "Returns the software packages for the specified device. Packages Include: Pending updates and currently installed updates/applications"
+      operationId: getDevicePackages
+      parameters:
+        - name: id
+          in: path
+          description: Server ID for the specified device
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the specified device
+          required: true
+          schema:
+            type: integer
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: page
+          description: The page of results you wish to be returned with page numbers starting at 0.
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+          in: query
+          name: limit
+          description: "A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter."
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/servers/123456/packages?o=0000"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Packages"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /servers/{id}/queues:
+    get:
+      tags:
+        - Devices
+        - Commands
+      summary: Upcoming Commands Queue for Specific Device
+      description: Returns the queue of upcoming commands for the specified device.
+      operationId: getDeviceQueues
+      parameters:
+        - name: id
+          in: path
+          description: Server ID for the specified device
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the specified device
+          required: true
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/servers/123456/queues?o=0000"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Command"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+    post:
+      tags:
+        - Devices
+        - Commands
+      summary: Issue a command to a device
+      description: "Force a device to Scan, Patch, or Reboot for immediate execution. **Note: The `installAllUpdates` option ignores any Policy Filters**"
+      operationId: issueDeviceCommand
+      parameters:
+        - name: id
+          in: path
+          description: Server ID for the specified device
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the specified device
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - command_type_name
+              properties:
+                command_type_name:
+                  type: string
+                  enum:
+                    - GetOS
+                    - InstallUpdate
+                    - InstallAllUpdates
+                    - policy_{policy_id}_test
+                    - policy_{policy_id}_remediate
+                    - Reboot
+                args:
+                  type: string
+                  description: 'Only needed for "InstallUpdate". Includes the name of the patches to install.'
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+                "Content-Type" = "application/json"
+            }
+            $body = @{
+              command_type_name = "Reboot"
+            }
+
+            $url = "https://console.automox.com/api/servers/123456/queues?o=0000"
+
+            Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body ($body | ConvertTo-Json)
+        - lang: PowerShell
+          label: PowerShell (with ARGS)
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+                "Content-Type" = "application/json"
+            }
+            $body = @{
+              command_type_name = "InstallUpdate"
+              args = "2e7e5661-f7c8-4a21-a65a-52d0fdf8841a"
+            }
+
+            $url = "https://console.automox.com/api/servers/123456/queues?o=0000"
+
+            Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body ($body | ConvertTo-Json)
+      responses:
+        "201":
+          description: Command submitted successfully
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+  /servergroups:
+    get:
+      tags:
+        - Groups
+      summary: List All Group Objects
+      description: Retrieves all server group objects for the authenticated user.
+      operationId: getServerGroups
+      parameters:
+        - name: o
+          in: query
+          description: Organization ID for retrieving groups
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: The page of results you wish to be returned with page numbers starting at 0.
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+          in: query
+          name: limit
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter."
+          required: false
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/servergroups?o=0000"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ServerGroup"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+    post:
+      tags:
+        - Groups
+      summary: Creates a new server group.
+      description: Creates a new server group.
+      operationId: createServerGroup
+      parameters:
+        - name: o
+          in: query
+          description: Organization ID for the created group
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServerGroupCreateOrUpdateRequest"
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+                "Content-Type" = "application/json"
+              }
+            $body = @"
+              {
+                  "name": "API Creation",
+                  "refresh_interval": 1440,
+                  "parent_server_group_id": 23500,
+                  "ui_color": "#FFFFFF",
+                  "notes": "2 Policies, White, Force WSUS",
+                  "enable_os_auto_update": false,
+                  "enable_wsus": true,
+                  "wsus_server": "http://myserver.com:8530",
+                  "policies": [
+                      18627,
+                      22645
+                  ]
+              }
+              "@
+
+            $url = "https://console.automox.com/api/servergroups?o=0000"
+
+            Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ServerGroup"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+  /servergroups/{id}:
+    get:
+      tags:
+        - Groups
+      summary: List Specific Group Object
+      description: Returns a specific server group object for the authenticated user.
+      operationId: getServerGroup
+      parameters:
+        - name: id
+          in: path
+          description: Server Group ID for the specified group
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the specified group
+          required: true
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/servergroups/12345?o=0000"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerGroup"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+    put:
+      tags:
+        - Groups
+      summary: Updates a new server group.
+      description: Updates a new server group.
+      operationId: updateServerGroup
+      parameters:
+        - name: id
+          in: path
+          description: Server Group ID for the specified group
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the created group
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServerGroupCreateOrUpdateRequest"
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+                "Content-Type" = "application/json"
+            }
+            $body = @"
+            {
+                "name": "API Modified",
+                "refresh_interval": 1380,
+                "parent_server_group_id": 23500,
+                "ui_color": "#E9FF03",
+                "notes": "3 Policies, Lemonade Color, Force WinUpdate",
+                "enable_os_auto_update": false,
+              "enable_wsus": false,
+                "policies": [
+                    18627,
+                    22645,
+                    25754
+                ]
+            }
+            "@
+
+            $url = "https://console.automox.com/api/servergroups/123456?o=0000"
+
+            Invoke-WebRequest -Method Put -Uri $url -Headers $headers -Body $body
+      responses:
+        "204":
+          description: Successful Operation
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+    delete:
+      tags:
+        - Groups
+      summary: Deletes a server group.
+      description: Any devices that belong to the deleted group will be moved to the organization's Default Group
+      operationId: deleteServerGroup
+      parameters:
+        - name: id
+          in: path
+          description: Server Group ID for the specified group
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the created group
+          required: true
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/servergroups/12345?o=0000"
+
+            Invoke-WebRequest -Method Delete -Uri $url -Headers $headers
+      responses:
+        "204":
+          description: Deletion Successful
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /orgs:
+    get:
+      tags:
+        - Organizations
+      summary: Organization Details
+      description: Returns a detailed list of all organizations for the authenticated user.
+      operationId: getOrganizations
+      parameters:
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: page
+          description: The page of results you wish to be returned with page numbers starting at 0.
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+          in: query
+          name: limit
+          description: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/orgs"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  "/orgs/{id}/packages":
+    get:
+      tags:
+        - Packages
+      summary: List All Software Packages for All Devices
+      description: Returns a list of all software packages discovered on all devices of an organization.
+      operationId: getOrganizationPackages
+      parameters:
+        - name: id
+          in: path
+          description: Organization ID for retrieving package list
+          required: true
+          schema:
+            type: integer
+        - name: includeUnmanaged
+          in: query
+          description: Include applications Automox does not currently support for patching
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+            format: int64
+        - name: awaiting
+          in: query
+          description: "Filter based installation status of package. awaiting=1:  Packages that are currently available but not installed. awaiting=0:  Packages that are already installed."
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+            format: int64
+        - name: o
+          in: query
+          description: "Organization ID. Required. If authenticated, the user has access to multiple organizations."
+          required: true
+          schema:
+            type: integer
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          required: false
+          name: page
+          description: The page of results you wish to be returned with page numbers starting at 0.
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+          in: query
+          name: limit
+          description: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+          required: false
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = 'https://console.automox.com/api/orgs/0000/packages?o=0000&awaiting=1&includeUnmanaged=0'
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Packages"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /orgs/{id}/api_keys:
+    get:
+      tags:
+        - API Keys
+      summary: List All API Keys for Organization
+      description: You must have Full Administrator privileges for this endpoint
+      operationId: getOrganizationApiKeys
+      parameters:
+        - name: id
+          in: path
+          description: Organization ID for retrieving API Keys
+          required: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter."
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+        - name: page
+          in: query
+          description: The page of results you wish to be returned with page numbers starting at 0.
+          required: false
+          schema:
+            type: integer
+            default: 0
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/orgs/{0000}/api_keys"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ApiKey"
+                  size:
+                    type: integer
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /policies:
+    get:
+      tags:
+        - Policies
+      summary: List All Policy Objects
+      description: Retrieves a list of all policy objects for the authenticated user.
+      operationId: getPolicies
+      parameters:
+        - name: o
+          in: query
+          description: Organization ID for retrieving policies
+          required: true
+          schema:
+            type: integer
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: page
+          description: The page of results you wish to be returned with page numbers starting at 0.
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+          in: query
+          name: limit
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter."
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/policies?o=0000"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Policy"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+    post:
+      tags:
+        - Policies
+      summary: Create a New Policy
+      description: Creates a new policy for a specified organization. For more info on filter types and scheduling, see [Policies - Scheduling and Filtering](/developer-portal/policy_filters_schedule)
+      operationId: createPolicy
+      parameters:
+        - name: o
+          in: query
+          description: Organization ID for retrieving policies
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+                - policy_type_name
+                - organization_id
+                - schedule_days
+                - schedule_weeks_of_month
+                - schedule_months
+                - schedule_time
+                - configuration
+                - notify_user
+              properties:
+                name:
+                  type: string
+                policy_type_name:
+                  type: string
+                organization_id:
+                  type: integer
+                schedule_days:
+                  type: integer
+                schedule_weeks_of_month:
+                  type: integer
+                schedule_months:
+                  type: integer
+                schedule_time:
+                  type: string
+                configuration:
+                  $ref: "#/components/schemas/PolicyConfiguration"
+                notify_user:
+                  type: boolean
+                notes:
+                  type: string
+                server_groups:
+                  type: array
+                  items:
+                    type: integer
+                auto_patch:
+                  type: boolean
+                auto_reboot:
+                  type: boolean
+                notify_reboot_user:
+                  type: boolean
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+                "Content-Type" = "application/json"
+            }
+            $url = "https://console.automox.com/api/policies/12345?o=0000"
+            $body = @"
+              {
+                "name": "API Created",
+                "policy_type_name": "patch",
+                "organization_id": 0000,
+                "configuration": {
+                  "auto_patch": false,
+                  "auto_reboot": true,
+                  "notify_reboot_user": true,
+                  "notify_user": true,
+                  "missed_patch_window": true,
+                  "patch_rule": "advanced",
+                  "filters": ["*KB2267602*","*Exclude This Too*"],
+                  "severity_filter": ["low","medium","high","critical","none","unknown"],
+                  "include_optional": true,
+                  "custom_notification_patch_message": "Notification Text before normal patch - Windows - Max 125 Char",
+                  "custom_notification_reboot_message": "Notification Text before reboot patch - Windows - Max 125 Char",
+                  "custom_notification_patch_message_mac": "Notification Text before normal patch - Mac - Max 70 Char",
+                  "custom_notification_reboot_message_mac": "Notification Text before reboot patch - Mac - Max 70 Char",
+                  "custom_notification_max_delays": 3,
+                  "custom_notification_deferment_periods": [1, 4, 8],
+                  "notify_user_message_timeout": 120,
+                  "notify_user_auto_deferral_enabled": false,
+                  "notify_deferred_reboot_user_message_timeout": 120,
+                  "notify_deferred_reboot_user_auto_deferral_enabled": true,
+                  "advanced_filter": [
+                          {
+                              "left": "patch-source",
+                              "right": "windowsupdate",
+                              "condition": "is"
+                          },
+                          {
+                              "left": "severity",
+                              "right": "medium",
+                              "condition": "greater-than-or-equal-to"
+                          }
+                      ]
+                },
+                "schedule_days": 146,
+                "schedule_weeks_of_month": 42,
+                "schedule_months": 4162,
+                "schedule_time": "01:00",
+                "notes": "Patch every Mon,Thu,Fri\n1st,3rd,5th Week\nJan,Jun,Dec",
+                "server_groups": [23500]
+              }
+              "@
+            Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Policy"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /policies/{id}:
+    get:
+      tags:
+        - Policies
+      summary: List Specific Policy Object
+      description: Returns a specific policy object for the authenticated user.
+      operationId: getPolicy
+      parameters:
+        - name: id
+          in: path
+          description: Policy ID for the specified policy
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the specified policy
+          required: true
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/policies/12345?o=0000"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Policy"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+    put:
+      tags:
+        - Policies
+      summary: Updates a specific policy object for the authenticated user.
+      description: Updates a specific policy object for the authenticated user.
+      operationId: updatePolicy
+      parameters:
+        - name: id
+          in: path
+          description: Policy ID for the specified policy
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the specified policy
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Policy"
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+                "Content-Type" = "application/json"
+              }
+            $url = "https://console.automox.com/api/policies/12345?o=0000"
+            $body = @"
+              {
+                "name": "API Created",
+                "policy_type_name": "patch",
+                "organization_id": 0000,
+                "configuration": {
+                  "auto_patch": false,
+                  "auto_reboot": true,
+                  "notify_reboot_user": true,
+                  "notify_user": true,
+                  "missed_patch_window": true,
+                  "patch_rule": "advanced",
+                  "filters": ["*KB2267602*","*Exclude This Too*"],
+                  "severity_filter": ["low","medium","high","critical","none","unknown"],
+                  "include_optional": true,
+                  "custom_notification_patch_message": "Notification Text before normal patch - Windows - Max 125 Char",
+                  "custom_notification_reboot_message": "Notification Text before reboot patch - Windows - Max 125 Char",
+                  "custom_notification_patch_message_mac": "Notification Text before normal patch - Mac - Max 70 Char",
+                  "custom_notification_reboot_message_mac": "Notification Text before reboot patch - Mac - Max 70 Char",
+                  "custom_notification_max_delays": 3,
+                  "custom_notification_deferment_periods": [1, 4, 8],
+                  "notify_user_message_timeout": 120,
+                  "notify_user_auto_deferral_enabled": false,
+                  "notify_deferred_reboot_user_message_timeout": 120,
+                  "notify_deferred_reboot_user_auto_deferral_enabled": true,
+                  "advanced_filter": [
+                          {
+                              "left": "patch-source",
+                              "right": "windowsupdate",
+                              "condition": "is"
+                          },
+                          {
+                              "left": "severity",
+                              "right": "medium",
+                              "condition": "greater-than-or-equal-to"
+                          }
+                      ]
+                },
+                "schedule_days": 146,
+                "schedule_weeks_of_month": 42,
+                "schedule_months": 4162,
+                "schedule_time": "01:00",
+                "notes": "Patch every Mon,Thu,Fri\n1st,3rd,5th Week\nJan,Jun,Dec",
+                "server_groups": [23500]
+              }
+              "@
+            Invoke-WebRequest -Method Put -Uri $url -Headers $headers -Body $body
+      responses:
+        "204":
+          description: Update Successful
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+    delete:
+      tags:
+        - Policies
+      summary: Delete Specific Policy Object
+      description: Deletes a specific policy object for the authenticated user.
+      operationId: deletePolicy
+      parameters:
+        - name: id
+          in: path
+          description: Policy ID for the specified policy
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the specified policy
+          required: true
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/policies/12345?o=0000"
+
+            $response = (Invoke-WebRequest -Method Delete -Uri $url -Headers $headers).Content
+      responses:
+        "204":
+          description: Successful Operation
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /policies/{id}/action:
+    post:
+      tags:
+        - Policies
+      summary: Schedule a Policy for Immediate Remediation
+      description: Schedule a policy for immediate remediation.
+      operationId: executePolicy
+      parameters:
+        - name: id
+          in: path
+          description: Policy ID for the specified policy
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: Organization ID for the specified policy
+          required: true
+          schema:
+            type: integer
+        - name: action
+          in: query
+          description: "Specify the action to be taken. Possible values: remediateAll, remediateServer Format: action=remediateServer"
+          required: true
+          schema:
+            type: string
+            enum:
+              - remediateAll
+              - remediateServer
+        - name: serverId
+          in: query
+          description: 'Specify the specific Server to run the policy for. Only applicable when action is set to "remediateServer" Format: serverId=123456'
+          required: false
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/policies/12345/action?o=0000&action=remediateServer&serverId=123456"
+
+            Invoke-WebRequest -Method POST -Uri $url -Headers $headers
+      responses:
+        "201":
+          description: Action Started Successfully
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /policies/device-filters-preview:
+    post:
+      tags:
+        - Policies
+      summary: Policy Device Filters Preview
+      description: Generate a preview of the list of devices that matches the provided device filter set. For more information, see [Device Filter Preview - Filter Parameters](/developer-portal/device-filters).
+      operationId: generatePolicyDeviceFilterPreview
+      parameters:
+        - name: o
+          in: query
+          description: Organization ID. If omitted, results will include all organizations for the authenticated user.
+          required: false
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: The page of results you wish to be returned with page numbers starting at 0.
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          description: A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with page parameter.
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 25
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PolicyDeviceFiltersPreview"
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+                "Content-Type" = "application/json"
+            }
+            $url = "https://console.automox.com/api/policies/device-filters-preview?o=9237&page=0&limit=25"
+            $body = @”
+              {
+                  "device_filters": [
+                  {
+                      "field": "os_family",
+                      "op": "in",
+                      "value": ["Windows"]
+                  },
+                  {
+                      "field": "hostname",
+                      "op": "like_any",
+                      "value": ["WinDev2104Eval"]
+                  }
+                  ],
+                  "server_groups": [102701]
+              }
+              ”@
+
+            $response = (Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body -ContentType "application/json").Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PolicyDeviceFiltersOutput"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /policystats:
+    get:
+      tags:
+        - Policies
+      summary: List Policy Compliance Stats
+      description: Retrieve policy compliance statistics for all policies.
+      operationId: getPolicyStats
+      parameters:
+        - name: o
+          in: query
+          description: Organization ID for retrieving policy stats.
+          required: false
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+
+            $url = "https://console.automox.com/api/policystats?o=0000"
+
+            Invoke-WebRequest -Method GET -Uri $url -Headers $headers
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PolicyStats"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /reports/prepatch:
+    get:
+      tags:
+        - Reports
+      summary: Pre-Patch Report
+      description: Retrieve the pre-patch report.
+      operationId: getPrePatchReport
+      parameters:
+        - name: o
+          in: query
+          description: Organization ID. If omitted, results will include all organizations for the authenticated user.
+          required: false
+          schema:
+            type: integer
+        - name: groupId
+          in: query
+          description: The ID of the server group for limiting results
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Limit number of results returned per page. Typically used in combination with offset
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 250
+        - name: offset
+          in: query
+          description: Specifies the offset. For example, if you are paging 250 at a time, you could specify 250 for the 2nd page and 500 for the 3rd, etc.
+          required: false
+          schema:
+            type: integer
+            default: 250
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = 'https://console.automox.com/api/reports/prepatch?o=0000&groupId=12345&limit=10&offset=20'
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrePatch"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /reports/noncompliance:
+    get:
+      tags:
+        - Reports
+      summary: Non-Compliance Report
+      description: Retrieve the non-compliant devices report.
+      operationId: getNonComplianceReport
+      parameters:
+        - name: o
+          in: query
+          description: Organization ID. If omitted, results will include all organizations for the authenticated user.
+          required: false
+          schema:
+            type: integer
+        - name: groupId
+          in: query
+          description: Group ID. If omitted, results will include all groups for the authenticated user.
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Limit number of results returned per page. Typically used in combination with offset
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 250
+        - name: offset
+          in: query
+          description: Specifies the offset. For example, if you are paging 250 at a time, you could specify 250 for the 2nd page and 500 for the 3rd, etc.
+          required: false
+          schema:
+            type: integer
+            default: 250
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = 'https://console.automox.com/api/reports/noncompliance?o=0000&groupId=12345&limit=10&offset=20'
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NonCompliant"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /approvals/{id}:
+    put:
+      tags:
+        - Approvals
+      summary: Update a Manual Approval Record
+      description: Update a manual approval record. Set the `manual_approval` attribute of approval object to `true` to approve a patch; set it to `false` to reject a patch.
+      operationId: updateApprovals
+      parameters:
+        - name: id
+          in: path
+          description: Approval ID. Contact [Automox Support](mailto:support@automox.com) for further assistance.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                manual_approval:
+                  type: boolean
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SoftwareApprovals"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /users:
+    get:
+      tags:
+        - Users
+      summary: List All Users With Access to a Given Organization
+      description: Retrieves a list of all users with access to an organization
+      operationId: getUsers
+      parameters:
+        - name: o
+          in: query
+          description: The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization.
+          required: false
+          schema:
+            type: integer
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: page
+          description: The page of results you wish to be returned with page numbers starting at 0.
+        - schema:
+            type: integer
+            default: 500
+            minimum: 1
+            maximum: 500
+          in: query
+          name: limit
+          description: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+            }
+
+            $url = "https://console.automox.com/api/users?o=0000"
+
+            Invoke-WebRequest -Method Get -Uri $url -Headers $headers
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Retrieves a user by user ID
+      description: Retrieves a user by user ID
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          description: The User ID of the user to retrieve
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization.
+          required: false
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+            }
+
+            $url = 'https://console.automox.com/api/users/999999?o=0000'
+
+            Invoke-WebRequest -Method Get -Uri $url -Headers $headers
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /users/{userId}/api_keys:
+    get:
+      tags:
+        - API Keys
+      summary: Retrieves a list of API key objects for a user
+      description: Retrieves a list of API key objects for a user
+      operationId: getUserApiKeys
+      parameters:
+        - name: userId
+          in: path
+          description: User ID of the user to retrieve API key objects
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: The Organization of the user.
+          required: true
+          schema:
+            type: integer
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: page
+          description: The page of results you wish to be returned with page numbers starting at 0.
+        - schema:
+            type: integer
+            default: 500
+            minimum: 1
+            maximum: 500
+          in: query
+          name: limit
+          description: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+
+            $url = "https://console.automox.com/api/users/{98765}/api_keys?o=0000&page=0&limit=25"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  size:
+                    type: integer
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ApiKey"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+    post:
+      tags:
+        - API Keys
+      summary: Creates an API key for a user
+      description: Creates an API key for a user
+      operationId: createUserApiKey
+      parameters:
+        - name: userId
+          in: path
+          description: User ID of the user to create an API key
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: The Organization of the user.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                expires_at:
+                  type: string
+                  format: datetime
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+
+            $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000&page=0&limit=25'
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiKey"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /users/{userId}/api_keys/{id}:
+    get:
+      tags:
+        - API Keys
+      summary: Retrieves an API key object by ID
+      description: Retrieves an API key object by ID
+      operationId: getUserApiKey
+      parameters:
+        - name: userId
+          in: path
+          description: User ID of the user to retrieve API key objects
+          required: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          description: The ID of the API key object to retrieve
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: The Organization of the user.
+          required: true
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+
+            $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000&page=0&limit=25'
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiKey"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+    put:
+      tags:
+        - API Keys
+      summary: Update an API Key by ID
+      description: Update an API Key by ID
+      operationId: updateUserApiKey
+      parameters:
+        - name: userId
+          in: path
+          description: User ID of the user to update keys for
+          required: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          description: The ID of the API key to update
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: The Organization of the key.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: The API Key updates
+        content:
+          application/json:
+            schema:
+              required:
+                - is_enabled
+              properties:
+                is_enabled:
+                  type: boolean
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $body = @"
+            {
+                "is_enabled": "False"
+            }
+            "@
+
+            $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000&page=0&limit=25'
+
+            $response = (Invoke-WebRequest -Method Put -Uri $url -Body $body -Headers $headers -ContentType "application/json").Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiKey"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+    delete:
+      tags:
+        - API Keys
+      summary: Deletes an API Key by ID
+      description: Deletes an API Key by ID
+      operationId: deleteUserApiKey
+      parameters:
+        - name: userId
+          in: path
+          description: User ID of the user to delete API Key for
+          required: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          description: The ID of the API key to delete
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: The Organization of the user.
+          required: true
+          schema:
+            type: integer
+        - name: Content-Type
+          in: header
+          description: Specify JSON as the content type for body parameters
+          required: true
+          schema:
+            type: string
+            default: "application/json"
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+
+            $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000'
+
+            $response = (Invoke-WebRequest -Method Delete -Uri $url -Headers $headers -ContentType "application/json").Content
+      responses:
+        "204":
+          description: Successful Operation
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /users/{userId}/api_keys/{id}/decrypt:
+    post:
+      tags:
+        - API Keys
+        - Users
+      summary: Retrieves the API Key secret by ID
+      description: Retrieves the API Key secret by ID
+      operationId: decryptUserApiKey
+      parameters:
+        - name: userId
+          in: path
+          description: User ID of the user to retrieve API Keys
+          required: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          description: The ID of the API key to retrieve
+          required: true
+          schema:
+            type: integer
+        - name: o
+          in: query
+          description: The Organization of the user.
+          required: true
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+
+            $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999/decrypt?o=0000'
+
+            $response = (Invoke-WebRequest -Method Delete -Uri $url -Headers $headers -ContentType "application/json").Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  api_key:
+                    type: string
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /community-worklets:
+    get:
+      tags:
+        - Worklets
+      summary: Retrieve Community Worklets
+      description: Retrieves a list of Community Worklets
+      operationId: getCommunityWorklets
+      parameters:
+        - name: page
+          schema:
+            type: integer
+            default: 0
+          in: query
+          description: The page of results you wish to be returned with page numbers starting at 0.
+        - name: limit
+          schema:
+            type: integer
+            default: 25
+            minimum: 1
+            maximum: 500
+          in: query
+          description: A limit on the number of results to be returned, between 1 and 500 with a default of 25. Use with page parameter.
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+
+            $url = "https://console.automox.com/api/community-worklets?page=0&limit=25"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Worklet"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /community-worklets/{id}:
+    get:
+      tags:
+        - Worklets
+      summary: Retrieve Community Worklet by ID
+      description: Retrieves details for a specific Community Worklet by ID
+      operationId: getCommunityWorklet
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the Community Worklet to retrieve
+          required: true
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+
+            $url = "https://console.automox.com/api/community-worklets/123456"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkletDetails"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /data-extracts:
+    get:
+      tags:
+        - Extracts
+      summary: List all Data Extracts for an Organization
+      description: List all Data extracts for an organization with ability to filter and sort results.
+      operationId: getDataExtracts
+      parameters:
+        - name: o
+          in: query
+          required: true
+          description: Limit response to a specific Automox organization
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: false
+          description: A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with page parameter.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 25
+        - name: page
+          in: query
+          required: false
+          description: "The page of results you wish to be returned with page numbers starting at 0. Default: 0."
+          schema:
+            type: integer
+            default: 0
+        - name: sort
+          in: query
+          required: false
+          description: "The sort for the results. Options: created_at:desc/asc and status:desc/asc. Default: created_at:desc"
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - "created_at:desc"
+                - "created_at:asc"
+                - "status:desc"
+                - "status:asc"
+              default: "created_at:desc"
+        - name: "type:equals"
+          in: query
+          required: false
+          description: "The type of Data Extracts to list. Options: data-extract."
+          schema:
+            type: string
+            enum:
+              - patch-history
+            default: patch-history
+        - name: "created_at:greater_than"
+          in: query
+          required: false
+          description: Created at date is greater than the value submitted. If a time is not specified, greater_than will have a time of start of day.
+          schema:
+            type: string
+            format: date-time
+        - name: "created_at:lesser_than"
+          in: query
+          required: false
+          description: Created at date is less than the value submitted. If a time is not specified, less_than will have a time of end of day.
+          schema:
+            type: string
+            format: date-time
+        - name: "created_at:greater_than_or_equals"
+          in: query
+          required: false
+          description: Created at date is greater than or equals the value submitted. If a time is not specified, greater_than_or_equals will have a time of start of day.
+          schema:
+            type: string
+            format: date-time
+        - name: "created_at:lesser_than_or_equals"
+          in: query
+          required: false
+          description: Created at date is lesser than or equals the value submitted. If a time is not specified, less_than_or_equals will have a time of end of day.
+          schema:
+            type: string
+            format: date-time
+        - name: "status:equals"
+          in: query
+          required: false
+          description: "Find jobs with a specific status. Options: queued, running, complete, failed, canceled, expired"
+          schema:
+            type: string
+            enum:
+              - queued
+              - running
+              - complete
+              - failed
+              - canceled
+              - expired
+        - name: "status:in"
+          in: query
+          required: false
+          description: Find jobs with one or more of these statuses.
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - queued
+                - running
+                - complete
+                - failed
+                - canceled
+                - expired
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/data-extracts?o=0000&limit=500&"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DataExtract"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+    post:
+      tags:
+        - Extracts
+      summary: Creates a new Data Extract.
+      description: Create a new Data Extract.
+      operationId: createExtract
+      parameters:
+        - name: o
+          in: query
+          required: true
+          description: Organization ID
+          schema:
+            type: integer
+      requestBody:
+        description: Create Data Extract
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - type
+                - parameters
+              properties:
+                type:
+                  description: The type of Data Extract that should be created.
+                  type: string
+                  minLength: 1
+                  enum:
+                    - patch-history
+                  default: patch-history
+                parameters:
+                  type: object
+                  required:
+                    - start_time
+                    - end_time
+                  properties:
+                    start_time:
+                      description: "The start date and time for the report. Validation: Previous 90 days, starting yesterday."
+                      type: string
+                      minLength: 1
+                      format: date-time
+                    end_time:
+                      description: "The end date and time for the report. Validation: Previous 90 days, starting yesterday and must be after start_time."
+                      type: string
+                      minLength: 1
+                      format: date-time
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+              "Authorization" = "Bearer $apiKey"
+              "Content-Type" = "application/json"
+            }
+            $url = "https://console.automox.com/api/data-extracts?o=0000"
+            $body = @”
+            {
+              “type”: “patch-history”,
+              “parameters”: {
+                “start_time”: "2021-05-28T13:31:57.510Z",
+                “end_time”:  "2021-05-30T06:42:12.117Z"
+                }
+            }
+            ”@
+
+            $response = (Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body -ContentType "application/json").Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DataExtract"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /data-extracts/{id}:
+    get:
+      tags:
+        - Extracts
+      summary: Show a new Data Extract job.
+      description: Retrieves a specific Data Extract job.
+      operationId: getDataExtractByID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the Data Extract you want to view.
+          schema:
+            type: integer
+            format: int64
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = "https://console.automox.com/api/data-extracts/000"
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DataExtract"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /data-extracts/{id}/download:
+    get:
+      tags:
+        - Extracts
+      summary: Download the CSV for a completed Data Extract job.
+      description: Downloads the CSV for a completed Data Extract job. Triggers an automatic download of the CSV file.
+      operationId: DownloadDataExtract
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the Data Extract to download.
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: o
+          in: query
+          description: Organization ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{ "Authorization" = "Bearer $apiKey" }
+            $url = 'https://console.automox.com/api/data-extracts/000/download?o=0000'
+
+            Invoke-WebRequest -Method Get -Uri $url -Headers $headers -OutFile "$env:userprofile\Downloads\patch-history_report.csv"
+      responses:
+        "200":
+          description: "Downloads the extract file automatically."
+          content:
+            application/octet-stream:
+              examples: {}
+              schema:
+                description: ""
+          headers: {}
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "410":
+          description: Returned when the extract download is no longer available.
+          content:
+            application/json:
+              schema:
+                description: ""
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                required:
+                  - errors
+              examples:
+                Download unavailable:
+                  value:
+                    errors:
+                      - The extract download is no longer available
+        "429":
+          $ref: "#/components/responses/RateLimit"
