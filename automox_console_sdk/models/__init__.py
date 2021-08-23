@@ -1,0 +1,71 @@
+# flake8: noqa
+
+# import all models into this package
+# if you have many models here with many references from one model to another this may
+# raise a RecursionError
+# to avoid this, import only the models that you directly need like:
+# from from automox_console_sdk.model.pet import Pet
+# or import this package, but before doing it, use:
+# import sys
+# sys.setrecursionlimit(n)
+
+from automox_console_sdk.model.api_key import ApiKey
+from automox_console_sdk.model.api_key_user import ApiKeyUser
+from automox_console_sdk.model.command import Command
+from automox_console_sdk.model.custom_policy_configuration import CustomPolicyConfiguration
+from automox_console_sdk.model.data_extract import DataExtract
+from automox_console_sdk.model.data_extract_parameters import DataExtractParameters
+from automox_console_sdk.model.device_status import DeviceStatus
+from automox_console_sdk.model.device_status_policy_statuses import DeviceStatusPolicyStatuses
+from automox_console_sdk.model.event import Event
+from automox_console_sdk.model.event_data import EventData
+from automox_console_sdk.model.inline_response200 import InlineResponse200
+from automox_console_sdk.model.inline_response2001 import InlineResponse2001
+from automox_console_sdk.model.inline_response403 import InlineResponse403
+from automox_console_sdk.model.non_compliant import NonCompliant
+from automox_console_sdk.model.non_compliant_non_compliant import NonCompliantNonCompliant
+from automox_console_sdk.model.non_compliant_non_compliant_devices import NonCompliantNonCompliantDevices
+from automox_console_sdk.model.non_compliant_non_compliant_packages import NonCompliantNonCompliantPackages
+from automox_console_sdk.model.non_compliant_non_compliant_policies import NonCompliantNonCompliantPolicies
+from automox_console_sdk.model.notification_response_data import NotificationResponseData
+from automox_console_sdk.model.notification_sent_data import NotificationSentData
+from automox_console_sdk.model.organization import Organization
+from automox_console_sdk.model.packages import Packages
+from automox_console_sdk.model.patch_applied_data import PatchAppliedData
+from automox_console_sdk.model.patch_failed_data import PatchFailedData
+from automox_console_sdk.model.patch_policy_configuration import PatchPolicyConfiguration
+from automox_console_sdk.model.patches import Patches
+from automox_console_sdk.model.policy import Policy
+from automox_console_sdk.model.policy_action_data import PolicyActionData
+from automox_console_sdk.model.policy_configuration import PolicyConfiguration
+from automox_console_sdk.model.policy_device_filters_output import PolicyDeviceFiltersOutput
+from automox_console_sdk.model.policy_device_filters_output_results import PolicyDeviceFiltersOutputResults
+from automox_console_sdk.model.policy_device_filters_output_server_group import PolicyDeviceFiltersOutputServerGroup
+from automox_console_sdk.model.policy_device_filters_preview import PolicyDeviceFiltersPreview
+from automox_console_sdk.model.policy_device_filters_preview_device_filters import PolicyDeviceFiltersPreviewDeviceFilters
+from automox_console_sdk.model.policy_stats import PolicyStats
+from automox_console_sdk.model.pre_patch import PrePatch
+from automox_console_sdk.model.pre_patch_prepatch import PrePatchPrepatch
+from automox_console_sdk.model.pre_patch_prepatch_devices import PrePatchPrepatchDevices
+from automox_console_sdk.model.required_software_policy_configuration import RequiredSoftwarePolicyConfiguration
+from automox_console_sdk.model.server import Server
+from automox_console_sdk.model.server_detail import ServerDetail
+from automox_console_sdk.model.server_detail_disks import ServerDetailDISKS
+from automox_console_sdk.model.server_detail_nics import ServerDetailNICS
+from automox_console_sdk.model.server_group import ServerGroup
+from automox_console_sdk.model.server_group_create_or_update_request import ServerGroupCreateOrUpdateRequest
+from automox_console_sdk.model.server_list import ServerList
+from automox_console_sdk.model.server_policy_status import ServerPolicyStatus
+from automox_console_sdk.model.server_with_policies import ServerWithPolicies
+from automox_console_sdk.model.software_approvals import SoftwareApprovals
+from automox_console_sdk.model.system_event_data import SystemEventData
+from automox_console_sdk.model.update_and_create_policy_configuration import UpdateAndCreatePolicyConfiguration
+from automox_console_sdk.model.user import User
+from automox_console_sdk.model.user_data import UserData
+from automox_console_sdk.model.user_features import UserFeatures
+from automox_console_sdk.model.user_orgs import UserOrgs
+from automox_console_sdk.model.user_prefs import UserPrefs
+from automox_console_sdk.model.user_rbac_roles import UserRbacRoles
+from automox_console_sdk.model.worklet import Worklet
+from automox_console_sdk.model.worklet_details import WorkletDetails
+from automox_console_sdk.model.wsus_config import WsusConfig
