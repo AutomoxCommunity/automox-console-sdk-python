@@ -2,6 +2,14 @@
   "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
   "spaces": 2,
   "generator-cli": {
-    "version": "5.2.1"
+    "version": "5.2.1",
+    "generators": {
+      "python": {
+        "generatorName": "python",
+        "inputSpec": "#{cwd}/specs/ax_console.yaml",
+        "output": "#{cwd}",
+        "config": "#{cwd}/generation/config.json"
+      }
+    }
   }
 }

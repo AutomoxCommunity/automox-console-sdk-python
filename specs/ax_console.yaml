@@ -984,6 +984,10 @@ components:
                     - type: string
                     - type: boolean
                     - type: array
+                      items:
+                        oneOf:
+                          - type: string
+                          - type: number
                     - type: number
         server_groups:
           type: array
