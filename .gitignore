@@ -65,3 +65,6 @@ target/
 
 # Intellij and Pycharm
 .idea
+
+# Generation files
+generation/swagger-codegen-cli.jar
