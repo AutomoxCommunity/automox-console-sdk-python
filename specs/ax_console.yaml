@@ -2041,9 +2041,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ServerList"
+                $ref: "#/components/schemas/ServerList"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -2504,9 +2502,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ServerGroup"
+                $ref: "#/components/schemas/ServerGroup"
         "400":
           $ref: "#/components/responses/Error"
         "401":
