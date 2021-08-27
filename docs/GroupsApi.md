@@ -11,7 +11,7 @@ Method | HTTP request | Description
 [**update_server_group**](GroupsApi.md#update_server_group) | **PUT** /servergroups/{id} | Updates a new server group.
 
 # **create_server_group**
-> list[ServerGroup] create_server_group(o, body=body)
+> ServerGroup create_server_group(o, body=body)
 
 Creates a new server group.
 
@@ -48,7 +48,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**list[ServerGroup]**](ServerGroup.md)
+[**ServerGroup**](ServerGroup.md)
 
 ### Authorization
 
