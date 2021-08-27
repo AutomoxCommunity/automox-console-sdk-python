@@ -1,6 +1,5 @@
 # Organization
 
-
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
@@ -32,15 +31,13 @@ Name | Type | Description | Notes
 **rate_id** | **int** |  | [optional] 
 **parent_id** | **int** |  | [optional] 
 **bill_overages** | **bool** |  | [optional] 
-**metadata** | **{str: (bool, date, datetime, dict, float, int, list, str, none_type)}** |  | [optional] 
+**metadata** | **object** |  | [optional] 
 **legacy_billing** | **bool** |  | [optional] 
 **billing_name** | **str** |  | [optional] 
 **billing_email** | **str** |  | [optional] 
 **billing_phone** | **str** |  | [optional] 
 **device_limit** | **float** | If your organization has a server limit (you will have contacted support for this), then this is the value for your organization. Otherwise, null. | [optional] 
 **device_count** | **float** | The current number of installed devices for your organization | [optional] 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
 

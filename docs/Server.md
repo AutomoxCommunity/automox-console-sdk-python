@@ -1,6 +1,5 @@
 # Server
 
-
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
@@ -17,26 +16,26 @@ Name | Type | Description | Notes
 **uptime** | **int** |  | [optional] 
 **needs_reboot** | **bool** |  | [optional] 
 **timezone** | **str** |  | [optional] 
-**tags** | **[str]** |  | [optional] 
+**tags** | **list[str]** |  | [optional] 
 **deleted** | **bool** |  | [optional] 
 **create_time** | **datetime** |  | [optional] 
 **os_version** | **str** |  | [optional] 
 **os_name** | **str** |  | [optional] 
 **os_family** | **str** |  | [optional] 
-**ip_addrs** | **[str]** |  | [optional] 
-**ip_addrs_private** | **[str]** |  | [optional] 
+**ip_addrs** | **list[str]** |  | [optional] 
+**ip_addrs_private** | **list[str]** |  | [optional] 
 **patches** | **int** |  | [optional] 
 **details** | [**ServerDetail**](ServerDetail.md) |  | [optional] 
 **agent_version** | **str** |  | [optional] 
 **custom_name** | **str** |  | [optional] 
 **exception** | **bool** |  | [optional] 
 **total_count** | **int** |  | [optional] 
-**policy_status** | [**[ServerPolicyStatus]**](ServerPolicyStatus.md) |  | [optional] 
+**policy_status** | [**list[ServerPolicyStatus]**](ServerPolicyStatus.md) |  | [optional] 
 **last_scan_failed** | **bool** |  | [optional] 
 **pending** | **bool** |  | [optional] 
 **compliant** | **bool** |  | [optional] 
 **display_name** | **str** |  | [optional] 
-**commands** | [**[Command]**](Command.md) |  | [optional] 
+**commands** | [**list[Command]**](Command.md) |  | [optional] 
 **pending_patches** | **int** |  | [optional] 
 **connected** | **bool** |  | [optional] 
 **last_process_time** | **str** |  | [optional] 
@@ -53,8 +52,6 @@ Name | Type | Description | Notes
 **serial_number** | **str** |  | [optional] 
 **status** | [**DeviceStatus**](DeviceStatus.md) |  | [optional] 
 **last_logged_in_user** | **str** |  | [optional] 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
 
