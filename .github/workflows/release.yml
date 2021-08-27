@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:
+  release:
+
+    runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: 3.9
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install Dependencies
+        run: |
+          python3 -m pip install --user --upgrade setuptools wheel twine
+      - name: Create Package
+        run: |
+          rm -rf dist/
+          python3 setup.py sdist bdist_wheel
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload OpenAPI Spec
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./specs/ax_console.yaml
+          asset_name: ax_console.yaml
+          asset_content_type: application/json
+      - name: PyPi Upload
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          python3 -m twine upload dist/*
