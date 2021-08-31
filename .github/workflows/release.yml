@@ -25,6 +25,12 @@ jobs:
         run: |
           rm -rf dist/
           python3 setup.py sdist bdist_wheel
+      - name: Get tag version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Update config version
+        run: |
+          contents="$(jq '.packageVersion = "${{ steps.get_version.outputs.VERSION }}"' generation/config.json)" && echo "${contents}" > generation/config.json
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
