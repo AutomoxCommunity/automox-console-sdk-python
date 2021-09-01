@@ -2,7 +2,7 @@ openapi: 3.0.2
 info:
   title: Automox Console API
   description: API for use with the Automox Console
-  version: "2021-08-10"
+  version: "2021-09-01"
   contact:
     name: Automox Support
     email: support@automox.com
@@ -132,6 +132,35 @@ components:
               type: string
             email:
               type: string
+    Batch:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "942b355c-1fdd-4465-af21-0e6c206b35f3"
+        total_jobs:
+          type: integer
+        pending_jobs:
+          type: integer
+        processed_jobs:
+          type: integer
+        progress:
+          type: integer
+        failed_jobs:
+          type: integer
+        options:
+          type: array
+          items:
+            type: object
+        created_at:
+          type: string
+          format: date-time
+        cancelled_at:
+          type: string
+          format: date-time
+        finished_at:
+          type: string
+          format: date-time
     Command:
       type: object
       required:
@@ -267,6 +296,39 @@ components:
         - download_expires_at
         - download_url
         - parameters
+    DeviceFilters:
+      type: array
+      items:
+        type: object
+        properties:
+          field:
+            type: string
+            enum:
+              - tag
+              - hostname
+              - ip_addr
+              - os_family
+              - os_version_id
+              - organizational_unit
+          op:
+            type: string
+            enum:
+              - in
+              - not_in
+              - like_any
+              - not_like_any
+          value:
+            type: array
+            items:
+              oneOf:
+                - type: string
+                - type: boolean
+                - type: array
+                  items:
+                    oneOf:
+                      - type: string
+                      - type: integer
+                - type: number
     Event:
       type: object
       properties:
@@ -765,6 +827,8 @@ components:
           type: string
         notify_user:
           type: boolean
+        device_filters:
+          $ref: "#/components/schemas/DeviceFilters"
         evaluation_code:
           type: string
           nullable: true
@@ -844,6 +908,8 @@ components:
           type: array
           items:
             type: string
+        device_filters:
+          $ref: "#/components/schemas/DeviceFilters"
         filter_type:
           type: string
         advanced_filter:
@@ -914,6 +980,8 @@ components:
           type: boolean
         notify_user:
           type: boolean
+        device_filters:
+          $ref: "#/components/schemas/DeviceFilters"
         missed_patch_window:
           type: boolean
         os_family:
@@ -934,6 +1002,8 @@ components:
           type: boolean
         notify_user:
           type: boolean
+        device_filters:
+          $ref: "#/components/schemas/DeviceFilters"
         missed_patch_window:
           type: boolean
         os_family:
@@ -970,6 +1040,8 @@ components:
                   - hostname
                   - ip_addr
                   - os_family
+                  - os_version_id
+                  - organizational_unit
               op:
                 type: string
                 enum:
@@ -987,7 +1059,7 @@ components:
                       items:
                         oneOf:
                           - type: string
-                          - type: number
+                          - type: integer
                     - type: number
         server_groups:
           type: array
@@ -1033,6 +1105,10 @@ components:
               ip_addr:
                 type: string
               ip_addrs_private:
+                type: array
+                items:
+                  type: string
+              organizational_unit:
                 type: array
                 items:
                   type: string
@@ -1323,6 +1399,8 @@ components:
           type: array
           items:
             type: string
+        hostname:
+          type: string
         patches:
           type: integer
           format: int64
@@ -1819,6 +1897,7 @@ paths:
           required: false
           schema:
             type: integer
+            default: 0
         - name: countOnly
           in: query
           description: Retrieve only the total count of events for the organization
@@ -2115,7 +2194,7 @@ paths:
         - name: o
           in: query
           description: Organization ID for the specified device
-          required: false
+          required: true
           schema:
             type: integer
       requestBody:
@@ -2208,6 +2287,100 @@ paths:
           $ref: "#/components/responses/UnauthorizedAction"
         "404":
           $ref: "#/components/responses/NotFound"
+  /servers/batch:
+    post:
+      tags:
+        - Devices
+      summary: 'Updates multiple devices (server objects).'
+      description: 'Updates multiple devices (server objects) in a batch.'
+      operationId: batchUpdateDevices
+      parameters:
+        - name: o
+          in: query
+          description: Organization ID for the specified devices
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update devices
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - devices
+                - actions
+              properties:
+                devices:
+                  description: List of device (server) ids
+                  type: array
+                  minItems: 1
+                  maxItems: 500
+                  items:
+                    type: integer
+                actions:
+                  description: Array of different actions to take on each device
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      attribute:
+                        description: Name of the attribute
+                        type: string
+                        enum:
+                          - tags
+                      action:
+                        description: What action should be taken
+                        type: string
+                        enum:
+                          - apply
+                          - remove
+                      value:
+                        description: The value to use for the action
+                        type: array
+                        items:
+                          type: string
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+                "Authorization" = "Bearer $apiKey"
+                "Content-Type" = "application/json"
+              }
+            $body = @"
+              {
+                  "devices": [1,2,3],
+                  "actions": [
+                    {
+                      "action": "apply",
+                      "attribute": "tags",
+                      "value": ["Tag1", "Tag2"]
+                    }
+                  ]
+              }
+              "@
+
+            $url = "https://console.automox.com/api/servers/batch?o=0"
+
+            Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Batch"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimit"
   /servers/{id}/packages:
     get:
       tags:
@@ -2907,7 +3080,7 @@ paths:
       tags:
         - Policies
       summary: Create a New Policy
-      description: Creates a new policy for a specified organization. For more info on filter types and scheduling, see [Policies - Scheduling and Filtering](/developer-portal/policy_filters_schedule)
+      description: Creates a new policy for a specified organization. For more info on filter types and scheduling, see [Policy and Device Filters, and Scheduling](/developer-portal/policy_filters_schedule). 
       operationId: createPolicy
       parameters:
         - name: o
@@ -3007,6 +3180,18 @@ paths:
                               "condition": "greater-than-or-equal-to"
                           }
                       ]
+                    "device_filters": [
+                          {
+                              "field": "os_family",
+                              "op": "in",
+                              "value": ["Windows"]
+                          },
+                          {
+                              "field": "hostname",
+                              "op": "like_any",
+                              "value": ["WinDev2104Eval"]
+                          }
+                        ],
                 },
                 "schedule_days": 146,
                 "schedule_weeks_of_month": 42,
@@ -3085,7 +3270,7 @@ paths:
       tags:
         - Policies
       summary: Updates a specific policy object for the authenticated user.
-      description: Updates a specific policy object for the authenticated user.
+      description: Updates a specific policy object for the authenticated user. For more info on filter types and scheduling, see [Policy and Device Filters, and Scheduling](/developer-portal/policy_filters_schedule).
       operationId: updatePolicy
       parameters:
         - name: id
@@ -3151,7 +3336,19 @@ paths:
                               "right": "medium",
                               "condition": "greater-than-or-equal-to"
                           }
-                      ]
+                      ],
+                      "device_filters": [
+                          {
+                              "field": "os_family",
+                              "op": "in",
+                              "value": ["Windows"]
+                          },
+                          {
+                              "field": "hostname",
+                              "op": "like_any",
+                              "value": ["WinDev2104Eval"]
+                          }
+                        ],
                 },
                 "schedule_days": 146,
                 "schedule_weeks_of_month": 42,
@@ -3272,13 +3469,13 @@ paths:
       tags:
         - Policies
       summary: Policy Device Filters Preview
-      description: Generate a preview of the list of devices that matches the provided device filter set. For more information, see [Device Filter Preview - Filter Parameters](/developer-portal/device-filters).
+      description: Generate a preview of the list of devices that matches the provided device filter set. For more information, see [Policy and Device Filters, and Scheduling](/developer-portal/policy_filters_schedule).
       operationId: generatePolicyDeviceFilterPreview
       parameters:
         - name: o
           in: query
           description: Organization ID. If omitted, results will include all organizations for the authenticated user.
-          required: false
+          required: true
           schema:
             type: integer
         - name: page
@@ -3361,7 +3558,7 @@ paths:
         - name: o
           in: query
           description: Organization ID for retrieving policy stats.
-          required: false
+          required: true
           schema:
             type: integer
       x-codeSamples:
@@ -3403,7 +3600,7 @@ paths:
         - name: o
           in: query
           description: Organization ID. If omitted, results will include all organizations for the authenticated user.
-          required: false
+          required: true
           schema:
             type: integer
         - name: groupId
@@ -3463,7 +3660,7 @@ paths:
         - name: o
           in: query
           description: Organization ID. If omitted, results will include all organizations for the authenticated user.
-          required: false
+          required: true
           schema:
             type: integer
         - name: groupId
@@ -3563,7 +3760,7 @@ paths:
         - name: o
           in: query
           description: The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization.
-          required: false
+          required: true
           schema:
             type: integer
         - schema:
@@ -3627,7 +3824,7 @@ paths:
         - name: o
           in: query
           description: The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization.
-          required: false
+          required: true
           schema:
             type: integer
       x-codeSamples:

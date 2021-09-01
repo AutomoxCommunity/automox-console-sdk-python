@@ -18,7 +18,7 @@ Method | HTTP request | Description
 
 Create a New Policy
 
-Creates a new policy for a specified organization. For more info on filter types and scheduling, see [Policies - Scheduling and Filtering](/developer-portal/policy_filters_schedule)
+Creates a new policy for a specified organization. For more info on filter types and scheduling, see [Policy and Device Filters, and Scheduling](/developer-portal/policy_filters_schedule).
 
 ### Example
 ```python
@@ -169,11 +169,11 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **generate_policy_device_filter_preview**
-> list[PolicyDeviceFiltersOutput] generate_policy_device_filter_preview(body, o=o, page=page, limit=limit)
+> list[PolicyDeviceFiltersOutput] generate_policy_device_filter_preview(body, o, page=page, limit=limit)
 
 Policy Device Filters Preview
 
-Generate a preview of the list of devices that matches the provided device filter set. For more information, see [Device Filter Preview - Filter Parameters](/developer-portal/device-filters).
+Generate a preview of the list of devices that matches the provided device filter set. For more information, see [Policy and Device Filters, and Scheduling](/developer-portal/policy_filters_schedule).
 
 ### Example
 ```python
@@ -187,13 +187,13 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
 body = automox_console_sdk.PolicyDeviceFiltersPreview() # PolicyDeviceFiltersPreview | 
-o = 56 # int | Organization ID. If omitted, results will include all organizations for the authenticated user. (optional)
+o = 56 # int | Organization ID. If omitted, results will include all organizations for the authenticated user.
 page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (optional) (default to 0)
 limit = 25 # int | A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with page parameter. (optional) (default to 25)
 
 try:
     # Policy Device Filters Preview
-    api_response = api_instance.generate_policy_device_filter_preview(body, o=o, page=page, limit=limit)
+    api_response = api_instance.generate_policy_device_filter_preview(body, o, page=page, limit=limit)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling PoliciesApi->generate_policy_device_filter_preview: %s\n" % e)
@@ -204,7 +204,7 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**PolicyDeviceFiltersPreview**](PolicyDeviceFiltersPreview.md)|  | 
- **o** | **int**| Organization ID. If omitted, results will include all organizations for the authenticated user. | [optional] 
+ **o** | **int**| Organization ID. If omitted, results will include all organizations for the authenticated user. | 
  **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] [default to 0]
  **limit** | **int**| A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with page parameter. | [optional] [default to 25]
 
@@ -328,7 +328,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_policy_stats**
-> list[PolicyStats] get_policy_stats(o=o)
+> list[PolicyStats] get_policy_stats(o)
 
 List Policy Compliance Stats
 
@@ -345,11 +345,11 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
-o = 56 # int | Organization ID for retrieving policy stats. (optional)
+o = 56 # int | Organization ID for retrieving policy stats.
 
 try:
     # List Policy Compliance Stats
-    api_response = api_instance.get_policy_stats(o=o)
+    api_response = api_instance.get_policy_stats(o)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling PoliciesApi->get_policy_stats: %s\n" % e)
@@ -359,7 +359,7 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **o** | **int**| Organization ID for retrieving policy stats. | [optional] 
+ **o** | **int**| Organization ID for retrieving policy stats. | 
 
 ### Return type
 
@@ -381,7 +381,7 @@ Name | Type | Description  | Notes
 
 Updates a specific policy object for the authenticated user.
 
-Updates a specific policy object for the authenticated user.
+Updates a specific policy object for the authenticated user. For more info on filter types and scheduling, see [Policy and Device Filters, and Scheduling](/developer-portal/policy_filters_schedule).
 
 ### Example
 ```python

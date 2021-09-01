@@ -24,6 +24,7 @@ Name | Type | Description | Notes
 **os_family** | **str** |  | [optional] 
 **ip_addrs** | **list[str]** |  | [optional] 
 **ip_addrs_private** | **list[str]** |  | [optional] 
+**hostname** | **str** |  | [optional] 
 **patches** | **int** |  | [optional] 
 **details** | [**ServerDetail**](ServerDetail.md) |  | [optional] 
 **agent_version** | **str** |  | [optional] 

@@ -5,6 +5,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **auto_patch** | **bool** |  | 
 **notify_user** | **bool** |  | 
+**device_filters** | [**DeviceFilters**](DeviceFilters.md) |  | [optional] 
 **missed_patch_window** | **bool** |  | [optional] 
 **os_family** | **str** |  | [optional] 
 **package_name** | **str** |  | [optional] 

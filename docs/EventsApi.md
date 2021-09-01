@@ -25,7 +25,7 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = automox_console_sdk.EventsApi(automox_console_sdk.ApiClient(configuration))
 o = 56 # int | Limit response to a specific Automox organization
-page = 56 # int | The page of results you wish to be returned with page numbers starting at 0. (optional)
+page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (optional) (default to 0)
 count_only = 56 # int | Retrieve only the total count of events for the organization (optional)
 policy_id = 56 # int | Retrieve events for a specific policy (optional)
 server_id = 56 # int | Retrieve events for a specific device (optional)
@@ -48,7 +48,7 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **o** | **int**| Limit response to a specific Automox organization | 
- **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] 
+ **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] [default to 0]
  **count_only** | **int**| Retrieve only the total count of events for the organization | [optional] 
  **policy_id** | **int**| Retrieve events for a specific policy | [optional] 
  **server_id** | **int**| Retrieve events for a specific device | [optional] 

@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **missed_patch_window** | **bool** |  | [optional] 
 **auto_reboot** | **bool** |  | 
 **filters** | **list[str]** |  | [optional] 
+**device_filters** | [**DeviceFilters**](DeviceFilters.md) |  | [optional] 
 **filter_type** | **str** |  | [optional] 
 **advanced_filter** | **list[str]** |  | [optional] 
 **severity_filter** | **list[str]** |  | [optional] 

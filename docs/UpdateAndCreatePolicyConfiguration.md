@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **auto_reboot** | **bool** |  | 
 **filter_type** | **str** |  | [optional] 
 **notify_user** | **bool** |  | 
+**device_filters** | [**DeviceFilters**](DeviceFilters.md) |  | [optional] 
 **evaluation_code** | **str** |  | [optional] 
 **include_optional** | **bool** |  | [optional] 
 **remediation_code** | **str** |  | [optional] 
