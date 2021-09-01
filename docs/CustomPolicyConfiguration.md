@@ -10,5 +10,5 @@ Name | Type | Description | Notes
 **test_code** | **str** |  | [optional] 
 **evaluation_code** | **str** |  | [optional] 
 
-[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+[[Back to Model list]](./README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

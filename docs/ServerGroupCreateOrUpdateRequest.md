@@ -13,5 +13,5 @@ Name | Type | Description | Notes
 **wsus_server** | **str** | WSUS server address. Use with enable_wsus. Format: \&quot;https://myserver.com:8530\&quot; | [optional] 
 **policies** | **list[int]** | List of Policies to link to this group. | [optional] 
 
-[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+[[Back to Model list]](./README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -8,5 +8,5 @@ Name | Type | Description | Notes
 **tags** | **list[str]** | List of tags | [optional] 
 **custom_name** | **str** | Custom name that will display in the console instead of the hostname | [optional] 
 
-[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+[[Back to Model list]](./README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

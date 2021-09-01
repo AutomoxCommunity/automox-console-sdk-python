@@ -39,5 +39,5 @@ Name | Type | Description | Notes
 **device_limit** | **float** | If your organization has a server limit (you will have contacted support for this), then this is the value for your organization. Otherwise, null. | [optional] 
 **device_count** | **float** | The current number of installed devices for your organization | [optional] 
 
-[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+[[Back to Model list]](./README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
