@@ -25,9 +25,15 @@ jobs:
         run: |
           rm -rf dist/
           python3 setup.py sdist bdist_wheel
+      - name: Get tag version
+        id: get_tag_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Get project version
+        id: get_project_version
+        run: echo ::set-output name=VERSION::$(jq '.packageVersion' generation/config.json)
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        if: steps.get_tag_version.outputs.VERSION == steps.get_project_version.outputs.VERSION && startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             specs/ax_console.yaml
