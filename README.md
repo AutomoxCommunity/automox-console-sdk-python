@@ -97,7 +97,7 @@ SDK. These scripts show off simple functionality such as:
 
 They should be used as reference as you are building your own scripts and utilities with the Automox SDK.
 
-### Out-of-the-box Use Cases (COMING SOON)
+### Use Cases Examples (COMING SOON)
 
 [Use Case Examples](examples/use-cases) have been provided to show off end to end utility of leveraging the Automox SDK
 within varying environments. These use cases can be used as-is or modified to meet your environment needs. 
