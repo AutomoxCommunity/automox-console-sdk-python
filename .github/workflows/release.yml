@@ -27,7 +27,7 @@ jobs:
           python3 setup.py sdist bdist_wheel
       - name: Get tag version
         id: get_tag_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//:1}
       - name: Get project version
         id: get_project_version
         run: echo ::set-output name=VERSION::$(jq '.packageVersion' generation/config.json)
