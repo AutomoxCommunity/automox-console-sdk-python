@@ -27,13 +27,19 @@ jobs:
           python3 setup.py sdist bdist_wheel
       - name: Get tag version
         id: get_tag_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//:1}
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
       - name: Get project version
         id: get_project_version
-        run: echo ::set-output name=VERSION::$(jq '.packageVersion' generation/config.json)
+        run: echo ::set-output name=VERSION::$(jq -r '.packageVersion' generation/config.json)
+      - name: Compare Project Version to Tag
+        if: ${{ steps.get_tag_version.outputs.VERSION != steps.get_project_version.outputs.VERSION }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('Project version and tag version are different; check the version for release prior to continuing')
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: steps.get_tag_version.outputs.VERSION == steps.get_project_version.outputs.VERSION && startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             specs/ax_console.yaml
