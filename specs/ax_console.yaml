@@ -150,6 +150,8 @@ components:
           type: integer
         options:
           type: array
+          items:
+            type: object
         created_at:
           type: string
           format: date-time
