@@ -4,6 +4,7 @@ All URIs are relative to *https://console.automox.com/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**batch_update_devices**](DevicesApi.md#batch_update_devices) | **POST** /servers/batch | Updates multiple devices (server objects).
 [**delete_device**](DevicesApi.md#delete_device) | **DELETE** /servers/{id} | Deletes a device (server object).
 [**get_device_packages**](DevicesApi.md#get_device_packages) | **GET** /servers/{id}/packages | List Software Packages for Specific Device
 [**get_device_queues**](DevicesApi.md#get_device_queues) | **GET** /servers/{id}/queues | Upcoming Commands Queue for Specific Device
@@ -11,6 +12,57 @@ Method | HTTP request | Description
 [**get_server**](DevicesApi.md#get_server) | **GET** /servers/{id} | List a Specific Device
 [**issue_device_command**](DevicesApi.md#issue_device_command) | **POST** /servers/{id}/queues | Issue a command to a device
 [**update_device**](DevicesApi.md#update_device) | **PUT** /servers/{id} | Updates a device (server object).
+
+# **batch_update_devices**
+> Batch batch_update_devices(body, o)
+
+Updates multiple devices (server objects).
+
+Updates multiple devices (server objects) in a batch.
+
+### Example
+```python
+from __future__ import print_function
+import time
+import automox_console_sdk
+from automox_console_sdk.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = automox_console_sdk.DevicesApi(automox_console_sdk.ApiClient(configuration))
+body = automox_console_sdk.ServersBatchBody() # ServersBatchBody | Update devices
+o = 56 # int | Organization ID for the specified devices
+
+try:
+    # Updates multiple devices (server objects).
+    api_response = api_instance.batch_update_devices(body, o)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DevicesApi->batch_update_devices: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**ServersBatchBody**](ServersBatchBody.md)| Update devices | 
+ **o** | **int**| Organization ID for the specified devices | 
+
+### Return type
+
+[**Batch**](Batch.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_device**
 > delete_device(id, o)
@@ -60,7 +112,7 @@ void (empty response body)
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](./README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_device_packages**
 > list[Packages] get_device_packages(id, o, page=page, limit=limit)
@@ -115,7 +167,7 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](./README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_device_queues**
 > list[Command] get_device_queues(id, o)
@@ -166,7 +218,7 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](./README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_devices**
 > list[Server] get_devices(o, limit, page, group_id=group_id, ps_version=ps_version, pending=pending, patch_status=patch_status, policy_id=policy_id, exception=exception, managed=managed)
@@ -233,7 +285,7 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](./README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_server**
 > ServerWithPolicies get_server(id, o)
@@ -284,7 +336,7 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](./README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **issue_device_command**
 > issue_device_command(o, id, body=body)
@@ -336,10 +388,10 @@ void (empty response body)
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](./README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_device**
-> update_device(body, id, o=o)
+> update_device(body, o, id)
 
 Updates a device (server object).
 
@@ -357,12 +409,12 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = automox_console_sdk.DevicesApi(automox_console_sdk.ApiClient(configuration))
 body = automox_console_sdk.ServersIdBody() # ServersIdBody | Device update
+o = 56 # int | Organization ID for the specified device
 id = 56 # int | Server ID for the specified device
-o = 56 # int | Organization ID for the specified device (optional)
 
 try:
     # Updates a device (server object).
-    api_instance.update_device(body, id, o=o)
+    api_instance.update_device(body, o, id)
 except ApiException as e:
     print("Exception when calling DevicesApi->update_device: %s\n" % e)
 ```
@@ -372,8 +424,8 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**ServersIdBody**](ServersIdBody.md)| Device update | 
+ **o** | **int**| Organization ID for the specified device | 
  **id** | **int**| Server ID for the specified device | 
- **o** | **int**| Organization ID for the specified device | [optional] 
 
 ### Return type
 
@@ -388,5 +440,5 @@ void (empty response body)
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](./README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

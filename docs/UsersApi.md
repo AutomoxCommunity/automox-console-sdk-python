@@ -59,10 +59,10 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](./README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_user_by_id**
-> list[User] get_user_by_id(user_id, o=o)
+> list[User] get_user_by_id(user_id, o)
 
 Retrieves a user by user ID
 
@@ -80,11 +80,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = automox_console_sdk.UsersApi(automox_console_sdk.ApiClient(configuration))
 user_id = 56 # int | The User ID of the user to retrieve
-o = 56 # int | The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization. (optional)
+o = 56 # int | The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization.
 
 try:
     # Retrieves a user by user ID
-    api_response = api_instance.get_user_by_id(user_id, o=o)
+    api_response = api_instance.get_user_by_id(user_id, o)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling UsersApi->get_user_by_id: %s\n" % e)
@@ -95,7 +95,7 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **user_id** | **int**| The User ID of the user to retrieve | 
- **o** | **int**| The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization. | [optional] 
+ **o** | **int**| The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization. | 
 
 ### Return type
 
@@ -110,10 +110,10 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](./README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_users**
-> list[User] get_users(o=o, page=page, limit=limit)
+> list[User] get_users(o, page=page, limit=limit)
 
 List All Users With Access to a Given Organization
 
@@ -130,13 +130,13 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.UsersApi(automox_console_sdk.ApiClient(configuration))
-o = 56 # int | The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization. (optional)
+o = 56 # int | The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization.
 page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (optional) (default to 0)
 limit = 500 # int | A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. (optional) (default to 500)
 
 try:
     # List All Users With Access to a Given Organization
-    api_response = api_instance.get_users(o=o, page=page, limit=limit)
+    api_response = api_instance.get_users(o, page=page, limit=limit)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling UsersApi->get_users: %s\n" % e)
@@ -146,7 +146,7 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **o** | **int**| The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization. | [optional] 
+ **o** | **int**| The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization. | 
  **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] [default to 0]
  **limit** | **int**| A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. | [optional] [default to 500]
 
@@ -163,5 +163,5 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](./README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

@@ -14,5 +14,5 @@ Name | Type | Description | Notes
 **saml_enabled** | **bool** |  | [optional] 
 **rbac_roles** | [**list[UserRbacRoles]**](UserRbacRoles.md) |  | [optional] 
 
-[[Back to Model list]](./README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

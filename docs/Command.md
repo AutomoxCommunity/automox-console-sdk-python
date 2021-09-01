@@ -14,5 +14,5 @@ Name | Type | Description | Notes
 **create_time** | **datetime** |  | [optional] 
 **exec_time** | **datetime** | Time to execute the command, or NULL if issuing a Reboot | 
 
-[[Back to Model list]](./README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

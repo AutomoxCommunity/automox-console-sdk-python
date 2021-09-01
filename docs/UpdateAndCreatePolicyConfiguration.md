@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **auto_reboot** | **bool** |  | 
 **filter_type** | **str** |  | [optional] 
 **notify_user** | **bool** |  | 
+**device_filters** | [**DeviceFilters**](DeviceFilters.md) |  | [optional] 
 **evaluation_code** | **str** |  | [optional] 
 **include_optional** | **bool** |  | [optional] 
 **remediation_code** | **str** |  | [optional] 
@@ -29,5 +30,5 @@ Name | Type | Description | Notes
 **custom_pending_reboot_notification_message_mac** | **str** |  | [optional] 
 **custom_pending_reboot_notification_deferment_periods** | **list[int]** |  | [optional] 
 
-[[Back to Model list]](./README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

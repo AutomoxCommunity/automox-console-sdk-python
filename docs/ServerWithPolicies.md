@@ -24,6 +24,7 @@ Name | Type | Description | Notes
 **os_family** | **str** |  | [optional] 
 **ip_addrs** | **list[str]** |  | [optional] 
 **ip_addrs_private** | **list[str]** |  | [optional] 
+**hostname** | **str** |  | [optional] 
 **patches** | **int** |  | [optional] 
 **details** | [**ServerDetail**](ServerDetail.md) |  | [optional] 
 **agent_version** | **str** |  | [optional] 
@@ -54,5 +55,5 @@ Name | Type | Description | Notes
 **status** | [**DeviceStatus**](DeviceStatus.md) |  | [optional] 
 **last_logged_in_user** | **str** |  | [optional] 
 
-[[Back to Model list]](./README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
