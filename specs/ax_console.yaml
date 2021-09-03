@@ -148,10 +148,6 @@ components:
           type: integer
         failed_jobs:
           type: integer
-        options:
-          type: array
-          items:
-            type: object
         created_at:
           type: string
           format: date-time
@@ -370,6 +366,14 @@ components:
           type: string
         policy_type_name:
           type: string
+          enum:
+            - patch
+            - custom
+            - required_software
+          x-enumDescriptions:
+            patch: Patch Policy
+            custom: Worklet Policy
+            required_software: Required Software Policy
         create_time:
           type: string
           format: date-time
@@ -778,33 +782,51 @@ components:
         configuration:
           $ref: "#/components/schemas/PolicyConfiguration"
         id:
+          description: The ID of the relevant policy.
           type: integer
           format: int64
         name:
+          description: Name of the policy
           type: string
         notes:
+          description: Policy notes
           type: string
         organization_id:
+          description: Organization ID for the specified policy
           type: integer
           format: int64
         policy_type_name:
+          description: Name for the policy type
           type: string
+          enum:
+            - patch
+            - custom
+            - required_software
+          x-enumDescriptions:
+            patch: Patch Policy
+            custom: Worklet Policy
+            required_software: Required Software Policy
         schedule_days:
+          description: "Decimal value of binary day schedule. See [Policy and Device Filters, and Scheduling - Example Days per Week](/developer-portal/policy_filters_schedule/#example-days-per-week)."
           type: integer
           format: int64
         schedule_weeks_of_month:
+          description: "Decimal value of binary week schedule. See [Policy and Device Filters, and Scheduling - Example Weeks per Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month)."
           type: integer
           format: int64
         schedule_months:
+          description: "Decimal value of binary month schedule. See [Policy and Device Filters, and Scheduling - Example Months per Year](/developer-portal/policy_filters_schedule/#example-months-per-year)."
           type: integer
           format: int64
         schedule_time:
+          description: 'Scheduled time for automatic policy execution. Format: `"hh:mm"`'
           type: string
         next_remediation:
           type: string
           format: date-time
           nullable: true
         server_groups:
+          description: "Integer array. Server groups to link with the policy"
           type: array
           items:
             type: integer
@@ -818,14 +840,40 @@ components:
         - notify_user
       properties:
         auto_patch:
+          description: "Enable or Disable automatic execution of the policy."
           type: boolean
         patch_rule:
+          description: "Use only with Patch Policy."
           type: string
+          enum:
+            - all
+            - filter
+            - manual
+            - advanced
+          x-enumDescriptions:
+            all: Patch All
+            filter: Patch All Except or Patch Only or Patch by Severity
+            manual: Manually Approve
+            advanced: Advanced Patch Policy
         auto_reboot:
+          description: "Enable or Disable automatic reboots following policy execution."
           type: boolean
         filter_type:
+          description: "Use only with `patch_rule` of `filter`"
           type: string
+          enum:
+            - exclude
+            - include
+            - severity
+          x-enumDescriptions:
+            exclude: Patch All Except
+            include: Patch Only
+            severity: Patch by Severity
         notify_user:
+          description: "Display notification 15 minutes before patching."
+          type: boolean
+        device_filters_enabled:
+          description: Enable or disable Device Filters.
           type: boolean
         device_filters:
           $ref: "#/components/schemas/DeviceFilters"
@@ -833,7 +881,9 @@ components:
           type: string
           nullable: true
         include_optional:
+          description: "Enable or disable inclusion of optional Windows patches for this policy. Note: Will default to `false` if not included."
           type: boolean
+          default: false
         remediation_code:
           type: string
           nullable: true
@@ -841,54 +891,75 @@ components:
           type: string
           nullable: true
         notify_reboot_user:
+          description: "Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions."
           type: boolean
         notify_deferred_reboot_user:
+          description: "If `true`, this shows a post-install reboot notification message, if `notify_reboot_deferred` is also `true`. If `notify_reboot_deferred` is `false` or `null`, this will sync with the existing `notify_reboot_user` parameter."
           type: boolean
+          nullable: true
         custom_notification_max_delays:
+          description: "Number of deferral chances before patching is forced."
           type: integer
           format: int64
         custom_notification_patch_message:
+          description: Message to display before a non-rebooting patch policy executes on a Windows device. Maximum 125 characters
           type: string
           maxLength: 125
         custom_notification_reboot_message:
+          description: Message to display before a rebooting patch policy executes on a Windows device. Reboot will follow patching actions. Maximum 125 characters
           type: string
           maxLength: 125
         custom_notification_deferment_periods:
+          description: "Integer array: Deferral time periods (hours) that users can choose from. Include up to 3. All 3 must be distinct with a maximum of 24"
           type: array
           items:
             type: integer
+            default: [1, 4, 8]
         custom_notification_patch_message_mac:
+          description: Message to display before a non-rebooting patch policy executes on a macOS device. Maximum 70 characters
           type: string
           maxLength: 70
         custom_notification_reboot_message_mac:
+          description: "The custom reboot message for macOS, which overrides `custom_pending_reboot_notification_message` string, if provided."
           type: string
           maxLength: 70
         custom_pending_reboot_notification_message:
+          description: "Custom reboot message."
           type: string
           maxLength: 125
         notify_user_message_timeout:
+          description: "The amount of time a patch notification appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes."
           type: integer
           default: 15
           minimum: 15
           maximum: 480
         notify_user_auto_deferral_enabled:
+          description: "If a patch notification times out, apply the highest configured patch deferral."
           type: boolean
         notify_deferred_reboot_user_message_timeout:
+          description: "The amount of time a deferrable reboot notification message appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes."
           type: integer
           default: 15
           minimum: 15
           maximum: 480
         notify_deferred_reboot_user_auto_deferral_enabled:
+          description: "If a reboot notification times out, apply the highest configured reboot deferral."
           type: boolean
         custom_pending_reboot_notification_max_delays:
+          description: "Maximum number of times a user is allowed to defer the reboot. The default is 0."
           type: integer
+          format: int64
+          default: 0
         custom_pending_reboot_notification_message_mac:
+          description: "Message to display before a rebooting patch policy executes on a macOS device. Reboot will follow patching actions. Maximum 70 characters"
           type: string
           maxLength: 70
         custom_pending_reboot_notification_deferment_periods:
+          description: "The time period options available to defer a reboot for each deferral selection. Default values: 1, 4, 8"
           type: array
           items:
             type: integer
+            default: [1, 4, 8]
     PatchPolicyConfiguration:
       type: object
       required:
@@ -897,77 +968,219 @@ components:
         - auto_reboot
       properties:
         auto_patch:
+          description: "Enable or Disable automatic execution of the policy."
           type: boolean
         notify_user:
+          description: "Display notification 15 minutes before patching."
           type: boolean
         missed_patch_window:
+          description: "Enable or Disable Missed Patch Window setting."
           type: boolean
         auto_reboot:
+          description: "Enable or Disable automatic reboots following policy execution."
           type: boolean
         filters:
+          description: "Use only with `filter_type` of `exclude` or `include`. Use `*` for wildcard."
           type: array
           items:
             type: string
+        device_filters_enabled:
+          description: Enable or disable Device Filters.
+          type: boolean
         device_filters:
           $ref: "#/components/schemas/DeviceFilters"
         filter_type:
+          description: "Use only with `patch_rule` of `filter`"
           type: string
+          enum:
+            - exclude
+            - include
+            - severity
+          x-enumDescriptions:
+            exclude: Patch All Except
+            include: Patch Only
+            severity: Patch by Severity
         advanced_filter:
+          description: "Object array. Include one object per advanced filter line. See [Policy and Device Filters, and Scheduling - Advanced Filters](/developer-portal/policy_filters_schedule/#advanced-filters)"
           type: array
           items:
-            type: string
+            type: object
+            properties:
+              left:
+                type: string
+                enum:
+                  - display-name
+                  - severity
+                  - patch-source
+                  - patch-os
+                  - type
+                x-enumDescriptions:
+                  display-name: Filter by display name
+                  severity: Filter by severity
+                  patch-source: Filter by patch source
+                  patch-os: Filter by patch OS
+                  type: Filter by type
+              right:
+                type: string
+                enum:
+                  - "text string"
+                  - other
+                  - none
+                  - low
+                  - medium
+                  - high
+                  - critical
+                  - windowsupdate
+                  - opera
+                  - mozilla
+                  - adobe
+                  - oracle
+                  - apple
+                  - microsoft
+                  - windows
+                  - mac
+                  - linux
+                  - upgrades
+                  - updates
+                  - update-rollups
+                  - service-packs
+                  - security-updates
+                  - tools
+                  - guidance
+                  - feature-packs
+                  - developer-kits
+                  - definition-updates
+                  - critical-updates
+                  - connectors
+                  - application
+                x-enumDescriptions:
+                  "text string": Enter a text string. Use to filter by Display Name.
+                  other: Use to filter by Severity
+                  low: Use to filter by Severity
+                  medium: Use to filter by Severity
+                  high: Use to filter by Severity
+                  critical: Use to filter by Severity
+                  windowsupdate: Use to filter by Patch Source
+                  opera: Use to filter by Patch Source
+                  mozilla: Use to filter by Patch Source
+                  adobe: Use to filter by Patch Source
+                  oracle: Use to filter by Patch Source
+                  apple: Use to filter by Patch Source
+                  microsoft: Use to filter by Patch Source
+                  windows: Use to filter by Patch OS
+                  mac: Use to filter by Patch OS
+                  linux: Use to filter by Patch OS
+                  upgrades: Use to filter by Type
+                  updates: Use to filter by Type
+                  update-rollups: Use to filter by Type
+                  service-packs: Use to filter by Type
+                  security-updates: Use to filter by Type
+                  tools: Use to filter by Type
+                  guidance: Use to filter by Type
+                  feature-packs: Use to filter by Type
+                  developer-kits: Use to filter by Type
+                  definition-updates: Use to filter by Type
+                  critical-updates: Use to filter by Type
+                  connectors: Use to filter by Type
+                  application: Use to filter by Type
+              condition:
+                type: string
+                enum:
+                  - contains
+                  - does-not-contain
+                  - is
+                  - is-not
+                  - less-than-or-equal-to
+                  - greater-than-or-equal-to
+                x-enumDescriptions:
+                  contains: Use with `display-name`
+                  does-not-contain: Use with `display-name`
+                  is: Use with `severity`, `patch-source`, `patch-os`, `type`
+                  is-not: Use with `severity`, `patch-source`, `patch-os`, `type`
+                  less-than-or-equal-to: Use with `severity`
+                  greater-than-or-equal-to: Use with `severity`
         severity_filter:
+          description: 'String array. Use only with `filter_type` of `severity`. Defines severity ratings to include in patching. Format: ["low","medium","high","critical","none","unknown"]'
           type: array
           items:
             type: string
         include_optional:
+          description: "Enable or disable inclusion of optional Windows patches for this policy **NOTE:** Will default to false if not included."
           type: boolean
+          default: false
         notify_reboot_user:
+          description: "Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions."
           type: boolean
         notify_deferred_reboot_user:
+          description: "If `true`, this shows a post-install reboot notification message, if `notify_reboot_deferred` is also `true`. If `notify_reboot_deferred` is `false` or `null`, this will sync with the existing `notify_reboot_user` parameter."
           type: boolean
+          nullable: true
         custom_notification_patch_message:
+          description: Message to display before a non-rebooting patch policy executes on a Windows device. Maximum 125 characters
           type: string
+          maxLength: 125
         custom_notification_patch_message_mac:
+          description: Message to display before a non-rebooting patch policy executes on a macOS device. Maximum 70 characters
           type: string
+          maxLength: 70
         custom_notification_reboot_message:
+          description: Message to display before a rebooting patch policy executes on a Windows device. Reboot will follow patching actions. Maximum 125 characters
           type: string
+          maxLength: 125
         custom_notification_reboot_message_mac:
+          description: Message to display before a rebooting patch policy executes on a macOS device. Reboot will follow patching actions. Maximum 70 characters
           type: string
+          maxLength: 70
         custom_notification_max_delays:
+          description: "Maximum number of times a user is allowed to defer the reboot. The default is 0."
           type: integer
           format: int64
+          default: 0
         custom_notification_deferment_periods:
+          description: "Integer array: Deferral time periods (hours) that users can choose from. Include up to 3. All 3 must be distinct with a maximum of 24. Default values: 1, 4, 8"
           type: array
           items:
             type: integer
             format: int64
+            default: [1, 4, 8]
         custom_pending_reboot_notification_message:
+          description: "Custom reboot message."
           type: string
+          maxLength: 125
         custom_pending_reboot_notification_message_mac:
+          description: "The custom reboot message for macOS, which overrides `custom_pending_reboot_notification_message` string, if provided."
           type: string
+          maxLength: 70
         custom_pending_reboot_notification_max_delays:
+          description: "Maximum number of times a user is allowed to defer the reboot. The default is 0."
           type: integer
           format: int64
+          default: 0
         custom_pending_reboot_notification_deferment_periods:
+          description: "The time period options available to defer a reboot for each deferral selection. Default values: 1, 4, 8"
           type: array
           items:
             type: integer
             format: int64
+            default: [1, 4, 8]
         notify_user_message_timeout:
+          description: "The amount of time a patch notification appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes."
           type: integer
           default: 15
           minimum: 15
           maximum: 480
         notify_deferred_reboot_user_message_timeout:
+          description: "The amount of time a deferrable reboot notification message appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes."
           type: integer
           default: 15
           minimum: 15
           maximum: 480
         notify_user_auto_deferral_enabled:
+          description: "If a patch notification times out, apply the highest configured patch deferral."
           type: boolean
           default: false
         notify_deferred_reboot_user_auto_deferral_enabled:
+          description: "If a reboot notification times out, apply the highest configured reboot deferral."
           type: boolean
           default: false
     RequiredSoftwarePolicyConfiguration:
@@ -977,12 +1190,18 @@ components:
         - notify_user
       properties:
         auto_patch:
+          description: "Enable or Disable automatic execution of the policy."
           type: boolean
         notify_user:
+          description: "Display notification 15 minutes before patching."
+          type: boolean
+        device_filters_enabled:
+          description: Enable or disable Device Filters.
           type: boolean
         device_filters:
           $ref: "#/components/schemas/DeviceFilters"
         missed_patch_window:
+          description: "Enable or Disable Missed Patch Window setting"
           type: boolean
         os_family:
           type: string
@@ -999,12 +1218,18 @@ components:
         - notify_user
       properties:
         auto_patch:
+          description: "Enable or Disable automatic execution of the policy."
           type: boolean
         notify_user:
+          description: "Display notification 15 minutes before patching."
+          type: boolean
+        device_filters_enabled:
+          description: Enable or disable Device Filters.
           type: boolean
         device_filters:
           $ref: "#/components/schemas/DeviceFilters"
         missed_patch_window:
+          description: "Enable or Disable Missed Patch Window setting"
           type: boolean
         os_family:
           type: string
@@ -1136,6 +1361,14 @@ components:
           type: string
         policy_type_name:
           type: string
+          enum:
+            - patch
+            - custom
+            - required_software
+          x-enumDescriptions:
+            patch: Patch Policy
+            custom: Worklet Policy
+            required_software: Required Software Policy
     PrePatch:
       type: object
       properties:
@@ -1284,6 +1517,14 @@ components:
                 type: string
               policy_type_name:
                 type: string
+                enum:
+                  - patch
+                  - custom
+                  - required_software
+                x-enumDescriptions:
+                  patch: Patch Policy
+                  custom: Worklet Policy
+                  required_software: Required Software Policy
               status:
                 type: integer
                 format: int64
@@ -1440,6 +1681,14 @@ components:
                 type: string
               policy_type_name:
                 type: string
+                enum:
+                  - patch
+                  - custom
+                  - required_software
+                x-enumDescriptions:
+                  patch: Patch Policy
+                  custom: Worklet Policy
+                  required_software: Required Software Policy
               status:
                 type: integer
                 format: int64
@@ -1543,12 +1792,6 @@ components:
         VERSION:
           type: string
     ServerList:
-      type: object
-      properties:
-        size:
-          type: integer
-          format: int64
-        results:
           type: array
           items:
             $ref: "#/components/schemas/Server"
@@ -1597,23 +1840,24 @@ components:
           minimum: 360
           maximum: 1440
         parent_server_group_id:
-          description: "ID of the parent group Use the organization's Default Group ID to make this a top-level group. See Note: Default Group ID"
+          description: "ID of the parent group. Use the organization's Default Group ID to make this a top-level group. See [About Automox API - Default Group ID](/developer-portal/about-ax-api#Default-Group-ID)"
           type: integer
         ui_color:
-          description: "The highlight color for the group. Primarily used on the System Management view. Format: #059F1D See Note UI Color"
+          description: "The highlight color for the group. Primarily used on the System Management view. Format: #059F1D"
           type: string
         notes:
           description: Use to define notes that are displayed while editing the policy
           type: string
         enable_os_auto_update:
-          description: "Enforce automatic update settings Options: null: Keep Device's Setting true: Enable OS automatic updates false: Disable OS automatic updates"
+          description: "Enforce automatic update settings Options: `null`: Keep Device's Setting. `true`: Enable OS automatic updates. `false`: Disable OS automatic updates."
           type: boolean
+          nullable: true
         enable_wsus:
-          description: "Enforce WSUS settings for Windows devices Options: null: Keep Device's Setting true: force WSUS false: force Windows Update"
+          description: "Enforce WSUS settings for Windows devices. Options: `null`: Keep Device's Setting. `true`: force WSUS. `false`: force Windows Update."
           type: boolean
           nullable: true
         wsus_server:
-          description: 'WSUS server address. Use with enable_wsus. Format: "https://myserver.com:8530"'
+          description: 'WSUS server address. Use with `enable_wsus`. Format: `"https://myserver.com:8530"`'
           type: string
         policies:
           description: List of Policies to link to this group.
@@ -1893,14 +2137,14 @@ paths:
       parameters:
         - name: page
           in: query
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
           schema:
             type: integer
             default: 0
         - name: countOnly
           in: query
-          description: Retrieve only the total count of events for the organization
+          description: Use instead of `page` or `limit` to retrieve only the total count of events for the organization, or when used with an `eventName`, retrieve a count of that specific type of event.
           required: false
           schema:
             type: integer
@@ -1909,25 +2153,25 @@ paths:
               - 1
         - name: policyId
           in: query
-          description: Retrieve events for a specific policy
+          description: Retrieve events for a specific policy.
           required: false
           schema:
             type: integer
         - name: serverId
           in: query
-          description: Retrieve events for a specific device
+          description: Retrieve events for a specific device.
           required: false
           schema:
             type: integer
         - name: userId
           in: query
-          description: Retrieve events for a specific user
+          description: Retrieve events for a specific user.
           required: false
           schema:
             type: integer
         - name: eventName
           in: query
-          description: Name for the event type
+          description: Name for the event type.
           required: false
           schema:
             type: string
@@ -1949,23 +2193,41 @@ paths:
               - user.login
               - user.logout
               - user.removed
+            x-enumDescriptions:
+              org.exceeded_endpoint_limit: Organization Endpoint Limit was exceeded.
+              saml.user.create: SAML users were created.
+              slack.app.added: Slack integration was added.
+              slack.app.reinstalled: Slack integration was reinstalled.
+              system.add: Devices were added to the Automox organization.
+              system.delete: Devices were removed from the Automox organization.
+              system.group.action: A Group action.
+              system.notification.response: Notification response events.
+              system.notification.sent: Notification sent events.
+              system.patch.applied: Patch was successfully installed on a device.
+              system.patch.failed: Patch failed to install on a device.
+              system.patch.uninstall: Patch was uninstalled from a device.
+              system.policy.action: A Policy Action.
+              user.create: User created in organization.
+              user.login: User logged into organization.
+              user.logout: User logged out of organization.
+              user.removed: User was removed from organization.
         - name: startDate
           in: query
-          description: "Limit responses to include only events after this date (YYYY-MM-DD)"
+          description: "Limit responses to include only events after this date. Format: (YYYY-MM-DD)."
           required: false
           schema:
             type: string
             format: date
         - name: endDate
           in: query
-          description: "Limit responses to include only events before this date (YYYY-MM-DD)"
+          description: "Limit responses to include only events before this date. Format: (YYYY-MM-DD)."
           required: false
           schema:
             type: string
             format: date
         - name: limit
           in: query
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter."
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
           required: false
           schema:
             type: integer
@@ -1974,7 +2236,7 @@ paths:
             default: 500
         - name: o
           in: query
-          description: Limit response to a specific Automox organization
+          description: Organization ID. Response will include devices for the specified Automox organization. The organization will be assumed based on the API key, if not specified.
           required: true
           schema:
             type: integer
@@ -2010,7 +2272,7 @@ paths:
       tags:
         - Devices
       summary: List All Devices
-      description: "This retrieves a detailed list of all devices (server objects) for the authenticated user."
+      description: "Retrieves a detailed list of all devices (server objects) for the authenticated user."
       operationId: getDevices
       parameters:
         - name: groupId
@@ -2027,13 +2289,13 @@ paths:
             type: integer
         - name: o
           in: query
-          description: Organization ID. Response will include devices for the specified Automox Organization
+          description: Organization ID. Response will include devices for the specified Automox Organization. The organization will be assumed based on the API key, if not specified.
           required: true
           schema:
             type: integer
         - name: pending
           in: query
-          description: "Filter based on status of pending patches. Format: pending=1"
+          description: "Filter based on status of pending patches. Format: `pending=1`"
           required: false
           schema:
             type: integer
@@ -2042,19 +2304,20 @@ paths:
               - 1
         - name: patchStatus
           in: query
-          description: "Filter based on presence of ANY available patches that aren't already installed. Value must be 'missing' Format: patchStatus=missing"
+          description: "Filter based on presence of ANY available patches that aren't already installed. Value must be 'missing' Format: `patchStatus=missing`"
           required: false
           schema:
             type: string
+            default: missing
         - name: policyId
           in: query
-          description: Filter based on association to a given Policy ID
+          description: "Filter based on association to a given Policy ID. Format: `policyId=12345`"
           required: false
           schema:
             type: integer
         - name: exception
           in: query
-          description: Filter based on device's Exception status
+          description: "Filter based on the exception property to exclude the device from reports. Device is still monitored when excluded from reports and statistics. Format: `exception=1`"
           required: false
           schema:
             type: integer
@@ -2063,7 +2326,7 @@ paths:
               - 1
         - name: managed
           in: query
-          description: Filter based on device's Managed status. Unmanaged indicates no linked policies.
+          description: "Filter based on device's Managed status. Unmanaged indicates no linked policies. Format: `managed=0`"
           required: false
           schema:
             type: integer
@@ -2072,7 +2335,7 @@ paths:
               - 1
         - name: limit
           in: query
-          description: "A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter."
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
           required: true
           schema:
             type: integer
@@ -2081,7 +2344,7 @@ paths:
             default: 500
         - name: page
           in: query
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
           required: true
           schema:
             type: integer
@@ -2122,7 +2385,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Server"
+                  $ref: "#/components/schemas/ServerList"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -2143,16 +2406,22 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Server ID for the specified device
+          description: Server ID for the specified device.
           required: true
           schema:
             type: integer
         - name: o
           in: query
-          description: Organization ID for the specified device
+          description: Organization ID for the specified device.
           required: true
           schema:
             type: integer
+        - name: PS_VERSION
+          in: query
+          description: The version of PowerShell running on the device.
+          required: false
+          schema:
+              type: integer
       x-codeSamples:
         - lang: PowerShell
           source: |
@@ -2182,18 +2451,18 @@ paths:
       tags:
         - Devices
       summary: "Updates a device (server object)."
-      description: "Updates a device (server object)."
+      description: "Send a JSON object in the request body to update device details)."
       operationId: updateDevice
       parameters:
         - name: id
           in: path
-          description: Server ID for the specified device
+          description: Server ID for the specified device.
           required: true
           schema:
             type: integer
         - name: o
           in: query
-          description: Organization ID for the specified device
+          description: Organization ID for the specified device.
           required: true
           schema:
             type: integer
@@ -2208,18 +2477,21 @@ paths:
                 - exception
               properties:
                 server_group_id:
-                  description: Server Group ID of the group to which the device should belong
+                  description: Server Group ID for the specified group.
                   type: integer
+                ip_addrs:
+                  description: Server IP address.
+                  type: string
                 exception:
-                  description: Set the exception property for the device
+                  description: Use the exception property to exclude the device from reports and statistics.
                   type: boolean
                 tags:
-                  description: List of tags
+                  description: List of tags.
                   type: array
                   items:
                     type: string
                 custom_name:
-                  description: Custom name that will display in the console instead of the hostname
+                  description: Custom name that will display in the console instead of the hostname.
                   type: string
       x-codeSamples:
         - lang: PowerShell
@@ -2254,8 +2526,8 @@ paths:
     delete:
       tags:
         - Devices
-      summary: Deletes a device (server object).
-      description: Deletes a device (server object). The associated command queue will be purged. Any pending custom commands for the device are removed.
+      summary: Deletes a device (server object) from the organization.
+      description: "**NOTE:** The associated command queue will be purged. Any pending custom commands for the device are removed."
       operationId: deleteDevice
       parameters:
         - name: id
@@ -2392,7 +2664,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Server ID for the specified device
+          description: Server ID for the specified device.
           required: true
           schema:
             type: integer
@@ -2407,7 +2679,7 @@ paths:
             default: 0
           in: query
           name: page
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
         - schema:
             type: integer
             minimum: 1
@@ -2415,7 +2687,7 @@ paths:
             default: 500
           in: query
           name: limit
-          description: "A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter."
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
       x-codeSamples:
         - lang: PowerShell
           source: |
@@ -2454,13 +2726,13 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Server ID for the specified device
+          description: Server ID for the specified device.
           required: true
           schema:
             type: integer
         - name: o
           in: query
-          description: Organization ID for the specified device
+          description: Organization ID for the specified device.
           required: true
           schema:
             type: integer
@@ -2527,9 +2799,16 @@ paths:
                     - policy_{policy_id}_test
                     - policy_{policy_id}_remediate
                     - Reboot
+                  x-enumDescriptions:
+                    GetOS: Triggers a device scan.
+                    InstallUpdate: Installs a specific patch.
+                    InstallAllUpdates: "Installs all available patches. **NOTE: This ignores any Policy Filters!**"
+                    policy_{policy_id}_test: Evaluates compliance against a Worklet.
+                    policy_{policy_id}_remediate: Forces remediation of a Worklet or Required Software Policy.
+                    Reboot: Forces a reboot.
                 args:
                   type: string
-                  description: 'Only needed for "InstallUpdate". Includes the name of the patches to install.'
+                  description: "Only needed for `InstallUpdate`. Includes the name of the patches to install."
       x-codeSamples:
         - lang: PowerShell
           source: |
@@ -2578,13 +2857,13 @@ paths:
       parameters:
         - name: o
           in: query
-          description: Organization ID for retrieving groups
+          description: Organization ID for retrieving groups.
           required: true
           schema:
             type: integer
         - name: page
           in: query
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
           required: false
           schema:
             type: integer
@@ -2596,7 +2875,7 @@ paths:
             default: 500
           in: query
           name: limit
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter."
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
           required: false
       x-codeSamples:
         - lang: PowerShell
@@ -2634,7 +2913,7 @@ paths:
       parameters:
         - name: o
           in: query
-          description: Organization ID for the created group
+          description: Organization ID for the created group.
           required: true
           schema:
             type: integer
@@ -2694,13 +2973,13 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Server Group ID for the specified group
+          description: Server Group ID for the specified group.
           required: true
           schema:
             type: integer
         - name: o
           in: query
-          description: Organization ID for the specified group
+          description: Organization ID for the specified group.
           required: true
           schema:
             type: integer
@@ -2732,19 +3011,19 @@ paths:
     put:
       tags:
         - Groups
-      summary: Updates a new server group.
-      description: Updates a new server group.
+      summary: Updates an existing server group.
+      description: Updates server group settings.
       operationId: updateServerGroup
       parameters:
         - name: id
           in: path
-          description: Server Group ID for the specified group
+          description: Server Group ID for the specified group.
           required: true
           schema:
             type: integer
         - name: o
           in: query
-          description: Organization ID for the created group
+          description: Organization ID for the created group.
           required: true
           schema:
             type: integer
@@ -2795,18 +3074,18 @@ paths:
       tags:
         - Groups
       summary: Deletes a server group.
-      description: Any devices that belong to the deleted group will be moved to the organization's Default Group
+      description: "**NOTE:** Any devices that belong to the deleted group will be moved to the organization's Default Group"
       operationId: deleteServerGroup
       parameters:
         - name: id
           in: path
-          description: Server Group ID for the specified group
+          description: Server Group ID for the specified group.
           required: true
           schema:
             type: integer
         - name: o
           in: query
-          description: Organization ID for the created group
+          description: Organization ID for the created group.
           required: true
           schema:
             type: integer
@@ -2840,7 +3119,7 @@ paths:
             default: 0
           in: query
           name: page
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
         - schema:
             type: integer
             minimum: 1
@@ -2848,7 +3127,7 @@ paths:
             default: 500
           in: query
           name: limit
-          description: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
       x-codeSamples:
         - lang: PowerShell
           source: |
@@ -2881,18 +3160,18 @@ paths:
       tags:
         - Packages
       summary: List All Software Packages for All Devices
-      description: Returns a list of all software packages discovered on all devices of an organization.
+      description: This will list all pending/installed updates, and all installed applications, for all devices in a given organization.
       operationId: getOrganizationPackages
       parameters:
         - name: id
           in: path
-          description: Organization ID for retrieving package list
+          description: Organization ID for retrieving package list.
           required: true
           schema:
             type: integer
         - name: includeUnmanaged
           in: query
-          description: Include applications Automox does not currently support for patching
+          description: Include applications Automox does not currently support for patching.
           required: false
           schema:
             type: integer
@@ -2902,7 +3181,7 @@ paths:
             format: int64
         - name: awaiting
           in: query
-          description: "Filter based installation status of package. awaiting=1:  Packages that are currently available but not installed. awaiting=0:  Packages that are already installed."
+          description: "Filter based installation status of package. `awaiting=1`:  Packages that are currently available but not installed. `awaiting=0`:  Packages that are already installed."
           required: false
           schema:
             type: integer
@@ -2912,7 +3191,7 @@ paths:
             format: int64
         - name: o
           in: query
-          description: "Organization ID. Required. If authenticated, the user has access to multiple organizations."
+          description: "Organization ID of the target organization."
           required: true
           schema:
             type: integer
@@ -2922,7 +3201,7 @@ paths:
           in: query
           required: false
           name: page
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
         - schema:
             type: integer
             minimum: 1
@@ -2930,7 +3209,7 @@ paths:
             default: 500
           in: query
           name: limit
-          description: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
           required: false
       x-codeSamples:
         - lang: PowerShell
@@ -2964,18 +3243,18 @@ paths:
       tags:
         - API Keys
       summary: List All API Keys for Organization
-      description: You must have Full Administrator privileges for this endpoint
+      description: "**PREREQUISITES:** You must have **Full Administrator** privileges! This endpoint allows you to list all keys for an organization."
       operationId: getOrganizationApiKeys
       parameters:
         - name: id
           in: path
-          description: Organization ID for retrieving API Keys
+          description: The ID of the organization to list keys for.
           required: true
           schema:
             type: integer
         - name: limit
           in: query
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter."
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
           required: false
           schema:
             type: integer
@@ -2984,7 +3263,7 @@ paths:
             default: 500
         - name: page
           in: query
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
           required: false
           schema:
             type: integer
@@ -3040,7 +3319,7 @@ paths:
             default: 0
           in: query
           name: page
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
         - schema:
             type: integer
             minimum: 1
@@ -3048,7 +3327,7 @@ paths:
             default: 500
           in: query
           name: limit
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter."
+          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
       x-codeSamples:
         - lang: PowerShell
           source: |
@@ -3080,12 +3359,12 @@ paths:
       tags:
         - Policies
       summary: Create a New Policy
-      description: Creates a new policy for a specified organization. For more info on filter types and scheduling, see [Policy and Device Filters, and Scheduling](/developer-portal/policy_filters_schedule). 
+      description: Creates a new policy for a specified organization. For more info on filter types and scheduling, see [Policy and Device Filters, and Scheduling](/developer-portal/policy_filters_schedule).
       operationId: createPolicy
       parameters:
         - name: o
           in: query
-          description: Organization ID for retrieving policies
+          description: Organization ID for the specified policy.
           required: true
           schema:
             type: integer
@@ -3105,34 +3384,54 @@ paths:
                 - notify_user
               properties:
                 name:
+                  description: The name of the policy.
                   type: string
                 policy_type_name:
                   type: string
+                  enum:
+                    - patch
+                    - custom
+                    - required_software
+                  x-enumDescriptions:
+                    patch: Patch Policy
+                    custom: Worklet Policy
+                    required_software: Required Software Policy
                 organization_id:
+                  description: Organization ID for the specified policy
                   type: integer
                 schedule_days:
+                  description: "Decimal value of binary day schedule. See [Policy and Device Filters, and Scheduling - Example Days per Week](/developer-portal/policy_filters_schedule/#example-days-per-week)."
                   type: integer
                 schedule_weeks_of_month:
+                  description: "Decimal value of binary week schedule. See [Policy and Device Filters, and Scheduling - Example Weeks per Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month)."
                   type: integer
                 schedule_months:
+                  description: "Decimal value of binary month schedule. See [Policy and Device Filters, and Scheduling - Example Months per Year](/developer-portal/policy_filters_schedule/#example-months-per-year)."
                   type: integer
                 schedule_time:
+                  description: 'Scheduled time for automatic policy execution. Format: `"hh:mm"`'
                   type: string
                 configuration:
                   $ref: "#/components/schemas/PolicyConfiguration"
                 notify_user:
+                  description: "Display notification 15 minutes before patching."
                   type: boolean
                 notes:
+                  description: Policy notes
                   type: string
                 server_groups:
+                  description: "Integer array. Server groups to link with the policy"
                   type: array
                   items:
                     type: integer
                 auto_patch:
+                  description: "Enable or Disable automatic execution of the policy."
                   type: boolean
                 auto_reboot:
+                  description: "Enable or Disable automatic reboots following policy execution."
                   type: boolean
                 notify_reboot_user:
+                  description: "Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions."
                   type: boolean
       x-codeSamples:
         - lang: PowerShell
@@ -3430,7 +3729,7 @@ paths:
             type: integer
         - name: action
           in: query
-          description: "Specify the action to be taken. Possible values: remediateAll, remediateServer Format: action=remediateServer"
+          description: "Specify the action to be taken. Possible values: `remediateAll`, `remediateServer` Format: `action=remediateServer`"
           required: true
           schema:
             type: string
@@ -3480,14 +3779,14 @@ paths:
             type: integer
         - name: page
           in: query
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
           schema:
             type: integer
             default: 0
         - name: limit
           in: query
-          description: A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with page parameter.
+          description: A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
           schema:
             type: integer
@@ -3557,7 +3856,7 @@ paths:
       parameters:
         - name: o
           in: query
-          description: Organization ID for retrieving policy stats.
+          description: Organization ID for retrieving policy stats. Omit this to retrieve stats for policies in all organizations that the authenticated user can access
           required: true
           schema:
             type: integer
@@ -3768,7 +4067,7 @@ paths:
             default: 0
           in: query
           name: page
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         - schema:
             type: integer
             default: 500
@@ -3776,7 +4075,7 @@ paths:
             maximum: 500
           in: query
           name: limit
-          description: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+          description: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
       x-codeSamples:
         - lang: PowerShell
           source: |
@@ -3862,7 +4161,7 @@ paths:
       tags:
         - API Keys
       summary: Retrieves a list of API key objects for a user
-      description: Retrieves a list of API key objects for a user
+      description: Returns a list of API keys for the given user under the requested organization. This response does not include the encrypted portion of the key.
       operationId: getUserApiKeys
       parameters:
         - name: userId
@@ -3882,7 +4181,7 @@ paths:
             default: 0
           in: query
           name: page
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         - schema:
             type: integer
             default: 500
@@ -3890,7 +4189,7 @@ paths:
             maximum: 500
           in: query
           name: limit
-          description: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+          description: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
       x-codeSamples:
         - lang: PowerShell
           source: |
@@ -3928,7 +4227,7 @@ paths:
       tags:
         - API Keys
       summary: Creates an API key for a user
-      description: Creates an API key for a user
+      description: "**Note:** A user is only allowed to have a maximum of 10 active keys per organization at any given time."
       operationId: createUserApiKey
       parameters:
         - name: userId
@@ -3951,8 +4250,10 @@ paths:
                 - name
               properties:
                 name:
+                  description: A unique name for this key. Users are not allowed to have two keys with the same name under a given organization.
                   type: string
                 expires_at:
+                  description: "The time at which (in UTC) the key should automatically expire. Format is ISO8601. Example: 2020-08-05T18:21:47+0000"
                   type: string
                   format: datetime
       x-codeSamples:
@@ -3986,12 +4287,12 @@ paths:
       tags:
         - API Keys
       summary: Retrieves an API key object by ID
-      description: Retrieves an API key object by ID
+      description: "Note: The response does not contain the encrypted portion of the key. See [Decrypt User API Key](/openapi/reference/operation/decryptUserApiKey/)  "
       operationId: getUserApiKey
       parameters:
         - name: userId
           in: path
-          description: User ID of the user to retrieve API key objects
+          description: The ID of the user to view keys for.
           required: true
           schema:
             type: integer
@@ -4003,7 +4304,7 @@ paths:
             type: integer
         - name: o
           in: query
-          description: The Organization of the user.
+          description: The Organization whose keys you want to view.
           required: true
           schema:
             type: integer
@@ -4059,7 +4360,7 @@ paths:
           schema:
             type: integer
       requestBody:
-        description: The API Key updates
+        description: Enable/Disable API key
         content:
           application/json:
             schema:
@@ -4120,17 +4421,10 @@ paths:
             type: integer
         - name: o
           in: query
-          description: The Organization of the user.
+          description: The Organization whose keys you want to delete.
           required: true
           schema:
             type: integer
-        - name: Content-Type
-          in: header
-          description: Specify JSON as the content type for body parameters
-          required: true
-          schema:
-            type: string
-            default: "application/json"
       x-codeSamples:
         - lang: PowerShell
           source: |
@@ -4158,19 +4452,19 @@ paths:
       tags:
         - API Keys
         - Users
-      summary: Retrieves the API Key secret by ID
-      description: Retrieves the API Key secret by ID
+      summary: Decrypt User API Key
+      description: This endpoint allows you to decrypt the API key for an authenticated user.
       operationId: decryptUserApiKey
       parameters:
         - name: userId
           in: path
-          description: User ID of the user to retrieve API Keys
+          description: The ID of the user to decrypt keys for.
           required: true
           schema:
             type: integer
         - name: id
           in: path
-          description: The ID of the API key to retrieve
+          description: The ID of the API key to decrypt
           required: true
           schema:
             type: integer
@@ -4313,7 +4607,7 @@ paths:
         - name: limit
           in: query
           required: false
-          description: A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with page parameter.
+          description: A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
           schema:
             type: integer
             minimum: 1
@@ -4322,14 +4616,14 @@ paths:
         - name: page
           in: query
           required: false
-          description: "The page of results you wish to be returned with page numbers starting at 0. Default: 0."
+          description: "The page of results you wish to be returned with page numbers starting at 0. Default: 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
           schema:
             type: integer
             default: 0
         - name: sort
           in: query
           required: false
-          description: "The sort for the results. Options: created_at:desc/asc and status:desc/asc. Default: created_at:desc"
+          description: "The sort for the results. Options: `created_at:desc/asc` and `status:desc/asc`. Default: `created_at:desc`"
           schema:
             type: array
             items:
@@ -4343,7 +4637,7 @@ paths:
         - name: "type:equals"
           in: query
           required: false
-          description: "The type of Data Extracts to list. Options: data-extract."
+          description: "The type of Data Extracts to list. Options: `patch-history`."
           schema:
             type: string
             enum:
@@ -4410,7 +4704,7 @@ paths:
           source: |
             $apiKey = 'your_automox_api_key'
             $headers = @{ "Authorization" = "Bearer $apiKey" }
-            $url = "https://console.automox.com/api/data-extracts?o=0000&limit=500&"
+            $url = "https://console.automox.com/api/data-extracts?o=0000&limit=25&page=0"
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
