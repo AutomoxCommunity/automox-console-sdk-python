@@ -476,7 +476,7 @@ class DevicesApi(object):
         :param int policy_id: Filter based on association to a given Policy ID. Format: `policyId=12345`
         :param int exception: Filter based on the exception property to exclude the device from reports. Device is still monitored when excluded from reports and statistics. Format: `exception=1`
         :param int managed: Filter based on device's Managed status. Unmanaged indicates no linked policies. Format: `managed=0`
-        :return: list[ServerList]
+        :return: ServerList
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -507,7 +507,7 @@ class DevicesApi(object):
         :param int policy_id: Filter based on association to a given Policy ID. Format: `policyId=12345`
         :param int exception: Filter based on the exception property to exclude the device from reports. Device is still monitored when excluded from reports and statistics. Format: `exception=1`
         :param int managed: Filter based on device's Managed status. Unmanaged indicates no linked policies. Format: `managed=0`
-        :return: list[ServerList]
+        :return: ServerList
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -587,7 +587,7 @@ class DevicesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[ServerList]',  # noqa: E501
+            response_type='ServerList',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
