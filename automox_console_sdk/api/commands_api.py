@@ -42,8 +42,8 @@ class CommandsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server ID for the specified device (required)
-        :param int o: Organization ID for the specified device (required)
+        :param int id: Server ID for the specified device. (required)
+        :param int o: Organization ID for the specified device. (required)
         :return: list[Command]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -65,8 +65,8 @@ class CommandsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server ID for the specified device (required)
-        :param int o: Organization ID for the specified device (required)
+        :param int id: Server ID for the specified device. (required)
+        :param int o: Organization ID for the specified device. (required)
         :return: list[Command]
                  If the method is called asynchronously,
                  returns the request thread.

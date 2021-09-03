@@ -25,8 +25,8 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.CommandsApi(automox_console_sdk.ApiClient(configuration))
-id = 56 # int | Server ID for the specified device
-o = 56 # int | Organization ID for the specified device
+id = 56 # int | Server ID for the specified device.
+o = 56 # int | Organization ID for the specified device.
 
 try:
     # Upcoming Commands Queue for Specific Device
@@ -40,8 +40,8 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **int**| Server ID for the specified device | 
- **o** | **int**| Organization ID for the specified device | 
+ **id** | **int**| Server ID for the specified device. | 
+ **o** | **int**| Organization ID for the specified device. | 
 
 ### Return type
 

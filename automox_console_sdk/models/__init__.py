@@ -53,6 +53,7 @@ from automox_console_sdk.models.packages import Packages
 from automox_console_sdk.models.patch_applied_data import PatchAppliedData
 from automox_console_sdk.models.patch_failed_data import PatchFailedData
 from automox_console_sdk.models.patch_policy_configuration import PatchPolicyConfiguration
+from automox_console_sdk.models.patch_policy_configuration_advanced_filter import PatchPolicyConfigurationAdvancedFilter
 from automox_console_sdk.models.patches import Patches
 from automox_console_sdk.models.policies_body import PoliciesBody
 from automox_console_sdk.models.policy import Policy

@@ -42,8 +42,8 @@ class OrganizationsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Organization]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -65,8 +65,8 @@ class OrganizationsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Organization]
                  If the method is called asynchronously,
                  returns the request thread.

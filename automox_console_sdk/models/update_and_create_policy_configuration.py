@@ -33,6 +33,7 @@ class UpdateAndCreatePolicyConfiguration(object):
         'auto_reboot': 'bool',
         'filter_type': 'str',
         'notify_user': 'bool',
+        'device_filters_enabled': 'bool',
         'device_filters': 'DeviceFilters',
         'evaluation_code': 'str',
         'include_optional': 'bool',
@@ -62,6 +63,7 @@ class UpdateAndCreatePolicyConfiguration(object):
         'auto_reboot': 'auto_reboot',
         'filter_type': 'filter_type',
         'notify_user': 'notify_user',
+        'device_filters_enabled': 'device_filters_enabled',
         'device_filters': 'device_filters',
         'evaluation_code': 'evaluation_code',
         'include_optional': 'include_optional',
@@ -85,13 +87,14 @@ class UpdateAndCreatePolicyConfiguration(object):
         'custom_pending_reboot_notification_deferment_periods': 'custom_pending_reboot_notification_deferment_periods'
     }
 
-    def __init__(self, auto_patch=None, patch_rule=None, auto_reboot=None, filter_type=None, notify_user=None, device_filters=None, evaluation_code=None, include_optional=None, remediation_code=None, installation_code=None, notify_reboot_user=None, notify_deferred_reboot_user=None, custom_notification_max_delays=None, custom_notification_patch_message=None, custom_notification_reboot_message=None, custom_notification_deferment_periods=None, custom_notification_patch_message_mac=None, custom_notification_reboot_message_mac=None, custom_pending_reboot_notification_message=None, notify_user_message_timeout=15, notify_user_auto_deferral_enabled=None, notify_deferred_reboot_user_message_timeout=15, notify_deferred_reboot_user_auto_deferral_enabled=None, custom_pending_reboot_notification_max_delays=None, custom_pending_reboot_notification_message_mac=None, custom_pending_reboot_notification_deferment_periods=None):  # noqa: E501
+    def __init__(self, auto_patch=None, patch_rule=None, auto_reboot=None, filter_type=None, notify_user=None, device_filters_enabled=None, device_filters=None, evaluation_code=None, include_optional=False, remediation_code=None, installation_code=None, notify_reboot_user=None, notify_deferred_reboot_user=None, custom_notification_max_delays=None, custom_notification_patch_message=None, custom_notification_reboot_message=None, custom_notification_deferment_periods=None, custom_notification_patch_message_mac=None, custom_notification_reboot_message_mac=None, custom_pending_reboot_notification_message=None, notify_user_message_timeout=15, notify_user_auto_deferral_enabled=None, notify_deferred_reboot_user_message_timeout=15, notify_deferred_reboot_user_auto_deferral_enabled=None, custom_pending_reboot_notification_max_delays=0, custom_pending_reboot_notification_message_mac=None, custom_pending_reboot_notification_deferment_periods=None):  # noqa: E501
         """UpdateAndCreatePolicyConfiguration - a model defined in Swagger"""  # noqa: E501
         self._auto_patch = None
         self._patch_rule = None
         self._auto_reboot = None
         self._filter_type = None
         self._notify_user = None
+        self._device_filters_enabled = None
         self._device_filters = None
         self._evaluation_code = None
         self._include_optional = None
@@ -120,6 +123,8 @@ class UpdateAndCreatePolicyConfiguration(object):
         if filter_type is not None:
             self.filter_type = filter_type
         self.notify_user = notify_user
+        if device_filters_enabled is not None:
+            self.device_filters_enabled = device_filters_enabled
         if device_filters is not None:
             self.device_filters = device_filters
         if evaluation_code is not None:
@@ -167,6 +172,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def auto_patch(self):
         """Gets the auto_patch of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Enable or Disable automatic execution of the policy.  # noqa: E501
 
         :return: The auto_patch of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: bool
@@ -177,6 +183,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def auto_patch(self, auto_patch):
         """Sets the auto_patch of this UpdateAndCreatePolicyConfiguration.
 
+        Enable or Disable automatic execution of the policy.  # noqa: E501
 
         :param auto_patch: The auto_patch of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: bool
@@ -190,6 +197,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def patch_rule(self):
         """Gets the patch_rule of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Use only with Patch Policy.  # noqa: E501
 
         :return: The patch_rule of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: str
@@ -200,12 +208,19 @@ class UpdateAndCreatePolicyConfiguration(object):
     def patch_rule(self, patch_rule):
         """Sets the patch_rule of this UpdateAndCreatePolicyConfiguration.
 
+        Use only with Patch Policy.  # noqa: E501
 
         :param patch_rule: The patch_rule of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: str
         """
         if patch_rule is None:
             raise ValueError("Invalid value for `patch_rule`, must not be `None`")  # noqa: E501
+        allowed_values = ["all", "filter", "manual", "advanced"]  # noqa: E501
+        if patch_rule not in allowed_values:
+            raise ValueError(
+                "Invalid value for `patch_rule` ({0}), must be one of {1}"  # noqa: E501
+                .format(patch_rule, allowed_values)
+            )
 
         self._patch_rule = patch_rule
 
@@ -213,6 +228,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def auto_reboot(self):
         """Gets the auto_reboot of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Enable or Disable automatic reboots following policy execution.  # noqa: E501
 
         :return: The auto_reboot of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: bool
@@ -223,6 +239,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def auto_reboot(self, auto_reboot):
         """Sets the auto_reboot of this UpdateAndCreatePolicyConfiguration.
 
+        Enable or Disable automatic reboots following policy execution.  # noqa: E501
 
         :param auto_reboot: The auto_reboot of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: bool
@@ -236,6 +253,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def filter_type(self):
         """Gets the filter_type of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Use only with `patch_rule` of `filter`  # noqa: E501
 
         :return: The filter_type of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: str
@@ -246,10 +264,17 @@ class UpdateAndCreatePolicyConfiguration(object):
     def filter_type(self, filter_type):
         """Sets the filter_type of this UpdateAndCreatePolicyConfiguration.
 
+        Use only with `patch_rule` of `filter`  # noqa: E501
 
         :param filter_type: The filter_type of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: str
         """
+        allowed_values = ["exclude", "include", "severity"]  # noqa: E501
+        if filter_type not in allowed_values:
+            raise ValueError(
+                "Invalid value for `filter_type` ({0}), must be one of {1}"  # noqa: E501
+                .format(filter_type, allowed_values)
+            )
 
         self._filter_type = filter_type
 
@@ -257,6 +282,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_user(self):
         """Gets the notify_user of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Display notification 15 minutes before patching.  # noqa: E501
 
         :return: The notify_user of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: bool
@@ -267,6 +293,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_user(self, notify_user):
         """Sets the notify_user of this UpdateAndCreatePolicyConfiguration.
 
+        Display notification 15 minutes before patching.  # noqa: E501
 
         :param notify_user: The notify_user of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: bool
@@ -275,6 +302,29 @@ class UpdateAndCreatePolicyConfiguration(object):
             raise ValueError("Invalid value for `notify_user`, must not be `None`")  # noqa: E501
 
         self._notify_user = notify_user
+
+    @property
+    def device_filters_enabled(self):
+        """Gets the device_filters_enabled of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
+
+        Enable or disable Device Filters.  # noqa: E501
+
+        :return: The device_filters_enabled of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
+        :rtype: bool
+        """
+        return self._device_filters_enabled
+
+    @device_filters_enabled.setter
+    def device_filters_enabled(self, device_filters_enabled):
+        """Sets the device_filters_enabled of this UpdateAndCreatePolicyConfiguration.
+
+        Enable or disable Device Filters.  # noqa: E501
+
+        :param device_filters_enabled: The device_filters_enabled of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
+        :type: bool
+        """
+
+        self._device_filters_enabled = device_filters_enabled
 
     @property
     def device_filters(self):
@@ -322,6 +372,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def include_optional(self):
         """Gets the include_optional of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Enable or disable inclusion of optional Windows patches for this policy. Note: Will default to `false` if not included.  # noqa: E501
 
         :return: The include_optional of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: bool
@@ -332,6 +383,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def include_optional(self, include_optional):
         """Sets the include_optional of this UpdateAndCreatePolicyConfiguration.
 
+        Enable or disable inclusion of optional Windows patches for this policy. Note: Will default to `false` if not included.  # noqa: E501
 
         :param include_optional: The include_optional of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: bool
@@ -385,6 +437,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_reboot_user(self):
         """Gets the notify_reboot_user of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions.  # noqa: E501
 
         :return: The notify_reboot_user of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: bool
@@ -395,6 +448,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_reboot_user(self, notify_reboot_user):
         """Sets the notify_reboot_user of this UpdateAndCreatePolicyConfiguration.
 
+        Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions.  # noqa: E501
 
         :param notify_reboot_user: The notify_reboot_user of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: bool
@@ -406,6 +460,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_deferred_reboot_user(self):
         """Gets the notify_deferred_reboot_user of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        If `true`, this shows a post-install reboot notification message, if `notify_reboot_deferred` is also `true`. If `notify_reboot_deferred` is `false` or `null`, this will sync with the existing `notify_reboot_user` parameter.  # noqa: E501
 
         :return: The notify_deferred_reboot_user of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: bool
@@ -416,6 +471,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_deferred_reboot_user(self, notify_deferred_reboot_user):
         """Sets the notify_deferred_reboot_user of this UpdateAndCreatePolicyConfiguration.
 
+        If `true`, this shows a post-install reboot notification message, if `notify_reboot_deferred` is also `true`. If `notify_reboot_deferred` is `false` or `null`, this will sync with the existing `notify_reboot_user` parameter.  # noqa: E501
 
         :param notify_deferred_reboot_user: The notify_deferred_reboot_user of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: bool
@@ -427,6 +483,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_max_delays(self):
         """Gets the custom_notification_max_delays of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Number of deferral chances before patching is forced.  # noqa: E501
 
         :return: The custom_notification_max_delays of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: int
@@ -437,6 +494,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_max_delays(self, custom_notification_max_delays):
         """Sets the custom_notification_max_delays of this UpdateAndCreatePolicyConfiguration.
 
+        Number of deferral chances before patching is forced.  # noqa: E501
 
         :param custom_notification_max_delays: The custom_notification_max_delays of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: int
@@ -448,6 +506,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_patch_message(self):
         """Gets the custom_notification_patch_message of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Message to display before a non-rebooting patch policy executes on a Windows device. Maximum 125 characters  # noqa: E501
 
         :return: The custom_notification_patch_message of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: str
@@ -458,6 +517,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_patch_message(self, custom_notification_patch_message):
         """Sets the custom_notification_patch_message of this UpdateAndCreatePolicyConfiguration.
 
+        Message to display before a non-rebooting patch policy executes on a Windows device. Maximum 125 characters  # noqa: E501
 
         :param custom_notification_patch_message: The custom_notification_patch_message of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: str
@@ -469,6 +529,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_reboot_message(self):
         """Gets the custom_notification_reboot_message of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Message to display before a rebooting patch policy executes on a Windows device. Reboot will follow patching actions. Maximum 125 characters  # noqa: E501
 
         :return: The custom_notification_reboot_message of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: str
@@ -479,6 +540,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_reboot_message(self, custom_notification_reboot_message):
         """Sets the custom_notification_reboot_message of this UpdateAndCreatePolicyConfiguration.
 
+        Message to display before a rebooting patch policy executes on a Windows device. Reboot will follow patching actions. Maximum 125 characters  # noqa: E501
 
         :param custom_notification_reboot_message: The custom_notification_reboot_message of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: str
@@ -490,6 +552,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_deferment_periods(self):
         """Gets the custom_notification_deferment_periods of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Integer array: Deferral time periods (hours) that users can choose from. Include up to 3. All 3 must be distinct with a maximum of 24  # noqa: E501
 
         :return: The custom_notification_deferment_periods of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: list[int]
@@ -500,6 +563,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_deferment_periods(self, custom_notification_deferment_periods):
         """Sets the custom_notification_deferment_periods of this UpdateAndCreatePolicyConfiguration.
 
+        Integer array: Deferral time periods (hours) that users can choose from. Include up to 3. All 3 must be distinct with a maximum of 24  # noqa: E501
 
         :param custom_notification_deferment_periods: The custom_notification_deferment_periods of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: list[int]
@@ -511,6 +575,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_patch_message_mac(self):
         """Gets the custom_notification_patch_message_mac of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Message to display before a non-rebooting patch policy executes on a macOS device. Maximum 70 characters  # noqa: E501
 
         :return: The custom_notification_patch_message_mac of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: str
@@ -521,6 +586,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_patch_message_mac(self, custom_notification_patch_message_mac):
         """Sets the custom_notification_patch_message_mac of this UpdateAndCreatePolicyConfiguration.
 
+        Message to display before a non-rebooting patch policy executes on a macOS device. Maximum 70 characters  # noqa: E501
 
         :param custom_notification_patch_message_mac: The custom_notification_patch_message_mac of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: str
@@ -532,6 +598,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_reboot_message_mac(self):
         """Gets the custom_notification_reboot_message_mac of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        The custom reboot message for macOS, which overrides `custom_pending_reboot_notification_message` string, if provided.  # noqa: E501
 
         :return: The custom_notification_reboot_message_mac of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: str
@@ -542,6 +609,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_notification_reboot_message_mac(self, custom_notification_reboot_message_mac):
         """Sets the custom_notification_reboot_message_mac of this UpdateAndCreatePolicyConfiguration.
 
+        The custom reboot message for macOS, which overrides `custom_pending_reboot_notification_message` string, if provided.  # noqa: E501
 
         :param custom_notification_reboot_message_mac: The custom_notification_reboot_message_mac of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: str
@@ -553,6 +621,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_pending_reboot_notification_message(self):
         """Gets the custom_pending_reboot_notification_message of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Custom reboot message.  # noqa: E501
 
         :return: The custom_pending_reboot_notification_message of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: str
@@ -563,6 +632,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_pending_reboot_notification_message(self, custom_pending_reboot_notification_message):
         """Sets the custom_pending_reboot_notification_message of this UpdateAndCreatePolicyConfiguration.
 
+        Custom reboot message.  # noqa: E501
 
         :param custom_pending_reboot_notification_message: The custom_pending_reboot_notification_message of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: str
@@ -574,6 +644,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_user_message_timeout(self):
         """Gets the notify_user_message_timeout of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        The amount of time a patch notification appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes.  # noqa: E501
 
         :return: The notify_user_message_timeout of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: int
@@ -584,6 +655,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_user_message_timeout(self, notify_user_message_timeout):
         """Sets the notify_user_message_timeout of this UpdateAndCreatePolicyConfiguration.
 
+        The amount of time a patch notification appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes.  # noqa: E501
 
         :param notify_user_message_timeout: The notify_user_message_timeout of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: int
@@ -595,6 +667,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_user_auto_deferral_enabled(self):
         """Gets the notify_user_auto_deferral_enabled of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        If a patch notification times out, apply the highest configured patch deferral.  # noqa: E501
 
         :return: The notify_user_auto_deferral_enabled of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: bool
@@ -605,6 +678,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_user_auto_deferral_enabled(self, notify_user_auto_deferral_enabled):
         """Sets the notify_user_auto_deferral_enabled of this UpdateAndCreatePolicyConfiguration.
 
+        If a patch notification times out, apply the highest configured patch deferral.  # noqa: E501
 
         :param notify_user_auto_deferral_enabled: The notify_user_auto_deferral_enabled of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: bool
@@ -616,6 +690,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_deferred_reboot_user_message_timeout(self):
         """Gets the notify_deferred_reboot_user_message_timeout of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        The amount of time a deferrable reboot notification message appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes.  # noqa: E501
 
         :return: The notify_deferred_reboot_user_message_timeout of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: int
@@ -626,6 +701,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_deferred_reboot_user_message_timeout(self, notify_deferred_reboot_user_message_timeout):
         """Sets the notify_deferred_reboot_user_message_timeout of this UpdateAndCreatePolicyConfiguration.
 
+        The amount of time a deferrable reboot notification message appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes.  # noqa: E501
 
         :param notify_deferred_reboot_user_message_timeout: The notify_deferred_reboot_user_message_timeout of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: int
@@ -637,6 +713,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_deferred_reboot_user_auto_deferral_enabled(self):
         """Gets the notify_deferred_reboot_user_auto_deferral_enabled of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        If a reboot notification times out, apply the highest configured reboot deferral.  # noqa: E501
 
         :return: The notify_deferred_reboot_user_auto_deferral_enabled of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: bool
@@ -647,6 +724,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def notify_deferred_reboot_user_auto_deferral_enabled(self, notify_deferred_reboot_user_auto_deferral_enabled):
         """Sets the notify_deferred_reboot_user_auto_deferral_enabled of this UpdateAndCreatePolicyConfiguration.
 
+        If a reboot notification times out, apply the highest configured reboot deferral.  # noqa: E501
 
         :param notify_deferred_reboot_user_auto_deferral_enabled: The notify_deferred_reboot_user_auto_deferral_enabled of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: bool
@@ -658,6 +736,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_pending_reboot_notification_max_delays(self):
         """Gets the custom_pending_reboot_notification_max_delays of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Maximum number of times a user is allowed to defer the reboot. The default is 0.  # noqa: E501
 
         :return: The custom_pending_reboot_notification_max_delays of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: int
@@ -668,6 +747,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_pending_reboot_notification_max_delays(self, custom_pending_reboot_notification_max_delays):
         """Sets the custom_pending_reboot_notification_max_delays of this UpdateAndCreatePolicyConfiguration.
 
+        Maximum number of times a user is allowed to defer the reboot. The default is 0.  # noqa: E501
 
         :param custom_pending_reboot_notification_max_delays: The custom_pending_reboot_notification_max_delays of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: int
@@ -679,6 +759,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_pending_reboot_notification_message_mac(self):
         """Gets the custom_pending_reboot_notification_message_mac of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        Message to display before a rebooting patch policy executes on a macOS device. Reboot will follow patching actions. Maximum 70 characters  # noqa: E501
 
         :return: The custom_pending_reboot_notification_message_mac of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: str
@@ -689,6 +770,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_pending_reboot_notification_message_mac(self, custom_pending_reboot_notification_message_mac):
         """Sets the custom_pending_reboot_notification_message_mac of this UpdateAndCreatePolicyConfiguration.
 
+        Message to display before a rebooting patch policy executes on a macOS device. Reboot will follow patching actions. Maximum 70 characters  # noqa: E501
 
         :param custom_pending_reboot_notification_message_mac: The custom_pending_reboot_notification_message_mac of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: str
@@ -700,6 +782,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_pending_reboot_notification_deferment_periods(self):
         """Gets the custom_pending_reboot_notification_deferment_periods of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
 
+        The time period options available to defer a reboot for each deferral selection. Default values: 1, 4, 8  # noqa: E501
 
         :return: The custom_pending_reboot_notification_deferment_periods of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :rtype: list[int]
@@ -710,6 +793,7 @@ class UpdateAndCreatePolicyConfiguration(object):
     def custom_pending_reboot_notification_deferment_periods(self, custom_pending_reboot_notification_deferment_periods):
         """Sets the custom_pending_reboot_notification_deferment_periods of this UpdateAndCreatePolicyConfiguration.
 
+        The time period options available to defer a reboot for each deferral selection. Default values: 1, 4, 8  # noqa: E501
 
         :param custom_pending_reboot_notification_deferment_periods: The custom_pending_reboot_notification_deferment_periods of this UpdateAndCreatePolicyConfiguration.  # noqa: E501
         :type: list[int]

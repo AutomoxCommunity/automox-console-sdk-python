@@ -179,10 +179,10 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = automox_console_sdk.ExtractsApi(automox_console_sdk.ApiClient(configuration))
 o = 56 # int | Limit response to a specific Automox organization
-limit = 25 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with page parameter. (optional) (default to 25)
-page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. Default: 0. (optional) (default to 0)
-sort = ['sort_example'] # list[str] | The sort for the results. Options: created_at:desc/asc and status:desc/asc. Default: created_at:desc (optional)
-typeequals = 'patch-history' # str | The type of Data Extracts to list. Options: data-extract. (optional) (default to patch-history)
+limit = 25 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 25)
+page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. Default: 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 0)
+sort = ['sort_example'] # list[str] | The sort for the results. Options: `created_at:desc/asc` and `status:desc/asc`. Default: `created_at:desc` (optional)
+typeequals = 'patch-history' # str | The type of Data Extracts to list. Options: `patch-history`. (optional) (default to patch-history)
 created_atgreater_than = '2013-10-20T19:20:30+01:00' # datetime | Created at date is greater than the value submitted. If a time is not specified, greater_than will have a time of start of day. (optional)
 created_atlesser_than = '2013-10-20T19:20:30+01:00' # datetime | Created at date is less than the value submitted. If a time is not specified, less_than will have a time of end of day. (optional)
 created_atgreater_than_or_equals = '2013-10-20T19:20:30+01:00' # datetime | Created at date is greater than or equals the value submitted. If a time is not specified, greater_than_or_equals will have a time of start of day. (optional)
@@ -203,10 +203,10 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **o** | **int**| Limit response to a specific Automox organization | 
- **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with page parameter. | [optional] [default to 25]
- **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. Default: 0. | [optional] [default to 0]
- **sort** | [**list[str]**](str.md)| The sort for the results. Options: created_at:desc/asc and status:desc/asc. Default: created_at:desc | [optional] 
- **typeequals** | **str**| The type of Data Extracts to list. Options: data-extract. | [optional] [default to patch-history]
+ **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with &#x60;page&#x60; parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 25]
+ **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. Default: 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 0]
+ **sort** | [**list[str]**](str.md)| The sort for the results. Options: &#x60;created_at:desc/asc&#x60; and &#x60;status:desc/asc&#x60;. Default: &#x60;created_at:desc&#x60; | [optional] 
+ **typeequals** | **str**| The type of Data Extracts to list. Options: &#x60;patch-history&#x60;. | [optional] [default to patch-history]
  **created_atgreater_than** | **datetime**| Created at date is greater than the value submitted. If a time is not specified, greater_than will have a time of start of day. | [optional] 
  **created_atlesser_than** | **datetime**| Created at date is less than the value submitted. If a time is not specified, less_than will have a time of end of day. | [optional] 
  **created_atgreater_than_or_equals** | **datetime**| Created at date is greater than or equals the value submitted. If a time is not specified, greater_than_or_equals will have a time of start of day. | [optional] 

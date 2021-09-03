@@ -79,7 +79,7 @@ class IdQueuesBody(object):
     def args(self):
         """Gets the args of this IdQueuesBody.  # noqa: E501
 
-        Only needed for \"InstallUpdate\". Includes the name of the patches to install.  # noqa: E501
+        Only needed for `InstallUpdate`. Includes the name of the patches to install.  # noqa: E501
 
         :return: The args of this IdQueuesBody.  # noqa: E501
         :rtype: str
@@ -90,7 +90,7 @@ class IdQueuesBody(object):
     def args(self, args):
         """Sets the args of this IdQueuesBody.
 
-        Only needed for \"InstallUpdate\". Includes the name of the patches to install.  # noqa: E501
+        Only needed for `InstallUpdate`. Includes the name of the patches to install.  # noqa: E501
 
         :param args: The args of this IdQueuesBody.  # noqa: E501
         :type: str

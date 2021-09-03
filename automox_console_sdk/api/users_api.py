@@ -33,17 +33,17 @@ class UsersApi(object):
         self.api_client = api_client
 
     def decrypt_user_api_key(self, user_id, id, o, **kwargs):  # noqa: E501
-        """Retrieves the API Key secret by ID  # noqa: E501
+        """Decrypt User API Key  # noqa: E501
 
-        Retrieves the API Key secret by ID  # noqa: E501
+        This endpoint allows you to decrypt the API key for an authenticated user.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.decrypt_user_api_key(user_id, id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int user_id: User ID of the user to retrieve API Keys (required)
-        :param int id: The ID of the API key to retrieve (required)
+        :param int user_id: The ID of the user to decrypt keys for. (required)
+        :param int id: The ID of the API key to decrypt (required)
         :param int o: The Organization of the user. (required)
         :return: InlineResponse2002
                  If the method is called asynchronously,
@@ -57,17 +57,17 @@ class UsersApi(object):
             return data
 
     def decrypt_user_api_key_with_http_info(self, user_id, id, o, **kwargs):  # noqa: E501
-        """Retrieves the API Key secret by ID  # noqa: E501
+        """Decrypt User API Key  # noqa: E501
 
-        Retrieves the API Key secret by ID  # noqa: E501
+        This endpoint allows you to decrypt the API key for an authenticated user.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.decrypt_user_api_key_with_http_info(user_id, id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int user_id: User ID of the user to retrieve API Keys (required)
-        :param int id: The ID of the API key to retrieve (required)
+        :param int user_id: The ID of the user to decrypt keys for. (required)
+        :param int id: The ID of the API key to decrypt (required)
         :param int o: The Organization of the user. (required)
         :return: InlineResponse2002
                  If the method is called asynchronously,
@@ -257,8 +257,8 @@ class UsersApi(object):
 
         :param async_req bool
         :param int o: The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization. (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[User]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -281,8 +281,8 @@ class UsersApi(object):
 
         :param async_req bool
         :param int o: The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization. (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[User]
                  If the method is called asynchronously,
                  returns the request thread.

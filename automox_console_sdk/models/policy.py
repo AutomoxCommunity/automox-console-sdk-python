@@ -116,6 +116,7 @@ class Policy(object):
     def id(self):
         """Gets the id of this Policy.  # noqa: E501
 
+        The ID of the relevant policy.  # noqa: E501
 
         :return: The id of this Policy.  # noqa: E501
         :rtype: int
@@ -126,6 +127,7 @@ class Policy(object):
     def id(self, id):
         """Sets the id of this Policy.
 
+        The ID of the relevant policy.  # noqa: E501
 
         :param id: The id of this Policy.  # noqa: E501
         :type: int
@@ -137,6 +139,7 @@ class Policy(object):
     def name(self):
         """Gets the name of this Policy.  # noqa: E501
 
+        Name of the policy  # noqa: E501
 
         :return: The name of this Policy.  # noqa: E501
         :rtype: str
@@ -147,6 +150,7 @@ class Policy(object):
     def name(self, name):
         """Sets the name of this Policy.
 
+        Name of the policy  # noqa: E501
 
         :param name: The name of this Policy.  # noqa: E501
         :type: str
@@ -160,6 +164,7 @@ class Policy(object):
     def notes(self):
         """Gets the notes of this Policy.  # noqa: E501
 
+        Policy notes  # noqa: E501
 
         :return: The notes of this Policy.  # noqa: E501
         :rtype: str
@@ -170,6 +175,7 @@ class Policy(object):
     def notes(self, notes):
         """Sets the notes of this Policy.
 
+        Policy notes  # noqa: E501
 
         :param notes: The notes of this Policy.  # noqa: E501
         :type: str
@@ -183,6 +189,7 @@ class Policy(object):
     def organization_id(self):
         """Gets the organization_id of this Policy.  # noqa: E501
 
+        Organization ID for the specified policy  # noqa: E501
 
         :return: The organization_id of this Policy.  # noqa: E501
         :rtype: int
@@ -193,6 +200,7 @@ class Policy(object):
     def organization_id(self, organization_id):
         """Sets the organization_id of this Policy.
 
+        Organization ID for the specified policy  # noqa: E501
 
         :param organization_id: The organization_id of this Policy.  # noqa: E501
         :type: int
@@ -206,6 +214,7 @@ class Policy(object):
     def policy_type_name(self):
         """Gets the policy_type_name of this Policy.  # noqa: E501
 
+        Name for the policy type  # noqa: E501
 
         :return: The policy_type_name of this Policy.  # noqa: E501
         :rtype: str
@@ -216,12 +225,19 @@ class Policy(object):
     def policy_type_name(self, policy_type_name):
         """Sets the policy_type_name of this Policy.
 
+        Name for the policy type  # noqa: E501
 
         :param policy_type_name: The policy_type_name of this Policy.  # noqa: E501
         :type: str
         """
         if policy_type_name is None:
             raise ValueError("Invalid value for `policy_type_name`, must not be `None`")  # noqa: E501
+        allowed_values = ["patch", "custom", "required_software"]  # noqa: E501
+        if policy_type_name not in allowed_values:
+            raise ValueError(
+                "Invalid value for `policy_type_name` ({0}), must be one of {1}"  # noqa: E501
+                .format(policy_type_name, allowed_values)
+            )
 
         self._policy_type_name = policy_type_name
 
@@ -229,6 +245,7 @@ class Policy(object):
     def schedule_days(self):
         """Gets the schedule_days of this Policy.  # noqa: E501
 
+        Decimal value of binary day schedule. See [Policy and Device Filters, and Scheduling - Example Days per Week](/developer-portal/policy_filters_schedule/#example-days-per-week).  # noqa: E501
 
         :return: The schedule_days of this Policy.  # noqa: E501
         :rtype: int
@@ -239,6 +256,7 @@ class Policy(object):
     def schedule_days(self, schedule_days):
         """Sets the schedule_days of this Policy.
 
+        Decimal value of binary day schedule. See [Policy and Device Filters, and Scheduling - Example Days per Week](/developer-portal/policy_filters_schedule/#example-days-per-week).  # noqa: E501
 
         :param schedule_days: The schedule_days of this Policy.  # noqa: E501
         :type: int
@@ -252,6 +270,7 @@ class Policy(object):
     def schedule_weeks_of_month(self):
         """Gets the schedule_weeks_of_month of this Policy.  # noqa: E501
 
+        Decimal value of binary week schedule. See [Policy and Device Filters, and Scheduling - Example Weeks per Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month).  # noqa: E501
 
         :return: The schedule_weeks_of_month of this Policy.  # noqa: E501
         :rtype: int
@@ -262,6 +281,7 @@ class Policy(object):
     def schedule_weeks_of_month(self, schedule_weeks_of_month):
         """Sets the schedule_weeks_of_month of this Policy.
 
+        Decimal value of binary week schedule. See [Policy and Device Filters, and Scheduling - Example Weeks per Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month).  # noqa: E501
 
         :param schedule_weeks_of_month: The schedule_weeks_of_month of this Policy.  # noqa: E501
         :type: int
@@ -273,6 +293,7 @@ class Policy(object):
     def schedule_months(self):
         """Gets the schedule_months of this Policy.  # noqa: E501
 
+        Decimal value of binary month schedule. See [Policy and Device Filters, and Scheduling - Example Months per Year](/developer-portal/policy_filters_schedule/#example-months-per-year).  # noqa: E501
 
         :return: The schedule_months of this Policy.  # noqa: E501
         :rtype: int
@@ -283,6 +304,7 @@ class Policy(object):
     def schedule_months(self, schedule_months):
         """Sets the schedule_months of this Policy.
 
+        Decimal value of binary month schedule. See [Policy and Device Filters, and Scheduling - Example Months per Year](/developer-portal/policy_filters_schedule/#example-months-per-year).  # noqa: E501
 
         :param schedule_months: The schedule_months of this Policy.  # noqa: E501
         :type: int
@@ -294,6 +316,7 @@ class Policy(object):
     def schedule_time(self):
         """Gets the schedule_time of this Policy.  # noqa: E501
 
+        Scheduled time for automatic policy execution. Format: `\"hh:mm\"`  # noqa: E501
 
         :return: The schedule_time of this Policy.  # noqa: E501
         :rtype: str
@@ -304,6 +327,7 @@ class Policy(object):
     def schedule_time(self, schedule_time):
         """Sets the schedule_time of this Policy.
 
+        Scheduled time for automatic policy execution. Format: `\"hh:mm\"`  # noqa: E501
 
         :param schedule_time: The schedule_time of this Policy.  # noqa: E501
         :type: str
@@ -338,6 +362,7 @@ class Policy(object):
     def server_groups(self):
         """Gets the server_groups of this Policy.  # noqa: E501
 
+        Integer array. Server groups to link with the policy  # noqa: E501
 
         :return: The server_groups of this Policy.  # noqa: E501
         :rtype: list[int]
@@ -348,6 +373,7 @@ class Policy(object):
     def server_groups(self, server_groups):
         """Sets the server_groups of this Policy.
 
+        Integer array. Server groups to link with the policy  # noqa: E501
 
         :param server_groups: The server_groups of this Policy.  # noqa: E501
         :type: list[int]

@@ -3,10 +3,11 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**auto_patch** | **bool** |  | 
-**notify_user** | **bool** |  | 
+**auto_patch** | **bool** | Enable or Disable automatic execution of the policy. | 
+**notify_user** | **bool** | Display notification 15 minutes before patching. | 
+**device_filters_enabled** | **bool** | Enable or disable Device Filters. | [optional] 
 **device_filters** | [**DeviceFilters**](DeviceFilters.md) |  | [optional] 
-**missed_patch_window** | **bool** |  | [optional] 
+**missed_patch_window** | **bool** | Enable or Disable Missed Patch Window setting | [optional] 
 **os_family** | **str** |  | [optional] 
 **test_code** | **str** |  | [optional] 
 **evaluation_code** | **str** |  | [optional] 

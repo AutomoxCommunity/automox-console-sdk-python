@@ -301,6 +301,12 @@ class Event(object):
         :param policy_type_name: The policy_type_name of this Event.  # noqa: E501
         :type: str
         """
+        allowed_values = ["patch", "custom", "required_software"]  # noqa: E501
+        if policy_type_name not in allowed_values:
+            raise ValueError(
+                "Invalid value for `policy_type_name` ({0}), must be one of {1}"  # noqa: E501
+                .format(policy_type_name, allowed_values)
+            )
 
         self._policy_type_name = policy_type_name
 

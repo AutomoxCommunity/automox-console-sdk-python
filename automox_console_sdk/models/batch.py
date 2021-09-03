@@ -34,7 +34,6 @@ class Batch(object):
         'processed_jobs': 'int',
         'progress': 'int',
         'failed_jobs': 'int',
-        'options': 'list[object]',
         'created_at': 'datetime',
         'cancelled_at': 'datetime',
         'finished_at': 'datetime'
@@ -47,13 +46,12 @@ class Batch(object):
         'processed_jobs': 'processed_jobs',
         'progress': 'progress',
         'failed_jobs': 'failed_jobs',
-        'options': 'options',
         'created_at': 'created_at',
         'cancelled_at': 'cancelled_at',
         'finished_at': 'finished_at'
     }
 
-    def __init__(self, id=None, total_jobs=None, pending_jobs=None, processed_jobs=None, progress=None, failed_jobs=None, options=None, created_at=None, cancelled_at=None, finished_at=None):  # noqa: E501
+    def __init__(self, id=None, total_jobs=None, pending_jobs=None, processed_jobs=None, progress=None, failed_jobs=None, created_at=None, cancelled_at=None, finished_at=None):  # noqa: E501
         """Batch - a model defined in Swagger"""  # noqa: E501
         self._id = None
         self._total_jobs = None
@@ -61,7 +59,6 @@ class Batch(object):
         self._processed_jobs = None
         self._progress = None
         self._failed_jobs = None
-        self._options = None
         self._created_at = None
         self._cancelled_at = None
         self._finished_at = None
@@ -78,8 +75,6 @@ class Batch(object):
             self.progress = progress
         if failed_jobs is not None:
             self.failed_jobs = failed_jobs
-        if options is not None:
-            self.options = options
         if created_at is not None:
             self.created_at = created_at
         if cancelled_at is not None:
@@ -212,27 +207,6 @@ class Batch(object):
         """
 
         self._failed_jobs = failed_jobs
-
-    @property
-    def options(self):
-        """Gets the options of this Batch.  # noqa: E501
-
-
-        :return: The options of this Batch.  # noqa: E501
-        :rtype: list[object]
-        """
-        return self._options
-
-    @options.setter
-    def options(self, options):
-        """Sets the options of this Batch.
-
-
-        :param options: The options of this Batch.  # noqa: E501
-        :type: list[object]
-        """
-
-        self._options = options
 
     @property
     def created_at(self):

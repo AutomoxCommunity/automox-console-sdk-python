@@ -31,7 +31,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
-o = 56 # int | Organization ID for retrieving policies
+o = 56 # int | Organization ID for the specified policy.
 body = automox_console_sdk.PoliciesBody() # PoliciesBody |  (optional)
 
 try:
@@ -46,7 +46,7 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **o** | **int**| Organization ID for retrieving policies | 
+ **o** | **int**| Organization ID for the specified policy. | 
  **body** | [**PoliciesBody**](PoliciesBody.md)|  | [optional] 
 
 ### Return type
@@ -134,7 +134,7 @@ from pprint import pprint
 api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
 id = 56 # int | Policy ID for the specified policy
 o = 56 # int | Organization ID for the specified policy
-action = 'action_example' # str | Specify the action to be taken. Possible values: remediateAll, remediateServer Format: action=remediateServer
+action = 'action_example' # str | Specify the action to be taken. Possible values: `remediateAll`, `remediateServer` Format: `action=remediateServer`
 server_id = 56 # int | Specify the specific Server to run the policy for. Only applicable when action is set to \"remediateServer\" Format: serverId=123456 (optional)
 
 try:
@@ -150,7 +150,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **int**| Policy ID for the specified policy | 
  **o** | **int**| Organization ID for the specified policy | 
- **action** | **str**| Specify the action to be taken. Possible values: remediateAll, remediateServer Format: action&#x3D;remediateServer | 
+ **action** | **str**| Specify the action to be taken. Possible values: &#x60;remediateAll&#x60;, &#x60;remediateServer&#x60; Format: &#x60;action&#x3D;remediateServer&#x60; | 
  **server_id** | **int**| Specify the specific Server to run the policy for. Only applicable when action is set to \&quot;remediateServer\&quot; Format: serverId&#x3D;123456 | [optional] 
 
 ### Return type
@@ -188,8 +188,8 @@ from pprint import pprint
 api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
 body = automox_console_sdk.PolicyDeviceFiltersPreview() # PolicyDeviceFiltersPreview | 
 o = 56 # int | Organization ID. If omitted, results will include all organizations for the authenticated user.
-page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (optional) (default to 0)
-limit = 25 # int | A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with page parameter. (optional) (default to 25)
+page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 0)
+limit = 25 # int | A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 25)
 
 try:
     # Policy Device Filters Preview
@@ -205,8 +205,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**PolicyDeviceFiltersPreview**](PolicyDeviceFiltersPreview.md)|  | 
  **o** | **int**| Organization ID. If omitted, results will include all organizations for the authenticated user. | 
- **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] [default to 0]
- **limit** | **int**| A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with page parameter. | [optional] [default to 25]
+ **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 0]
+ **limit** | **int**| A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with &#x60;page&#x60; parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 25]
 
 ### Return type
 
@@ -242,8 +242,8 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
 o = 56 # int | Organization ID for retrieving policies
-page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (optional) (default to 0)
-limit = 500 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. (optional) (default to 500)
+page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 0)
+limit = 500 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 500)
 
 try:
     # List All Policy Objects
@@ -258,8 +258,8 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **o** | **int**| Organization ID for retrieving policies | 
- **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] [default to 0]
- **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. | [optional] [default to 500]
+ **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 0]
+ **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with &#x60;page&#x60; parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 500]
 
 ### Return type
 
@@ -345,7 +345,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
-o = 56 # int | Organization ID for retrieving policy stats.
+o = 56 # int | Organization ID for retrieving policy stats. Omit this to retrieve stats for policies in all organizations that the authenticated user can access
 
 try:
     # List Policy Compliance Stats
@@ -359,7 +359,7 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **o** | **int**| Organization ID for retrieving policy stats. | 
+ **o** | **int**| Organization ID for retrieving policy stats. Omit this to retrieve stats for policies in all organizations that the authenticated user can access | 
 
 ### Return type
 

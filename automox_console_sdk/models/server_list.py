@@ -28,66 +28,14 @@ class ServerList(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'size': 'int',
-        'results': 'list[Server]'
     }
 
     attribute_map = {
-        'size': 'size',
-        'results': 'results'
     }
 
-    def __init__(self, size=None, results=None):  # noqa: E501
+    def __init__(self):  # noqa: E501
         """ServerList - a model defined in Swagger"""  # noqa: E501
-        self._size = None
-        self._results = None
         self.discriminator = None
-        if size is not None:
-            self.size = size
-        if results is not None:
-            self.results = results
-
-    @property
-    def size(self):
-        """Gets the size of this ServerList.  # noqa: E501
-
-
-        :return: The size of this ServerList.  # noqa: E501
-        :rtype: int
-        """
-        return self._size
-
-    @size.setter
-    def size(self, size):
-        """Sets the size of this ServerList.
-
-
-        :param size: The size of this ServerList.  # noqa: E501
-        :type: int
-        """
-
-        self._size = size
-
-    @property
-    def results(self):
-        """Gets the results of this ServerList.  # noqa: E501
-
-
-        :return: The results of this ServerList.  # noqa: E501
-        :rtype: list[Server]
-        """
-        return self._results
-
-    @results.setter
-    def results(self, results):
-        """Sets the results of this ServerList.
-
-
-        :param results: The results of this ServerList.  # noqa: E501
-        :type: list[Server]
-        """
-
-        self._results = results
 
     def to_dict(self):
         """Returns the model properties as a dict"""

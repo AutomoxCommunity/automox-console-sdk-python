@@ -24,16 +24,16 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.EventsApi(automox_console_sdk.ApiClient(configuration))
-o = 56 # int | Limit response to a specific Automox organization
-page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (optional) (default to 0)
-count_only = 56 # int | Retrieve only the total count of events for the organization (optional)
-policy_id = 56 # int | Retrieve events for a specific policy (optional)
-server_id = 56 # int | Retrieve events for a specific device (optional)
-user_id = 56 # int | Retrieve events for a specific user (optional)
-event_name = 'event_name_example' # str | Name for the event type (optional)
-start_date = '2013-10-20' # date | Limit responses to include only events after this date (YYYY-MM-DD) (optional)
-end_date = '2013-10-20' # date | Limit responses to include only events before this date (YYYY-MM-DD) (optional)
-limit = 500 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. (optional) (default to 500)
+o = 56 # int | Organization ID. Response will include devices for the specified Automox organization. The organization will be assumed based on the API key, if not specified.
+page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 0)
+count_only = 56 # int | Use instead of `page` or `limit` to retrieve only the total count of events for the organization, or when used with an `eventName`, retrieve a count of that specific type of event. (optional)
+policy_id = 56 # int | Retrieve events for a specific policy. (optional)
+server_id = 56 # int | Retrieve events for a specific device. (optional)
+user_id = 56 # int | Retrieve events for a specific user. (optional)
+event_name = 'event_name_example' # str | Name for the event type. (optional)
+start_date = '2013-10-20' # date | Limit responses to include only events after this date. Format: (YYYY-MM-DD). (optional)
+end_date = '2013-10-20' # date | Limit responses to include only events before this date. Format: (YYYY-MM-DD). (optional)
+limit = 500 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 500)
 
 try:
     # Retrieve All Event Objects for the Authenticated User
@@ -47,16 +47,16 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **o** | **int**| Limit response to a specific Automox organization | 
- **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] [default to 0]
- **count_only** | **int**| Retrieve only the total count of events for the organization | [optional] 
- **policy_id** | **int**| Retrieve events for a specific policy | [optional] 
- **server_id** | **int**| Retrieve events for a specific device | [optional] 
- **user_id** | **int**| Retrieve events for a specific user | [optional] 
- **event_name** | **str**| Name for the event type | [optional] 
- **start_date** | **date**| Limit responses to include only events after this date (YYYY-MM-DD) | [optional] 
- **end_date** | **date**| Limit responses to include only events before this date (YYYY-MM-DD) | [optional] 
- **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. | [optional] [default to 500]
+ **o** | **int**| Organization ID. Response will include devices for the specified Automox organization. The organization will be assumed based on the API key, if not specified. | 
+ **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 0]
+ **count_only** | **int**| Use instead of &#x60;page&#x60; or &#x60;limit&#x60; to retrieve only the total count of events for the organization, or when used with an &#x60;eventName&#x60;, retrieve a count of that specific type of event. | [optional] 
+ **policy_id** | **int**| Retrieve events for a specific policy. | [optional] 
+ **server_id** | **int**| Retrieve events for a specific device. | [optional] 
+ **user_id** | **int**| Retrieve events for a specific user. | [optional] 
+ **event_name** | **str**| Name for the event type. | [optional] 
+ **start_date** | **date**| Limit responses to include only events after this date. Format: (YYYY-MM-DD). | [optional] 
+ **end_date** | **date**| Limit responses to include only events before this date. Format: (YYYY-MM-DD). | [optional] 
+ **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 500]
 
 ### Return type
 

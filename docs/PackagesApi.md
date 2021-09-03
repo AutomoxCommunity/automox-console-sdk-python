@@ -25,10 +25,10 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.PackagesApi(automox_console_sdk.ApiClient(configuration))
-id = 56 # int | Server ID for the specified device
+id = 56 # int | Server ID for the specified device.
 o = 56 # int | Organization ID for the specified device
-page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (optional) (default to 0)
-limit = 500 # int | A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. (optional) (default to 500)
+page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 0)
+limit = 500 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 500)
 
 try:
     # List Software Packages for Specific Device
@@ -42,10 +42,10 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **int**| Server ID for the specified device | 
+ **id** | **int**| Server ID for the specified device. | 
  **o** | **int**| Organization ID for the specified device | 
- **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] [default to 0]
- **limit** | **int**| A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. | [optional] [default to 500]
+ **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 0]
+ **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with &#x60;page&#x60; parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 500]
 
 ### Return type
 
@@ -67,7 +67,7 @@ Name | Type | Description  | Notes
 
 List All Software Packages for All Devices
 
-Returns a list of all software packages discovered on all devices of an organization.
+This will list all pending/installed updates, and all installed applications, for all devices in a given organization.
 
 ### Example
 ```python
@@ -80,12 +80,12 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.PackagesApi(automox_console_sdk.ApiClient(configuration))
-id = 56 # int | Organization ID for retrieving package list
-o = 56 # int | Organization ID. Required. If authenticated, the user has access to multiple organizations.
-include_unmanaged = 789 # int | Include applications Automox does not currently support for patching (optional)
-awaiting = 789 # int | Filter based installation status of package. awaiting=1:  Packages that are currently available but not installed. awaiting=0:  Packages that are already installed. (optional)
-page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (optional) (default to 0)
-limit = 500 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. (optional) (default to 500)
+id = 56 # int | Organization ID for retrieving package list.
+o = 56 # int | Organization ID of the target organization.
+include_unmanaged = 789 # int | Include applications Automox does not currently support for patching. (optional)
+awaiting = 789 # int | Filter based installation status of package. `awaiting=1`:  Packages that are currently available but not installed. `awaiting=0`:  Packages that are already installed. (optional)
+page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 0)
+limit = 500 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 500)
 
 try:
     # List All Software Packages for All Devices
@@ -99,12 +99,12 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **int**| Organization ID for retrieving package list | 
- **o** | **int**| Organization ID. Required. If authenticated, the user has access to multiple organizations. | 
- **include_unmanaged** | **int**| Include applications Automox does not currently support for patching | [optional] 
- **awaiting** | **int**| Filter based installation status of package. awaiting&#x3D;1:  Packages that are currently available but not installed. awaiting&#x3D;0:  Packages that are already installed. | [optional] 
- **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] [default to 0]
- **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. | [optional] [default to 500]
+ **id** | **int**| Organization ID for retrieving package list. | 
+ **o** | **int**| Organization ID of the target organization. | 
+ **include_unmanaged** | **int**| Include applications Automox does not currently support for patching. | [optional] 
+ **awaiting** | **int**| Filter based installation status of package. &#x60;awaiting&#x3D;1&#x60;:  Packages that are currently available but not installed. &#x60;awaiting&#x3D;0&#x60;:  Packages that are already installed. | [optional] 
+ **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 0]
+ **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with &#x60;page&#x60; parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 500]
 
 ### Return type
 

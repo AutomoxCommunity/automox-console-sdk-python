@@ -42,10 +42,10 @@ class PackagesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server ID for the specified device (required)
+        :param int id: Server ID for the specified device. (required)
         :param int o: Organization ID for the specified device (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Packages]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -67,10 +67,10 @@ class PackagesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server ID for the specified device (required)
+        :param int id: Server ID for the specified device. (required)
         :param int o: Organization ID for the specified device (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Packages]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -146,19 +146,19 @@ class PackagesApi(object):
     def get_organization_packages(self, id, o, **kwargs):  # noqa: E501
         """List All Software Packages for All Devices  # noqa: E501
 
-        Returns a list of all software packages discovered on all devices of an organization.  # noqa: E501
+        This will list all pending/installed updates, and all installed applications, for all devices in a given organization.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_organization_packages(id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Organization ID for retrieving package list (required)
-        :param int o: Organization ID. Required. If authenticated, the user has access to multiple organizations. (required)
-        :param int include_unmanaged: Include applications Automox does not currently support for patching
-        :param int awaiting: Filter based installation status of package. awaiting=1:  Packages that are currently available but not installed. awaiting=0:  Packages that are already installed.
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+        :param int id: Organization ID for retrieving package list. (required)
+        :param int o: Organization ID of the target organization. (required)
+        :param int include_unmanaged: Include applications Automox does not currently support for patching.
+        :param int awaiting: Filter based installation status of package. `awaiting=1`:  Packages that are currently available but not installed. `awaiting=0`:  Packages that are already installed.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Packages]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -173,19 +173,19 @@ class PackagesApi(object):
     def get_organization_packages_with_http_info(self, id, o, **kwargs):  # noqa: E501
         """List All Software Packages for All Devices  # noqa: E501
 
-        Returns a list of all software packages discovered on all devices of an organization.  # noqa: E501
+        This will list all pending/installed updates, and all installed applications, for all devices in a given organization.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_organization_packages_with_http_info(id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Organization ID for retrieving package list (required)
-        :param int o: Organization ID. Required. If authenticated, the user has access to multiple organizations. (required)
-        :param int include_unmanaged: Include applications Automox does not currently support for patching
-        :param int awaiting: Filter based installation status of package. awaiting=1:  Packages that are currently available but not installed. awaiting=0:  Packages that are already installed.
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+        :param int id: Organization ID for retrieving package list. (required)
+        :param int o: Organization ID of the target organization. (required)
+        :param int include_unmanaged: Include applications Automox does not currently support for patching.
+        :param int awaiting: Filter based installation status of package. `awaiting=1`:  Packages that are currently available but not installed. `awaiting=0`:  Packages that are already installed.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Packages]
                  If the method is called asynchronously,
                  returns the request thread.

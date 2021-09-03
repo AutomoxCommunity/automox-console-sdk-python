@@ -102,6 +102,7 @@ class PoliciesBody(object):
     def name(self):
         """Gets the name of this PoliciesBody.  # noqa: E501
 
+        The name of the policy.  # noqa: E501
 
         :return: The name of this PoliciesBody.  # noqa: E501
         :rtype: str
@@ -112,6 +113,7 @@ class PoliciesBody(object):
     def name(self, name):
         """Sets the name of this PoliciesBody.
 
+        The name of the policy.  # noqa: E501
 
         :param name: The name of this PoliciesBody.  # noqa: E501
         :type: str
@@ -141,6 +143,12 @@ class PoliciesBody(object):
         """
         if policy_type_name is None:
             raise ValueError("Invalid value for `policy_type_name`, must not be `None`")  # noqa: E501
+        allowed_values = ["patch", "custom", "required_software"]  # noqa: E501
+        if policy_type_name not in allowed_values:
+            raise ValueError(
+                "Invalid value for `policy_type_name` ({0}), must be one of {1}"  # noqa: E501
+                .format(policy_type_name, allowed_values)
+            )
 
         self._policy_type_name = policy_type_name
 
@@ -148,6 +156,7 @@ class PoliciesBody(object):
     def organization_id(self):
         """Gets the organization_id of this PoliciesBody.  # noqa: E501
 
+        Organization ID for the specified policy  # noqa: E501
 
         :return: The organization_id of this PoliciesBody.  # noqa: E501
         :rtype: int
@@ -158,6 +167,7 @@ class PoliciesBody(object):
     def organization_id(self, organization_id):
         """Sets the organization_id of this PoliciesBody.
 
+        Organization ID for the specified policy  # noqa: E501
 
         :param organization_id: The organization_id of this PoliciesBody.  # noqa: E501
         :type: int
@@ -171,6 +181,7 @@ class PoliciesBody(object):
     def schedule_days(self):
         """Gets the schedule_days of this PoliciesBody.  # noqa: E501
 
+        Decimal value of binary day schedule. See [Policy and Device Filters, and Scheduling - Example Days per Week](/developer-portal/policy_filters_schedule/#example-days-per-week).  # noqa: E501
 
         :return: The schedule_days of this PoliciesBody.  # noqa: E501
         :rtype: int
@@ -181,6 +192,7 @@ class PoliciesBody(object):
     def schedule_days(self, schedule_days):
         """Sets the schedule_days of this PoliciesBody.
 
+        Decimal value of binary day schedule. See [Policy and Device Filters, and Scheduling - Example Days per Week](/developer-portal/policy_filters_schedule/#example-days-per-week).  # noqa: E501
 
         :param schedule_days: The schedule_days of this PoliciesBody.  # noqa: E501
         :type: int
@@ -194,6 +206,7 @@ class PoliciesBody(object):
     def schedule_weeks_of_month(self):
         """Gets the schedule_weeks_of_month of this PoliciesBody.  # noqa: E501
 
+        Decimal value of binary week schedule. See [Policy and Device Filters, and Scheduling - Example Weeks per Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month).  # noqa: E501
 
         :return: The schedule_weeks_of_month of this PoliciesBody.  # noqa: E501
         :rtype: int
@@ -204,6 +217,7 @@ class PoliciesBody(object):
     def schedule_weeks_of_month(self, schedule_weeks_of_month):
         """Sets the schedule_weeks_of_month of this PoliciesBody.
 
+        Decimal value of binary week schedule. See [Policy and Device Filters, and Scheduling - Example Weeks per Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month).  # noqa: E501
 
         :param schedule_weeks_of_month: The schedule_weeks_of_month of this PoliciesBody.  # noqa: E501
         :type: int
@@ -217,6 +231,7 @@ class PoliciesBody(object):
     def schedule_months(self):
         """Gets the schedule_months of this PoliciesBody.  # noqa: E501
 
+        Decimal value of binary month schedule. See [Policy and Device Filters, and Scheduling - Example Months per Year](/developer-portal/policy_filters_schedule/#example-months-per-year).  # noqa: E501
 
         :return: The schedule_months of this PoliciesBody.  # noqa: E501
         :rtype: int
@@ -227,6 +242,7 @@ class PoliciesBody(object):
     def schedule_months(self, schedule_months):
         """Sets the schedule_months of this PoliciesBody.
 
+        Decimal value of binary month schedule. See [Policy and Device Filters, and Scheduling - Example Months per Year](/developer-portal/policy_filters_schedule/#example-months-per-year).  # noqa: E501
 
         :param schedule_months: The schedule_months of this PoliciesBody.  # noqa: E501
         :type: int
@@ -240,6 +256,7 @@ class PoliciesBody(object):
     def schedule_time(self):
         """Gets the schedule_time of this PoliciesBody.  # noqa: E501
 
+        Scheduled time for automatic policy execution. Format: `\"hh:mm\"`  # noqa: E501
 
         :return: The schedule_time of this PoliciesBody.  # noqa: E501
         :rtype: str
@@ -250,6 +267,7 @@ class PoliciesBody(object):
     def schedule_time(self, schedule_time):
         """Sets the schedule_time of this PoliciesBody.
 
+        Scheduled time for automatic policy execution. Format: `\"hh:mm\"`  # noqa: E501
 
         :param schedule_time: The schedule_time of this PoliciesBody.  # noqa: E501
         :type: str
@@ -286,6 +304,7 @@ class PoliciesBody(object):
     def notify_user(self):
         """Gets the notify_user of this PoliciesBody.  # noqa: E501
 
+        Display notification 15 minutes before patching.  # noqa: E501
 
         :return: The notify_user of this PoliciesBody.  # noqa: E501
         :rtype: bool
@@ -296,6 +315,7 @@ class PoliciesBody(object):
     def notify_user(self, notify_user):
         """Sets the notify_user of this PoliciesBody.
 
+        Display notification 15 minutes before patching.  # noqa: E501
 
         :param notify_user: The notify_user of this PoliciesBody.  # noqa: E501
         :type: bool
@@ -309,6 +329,7 @@ class PoliciesBody(object):
     def notes(self):
         """Gets the notes of this PoliciesBody.  # noqa: E501
 
+        Policy notes  # noqa: E501
 
         :return: The notes of this PoliciesBody.  # noqa: E501
         :rtype: str
@@ -319,6 +340,7 @@ class PoliciesBody(object):
     def notes(self, notes):
         """Sets the notes of this PoliciesBody.
 
+        Policy notes  # noqa: E501
 
         :param notes: The notes of this PoliciesBody.  # noqa: E501
         :type: str
@@ -330,6 +352,7 @@ class PoliciesBody(object):
     def server_groups(self):
         """Gets the server_groups of this PoliciesBody.  # noqa: E501
 
+        Integer array. Server groups to link with the policy  # noqa: E501
 
         :return: The server_groups of this PoliciesBody.  # noqa: E501
         :rtype: list[int]
@@ -340,6 +363,7 @@ class PoliciesBody(object):
     def server_groups(self, server_groups):
         """Sets the server_groups of this PoliciesBody.
 
+        Integer array. Server groups to link with the policy  # noqa: E501
 
         :param server_groups: The server_groups of this PoliciesBody.  # noqa: E501
         :type: list[int]
@@ -351,6 +375,7 @@ class PoliciesBody(object):
     def auto_patch(self):
         """Gets the auto_patch of this PoliciesBody.  # noqa: E501
 
+        Enable or Disable automatic execution of the policy.  # noqa: E501
 
         :return: The auto_patch of this PoliciesBody.  # noqa: E501
         :rtype: bool
@@ -361,6 +386,7 @@ class PoliciesBody(object):
     def auto_patch(self, auto_patch):
         """Sets the auto_patch of this PoliciesBody.
 
+        Enable or Disable automatic execution of the policy.  # noqa: E501
 
         :param auto_patch: The auto_patch of this PoliciesBody.  # noqa: E501
         :type: bool
@@ -372,6 +398,7 @@ class PoliciesBody(object):
     def auto_reboot(self):
         """Gets the auto_reboot of this PoliciesBody.  # noqa: E501
 
+        Enable or Disable automatic reboots following policy execution.  # noqa: E501
 
         :return: The auto_reboot of this PoliciesBody.  # noqa: E501
         :rtype: bool
@@ -382,6 +409,7 @@ class PoliciesBody(object):
     def auto_reboot(self, auto_reboot):
         """Sets the auto_reboot of this PoliciesBody.
 
+        Enable or Disable automatic reboots following policy execution.  # noqa: E501
 
         :param auto_reboot: The auto_reboot of this PoliciesBody.  # noqa: E501
         :type: bool
@@ -393,6 +421,7 @@ class PoliciesBody(object):
     def notify_reboot_user(self):
         """Gets the notify_reboot_user of this PoliciesBody.  # noqa: E501
 
+        Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions.  # noqa: E501
 
         :return: The notify_reboot_user of this PoliciesBody.  # noqa: E501
         :rtype: bool
@@ -403,6 +432,7 @@ class PoliciesBody(object):
     def notify_reboot_user(self, notify_reboot_user):
         """Sets the notify_reboot_user of this PoliciesBody.
 
+        Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions.  # noqa: E501
 
         :param notify_reboot_user: The notify_reboot_user of this PoliciesBody.  # noqa: E501
         :type: bool

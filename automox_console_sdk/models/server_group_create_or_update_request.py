@@ -133,7 +133,7 @@ class ServerGroupCreateOrUpdateRequest(object):
     def parent_server_group_id(self):
         """Gets the parent_server_group_id of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
 
-        ID of the parent group Use the organization's Default Group ID to make this a top-level group. See Note: Default Group ID  # noqa: E501
+        ID of the parent group. Use the organization's Default Group ID to make this a top-level group. See [About Automox API - Default Group ID](/developer-portal/about-ax-api#Default-Group-ID)  # noqa: E501
 
         :return: The parent_server_group_id of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
         :rtype: int
@@ -144,7 +144,7 @@ class ServerGroupCreateOrUpdateRequest(object):
     def parent_server_group_id(self, parent_server_group_id):
         """Sets the parent_server_group_id of this ServerGroupCreateOrUpdateRequest.
 
-        ID of the parent group Use the organization's Default Group ID to make this a top-level group. See Note: Default Group ID  # noqa: E501
+        ID of the parent group. Use the organization's Default Group ID to make this a top-level group. See [About Automox API - Default Group ID](/developer-portal/about-ax-api#Default-Group-ID)  # noqa: E501
 
         :param parent_server_group_id: The parent_server_group_id of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
         :type: int
@@ -158,7 +158,7 @@ class ServerGroupCreateOrUpdateRequest(object):
     def ui_color(self):
         """Gets the ui_color of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
 
-        The highlight color for the group. Primarily used on the System Management view. Format: #059F1D See Note UI Color  # noqa: E501
+        The highlight color for the group. Primarily used on the System Management view. Format: #059F1D  # noqa: E501
 
         :return: The ui_color of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
         :rtype: str
@@ -169,7 +169,7 @@ class ServerGroupCreateOrUpdateRequest(object):
     def ui_color(self, ui_color):
         """Sets the ui_color of this ServerGroupCreateOrUpdateRequest.
 
-        The highlight color for the group. Primarily used on the System Management view. Format: #059F1D See Note UI Color  # noqa: E501
+        The highlight color for the group. Primarily used on the System Management view. Format: #059F1D  # noqa: E501
 
         :param ui_color: The ui_color of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
         :type: str
@@ -204,7 +204,7 @@ class ServerGroupCreateOrUpdateRequest(object):
     def enable_os_auto_update(self):
         """Gets the enable_os_auto_update of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
 
-        Enforce automatic update settings Options: null: Keep Device's Setting true: Enable OS automatic updates false: Disable OS automatic updates  # noqa: E501
+        Enforce automatic update settings Options: `null`: Keep Device's Setting. `true`: Enable OS automatic updates. `false`: Disable OS automatic updates.  # noqa: E501
 
         :return: The enable_os_auto_update of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
         :rtype: bool
@@ -215,7 +215,7 @@ class ServerGroupCreateOrUpdateRequest(object):
     def enable_os_auto_update(self, enable_os_auto_update):
         """Sets the enable_os_auto_update of this ServerGroupCreateOrUpdateRequest.
 
-        Enforce automatic update settings Options: null: Keep Device's Setting true: Enable OS automatic updates false: Disable OS automatic updates  # noqa: E501
+        Enforce automatic update settings Options: `null`: Keep Device's Setting. `true`: Enable OS automatic updates. `false`: Disable OS automatic updates.  # noqa: E501
 
         :param enable_os_auto_update: The enable_os_auto_update of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
         :type: bool
@@ -227,7 +227,7 @@ class ServerGroupCreateOrUpdateRequest(object):
     def enable_wsus(self):
         """Gets the enable_wsus of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
 
-        Enforce WSUS settings for Windows devices Options: null: Keep Device's Setting true: force WSUS false: force Windows Update  # noqa: E501
+        Enforce WSUS settings for Windows devices. Options: `null`: Keep Device's Setting. `true`: force WSUS. `false`: force Windows Update.  # noqa: E501
 
         :return: The enable_wsus of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
         :rtype: bool
@@ -238,7 +238,7 @@ class ServerGroupCreateOrUpdateRequest(object):
     def enable_wsus(self, enable_wsus):
         """Sets the enable_wsus of this ServerGroupCreateOrUpdateRequest.
 
-        Enforce WSUS settings for Windows devices Options: null: Keep Device's Setting true: force WSUS false: force Windows Update  # noqa: E501
+        Enforce WSUS settings for Windows devices. Options: `null`: Keep Device's Setting. `true`: force WSUS. `false`: force Windows Update.  # noqa: E501
 
         :param enable_wsus: The enable_wsus of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
         :type: bool
@@ -250,7 +250,7 @@ class ServerGroupCreateOrUpdateRequest(object):
     def wsus_server(self):
         """Gets the wsus_server of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
 
-        WSUS server address. Use with enable_wsus. Format: \"https://myserver.com:8530\"  # noqa: E501
+        WSUS server address. Use with `enable_wsus`. Format: `\"https://myserver.com:8530\"`  # noqa: E501
 
         :return: The wsus_server of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
         :rtype: str
@@ -261,7 +261,7 @@ class ServerGroupCreateOrUpdateRequest(object):
     def wsus_server(self, wsus_server):
         """Sets the wsus_server of this ServerGroupCreateOrUpdateRequest.
 
-        WSUS server address. Use with enable_wsus. Format: \"https://myserver.com:8530\"  # noqa: E501
+        WSUS server address. Use with `enable_wsus`. Format: `\"https://myserver.com:8530\"`  # noqa: E501
 
         :param wsus_server: The wsus_server of this ServerGroupCreateOrUpdateRequest.  # noqa: E501
         :type: str

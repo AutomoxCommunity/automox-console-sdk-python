@@ -50,6 +50,7 @@ class UserIdApiKeysBody(object):
     def name(self):
         """Gets the name of this UserIdApiKeysBody.  # noqa: E501
 
+        A unique name for this key. Users are not allowed to have two keys with the same name under a given organization.  # noqa: E501
 
         :return: The name of this UserIdApiKeysBody.  # noqa: E501
         :rtype: str
@@ -60,6 +61,7 @@ class UserIdApiKeysBody(object):
     def name(self, name):
         """Sets the name of this UserIdApiKeysBody.
 
+        A unique name for this key. Users are not allowed to have two keys with the same name under a given organization.  # noqa: E501
 
         :param name: The name of this UserIdApiKeysBody.  # noqa: E501
         :type: str
@@ -73,6 +75,7 @@ class UserIdApiKeysBody(object):
     def expires_at(self):
         """Gets the expires_at of this UserIdApiKeysBody.  # noqa: E501
 
+        The time at which (in UTC) the key should automatically expire. Format is ISO8601. Example: 2020-08-05T18:21:47+0000  # noqa: E501
 
         :return: The expires_at of this UserIdApiKeysBody.  # noqa: E501
         :rtype: str
@@ -83,6 +86,7 @@ class UserIdApiKeysBody(object):
     def expires_at(self, expires_at):
         """Sets the expires_at of this UserIdApiKeysBody.
 
+        The time at which (in UTC) the key should automatically expire. Format is ISO8601. Example: 2020-08-05T18:21:47+0000  # noqa: E501
 
         :param expires_at: The expires_at of this UserIdApiKeysBody.  # noqa: E501
         :type: str

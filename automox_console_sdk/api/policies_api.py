@@ -42,7 +42,7 @@ class PoliciesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Organization ID for retrieving policies (required)
+        :param int o: Organization ID for the specified policy. (required)
         :param PoliciesBody body:
         :return: list[Policy]
                  If the method is called asynchronously,
@@ -65,7 +65,7 @@ class PoliciesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Organization ID for retrieving policies (required)
+        :param int o: Organization ID for the specified policy. (required)
         :param PoliciesBody body:
         :return: list[Policy]
                  If the method is called asynchronously,
@@ -250,7 +250,7 @@ class PoliciesApi(object):
         :param async_req bool
         :param int id: Policy ID for the specified policy (required)
         :param int o: Organization ID for the specified policy (required)
-        :param str action: Specify the action to be taken. Possible values: remediateAll, remediateServer Format: action=remediateServer (required)
+        :param str action: Specify the action to be taken. Possible values: `remediateAll`, `remediateServer` Format: `action=remediateServer` (required)
         :param int server_id: Specify the specific Server to run the policy for. Only applicable when action is set to \"remediateServer\" Format: serverId=123456
         :return: None
                  If the method is called asynchronously,
@@ -275,7 +275,7 @@ class PoliciesApi(object):
         :param async_req bool
         :param int id: Policy ID for the specified policy (required)
         :param int o: Organization ID for the specified policy (required)
-        :param str action: Specify the action to be taken. Possible values: remediateAll, remediateServer Format: action=remediateServer (required)
+        :param str action: Specify the action to be taken. Possible values: `remediateAll`, `remediateServer` Format: `action=remediateServer` (required)
         :param int server_id: Specify the specific Server to run the policy for. Only applicable when action is set to \"remediateServer\" Format: serverId=123456
         :return: None
                  If the method is called asynchronously,
@@ -365,8 +365,8 @@ class PoliciesApi(object):
         :param async_req bool
         :param PolicyDeviceFiltersPreview body: (required)
         :param int o: Organization ID. If omitted, results will include all organizations for the authenticated user. (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[PolicyDeviceFiltersOutput]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -390,8 +390,8 @@ class PoliciesApi(object):
         :param async_req bool
         :param PolicyDeviceFiltersPreview body: (required)
         :param int o: Organization ID. If omitted, results will include all organizations for the authenticated user. (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[PolicyDeviceFiltersOutput]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -479,8 +479,8 @@ class PoliciesApi(object):
 
         :param async_req bool
         :param int o: Organization ID for retrieving policies (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Policy]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -503,8 +503,8 @@ class PoliciesApi(object):
 
         :param async_req bool
         :param int o: Organization ID for retrieving policies (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Policy]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -684,7 +684,7 @@ class PoliciesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Organization ID for retrieving policy stats. (required)
+        :param int o: Organization ID for retrieving policy stats. Omit this to retrieve stats for policies in all organizations that the authenticated user can access (required)
         :return: list[PolicyStats]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -706,7 +706,7 @@ class PoliciesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Organization ID for retrieving policy stats. (required)
+        :param int o: Organization ID for retrieving policy stats. Omit this to retrieve stats for policies in all organizations that the authenticated user can access (required)
         :return: list[PolicyStats]
                  If the method is called asynchronously,
                  returns the request thread.

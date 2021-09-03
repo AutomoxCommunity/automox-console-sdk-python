@@ -30,6 +30,7 @@ class CustomPolicyConfiguration(object):
     swagger_types = {
         'auto_patch': 'bool',
         'notify_user': 'bool',
+        'device_filters_enabled': 'bool',
         'device_filters': 'DeviceFilters',
         'missed_patch_window': 'bool',
         'os_family': 'str',
@@ -40,6 +41,7 @@ class CustomPolicyConfiguration(object):
     attribute_map = {
         'auto_patch': 'auto_patch',
         'notify_user': 'notify_user',
+        'device_filters_enabled': 'device_filters_enabled',
         'device_filters': 'device_filters',
         'missed_patch_window': 'missed_patch_window',
         'os_family': 'os_family',
@@ -47,10 +49,11 @@ class CustomPolicyConfiguration(object):
         'evaluation_code': 'evaluation_code'
     }
 
-    def __init__(self, auto_patch=None, notify_user=None, device_filters=None, missed_patch_window=None, os_family=None, test_code=None, evaluation_code=None):  # noqa: E501
+    def __init__(self, auto_patch=None, notify_user=None, device_filters_enabled=None, device_filters=None, missed_patch_window=None, os_family=None, test_code=None, evaluation_code=None):  # noqa: E501
         """CustomPolicyConfiguration - a model defined in Swagger"""  # noqa: E501
         self._auto_patch = None
         self._notify_user = None
+        self._device_filters_enabled = None
         self._device_filters = None
         self._missed_patch_window = None
         self._os_family = None
@@ -59,6 +62,8 @@ class CustomPolicyConfiguration(object):
         self.discriminator = None
         self.auto_patch = auto_patch
         self.notify_user = notify_user
+        if device_filters_enabled is not None:
+            self.device_filters_enabled = device_filters_enabled
         if device_filters is not None:
             self.device_filters = device_filters
         if missed_patch_window is not None:
@@ -74,6 +79,7 @@ class CustomPolicyConfiguration(object):
     def auto_patch(self):
         """Gets the auto_patch of this CustomPolicyConfiguration.  # noqa: E501
 
+        Enable or Disable automatic execution of the policy.  # noqa: E501
 
         :return: The auto_patch of this CustomPolicyConfiguration.  # noqa: E501
         :rtype: bool
@@ -84,6 +90,7 @@ class CustomPolicyConfiguration(object):
     def auto_patch(self, auto_patch):
         """Sets the auto_patch of this CustomPolicyConfiguration.
 
+        Enable or Disable automatic execution of the policy.  # noqa: E501
 
         :param auto_patch: The auto_patch of this CustomPolicyConfiguration.  # noqa: E501
         :type: bool
@@ -97,6 +104,7 @@ class CustomPolicyConfiguration(object):
     def notify_user(self):
         """Gets the notify_user of this CustomPolicyConfiguration.  # noqa: E501
 
+        Display notification 15 minutes before patching.  # noqa: E501
 
         :return: The notify_user of this CustomPolicyConfiguration.  # noqa: E501
         :rtype: bool
@@ -107,6 +115,7 @@ class CustomPolicyConfiguration(object):
     def notify_user(self, notify_user):
         """Sets the notify_user of this CustomPolicyConfiguration.
 
+        Display notification 15 minutes before patching.  # noqa: E501
 
         :param notify_user: The notify_user of this CustomPolicyConfiguration.  # noqa: E501
         :type: bool
@@ -115,6 +124,29 @@ class CustomPolicyConfiguration(object):
             raise ValueError("Invalid value for `notify_user`, must not be `None`")  # noqa: E501
 
         self._notify_user = notify_user
+
+    @property
+    def device_filters_enabled(self):
+        """Gets the device_filters_enabled of this CustomPolicyConfiguration.  # noqa: E501
+
+        Enable or disable Device Filters.  # noqa: E501
+
+        :return: The device_filters_enabled of this CustomPolicyConfiguration.  # noqa: E501
+        :rtype: bool
+        """
+        return self._device_filters_enabled
+
+    @device_filters_enabled.setter
+    def device_filters_enabled(self, device_filters_enabled):
+        """Sets the device_filters_enabled of this CustomPolicyConfiguration.
+
+        Enable or disable Device Filters.  # noqa: E501
+
+        :param device_filters_enabled: The device_filters_enabled of this CustomPolicyConfiguration.  # noqa: E501
+        :type: bool
+        """
+
+        self._device_filters_enabled = device_filters_enabled
 
     @property
     def device_filters(self):
@@ -141,6 +173,7 @@ class CustomPolicyConfiguration(object):
     def missed_patch_window(self):
         """Gets the missed_patch_window of this CustomPolicyConfiguration.  # noqa: E501
 
+        Enable or Disable Missed Patch Window setting  # noqa: E501
 
         :return: The missed_patch_window of this CustomPolicyConfiguration.  # noqa: E501
         :rtype: bool
@@ -151,6 +184,7 @@ class CustomPolicyConfiguration(object):
     def missed_patch_window(self, missed_patch_window):
         """Sets the missed_patch_window of this CustomPolicyConfiguration.
 
+        Enable or Disable Missed Patch Window setting  # noqa: E501
 
         :param missed_patch_window: The missed_patch_window of this CustomPolicyConfiguration.  # noqa: E501
         :type: bool

@@ -42,16 +42,16 @@ class EventsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Limit response to a specific Automox organization (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int count_only: Retrieve only the total count of events for the organization
-        :param int policy_id: Retrieve events for a specific policy
-        :param int server_id: Retrieve events for a specific device
-        :param int user_id: Retrieve events for a specific user
-        :param str event_name: Name for the event type
-        :param date start_date: Limit responses to include only events after this date (YYYY-MM-DD)
-        :param date end_date: Limit responses to include only events before this date (YYYY-MM-DD)
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+        :param int o: Organization ID. Response will include devices for the specified Automox organization. The organization will be assumed based on the API key, if not specified. (required)
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int count_only: Use instead of `page` or `limit` to retrieve only the total count of events for the organization, or when used with an `eventName`, retrieve a count of that specific type of event.
+        :param int policy_id: Retrieve events for a specific policy.
+        :param int server_id: Retrieve events for a specific device.
+        :param int user_id: Retrieve events for a specific user.
+        :param str event_name: Name for the event type.
+        :param date start_date: Limit responses to include only events after this date. Format: (YYYY-MM-DD).
+        :param date end_date: Limit responses to include only events before this date. Format: (YYYY-MM-DD).
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Event]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -73,16 +73,16 @@ class EventsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Limit response to a specific Automox organization (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int count_only: Retrieve only the total count of events for the organization
-        :param int policy_id: Retrieve events for a specific policy
-        :param int server_id: Retrieve events for a specific device
-        :param int user_id: Retrieve events for a specific user
-        :param str event_name: Name for the event type
-        :param date start_date: Limit responses to include only events after this date (YYYY-MM-DD)
-        :param date end_date: Limit responses to include only events before this date (YYYY-MM-DD)
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+        :param int o: Organization ID. Response will include devices for the specified Automox organization. The organization will be assumed based on the API key, if not specified. (required)
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int count_only: Use instead of `page` or `limit` to retrieve only the total count of events for the organization, or when used with an `eventName`, retrieve a count of that specific type of event.
+        :param int policy_id: Retrieve events for a specific policy.
+        :param int server_id: Retrieve events for a specific device.
+        :param int user_id: Retrieve events for a specific user.
+        :param str event_name: Name for the event type.
+        :param date start_date: Limit responses to include only events after this date. Format: (YYYY-MM-DD).
+        :param date end_date: Limit responses to include only events before this date. Format: (YYYY-MM-DD).
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Event]
                  If the method is called asynchronously,
                  returns the request thread.

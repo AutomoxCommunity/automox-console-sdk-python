@@ -35,7 +35,7 @@ class APIKeysApi(object):
     def create_user_api_key(self, o, user_id, **kwargs):  # noqa: E501
         """Creates an API key for a user  # noqa: E501
 
-        Creates an API key for a user  # noqa: E501
+        **Note:** A user is only allowed to have a maximum of 10 active keys per organization at any given time.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.create_user_api_key(o, user_id, async_req=True)
@@ -59,7 +59,7 @@ class APIKeysApi(object):
     def create_user_api_key_with_http_info(self, o, user_id, **kwargs):  # noqa: E501
         """Creates an API key for a user  # noqa: E501
 
-        Creates an API key for a user  # noqa: E501
+        **Note:** A user is only allowed to have a maximum of 10 active keys per organization at any given time.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.create_user_api_key_with_http_info(o, user_id, async_req=True)
@@ -144,17 +144,17 @@ class APIKeysApi(object):
             collection_formats=collection_formats)
 
     def decrypt_user_api_key(self, user_id, id, o, **kwargs):  # noqa: E501
-        """Retrieves the API Key secret by ID  # noqa: E501
+        """Decrypt User API Key  # noqa: E501
 
-        Retrieves the API Key secret by ID  # noqa: E501
+        This endpoint allows you to decrypt the API key for an authenticated user.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.decrypt_user_api_key(user_id, id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int user_id: User ID of the user to retrieve API Keys (required)
-        :param int id: The ID of the API key to retrieve (required)
+        :param int user_id: The ID of the user to decrypt keys for. (required)
+        :param int id: The ID of the API key to decrypt (required)
         :param int o: The Organization of the user. (required)
         :return: InlineResponse2002
                  If the method is called asynchronously,
@@ -168,17 +168,17 @@ class APIKeysApi(object):
             return data
 
     def decrypt_user_api_key_with_http_info(self, user_id, id, o, **kwargs):  # noqa: E501
-        """Retrieves the API Key secret by ID  # noqa: E501
+        """Decrypt User API Key  # noqa: E501
 
-        Retrieves the API Key secret by ID  # noqa: E501
+        This endpoint allows you to decrypt the API key for an authenticated user.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.decrypt_user_api_key_with_http_info(user_id, id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int user_id: User ID of the user to retrieve API Keys (required)
-        :param int id: The ID of the API key to retrieve (required)
+        :param int user_id: The ID of the user to decrypt keys for. (required)
+        :param int id: The ID of the API key to decrypt (required)
         :param int o: The Organization of the user. (required)
         :return: InlineResponse2002
                  If the method is called asynchronously,
@@ -254,51 +254,49 @@ class APIKeysApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def delete_user_api_key(self, user_id, id, o, content_type, **kwargs):  # noqa: E501
+    def delete_user_api_key(self, user_id, id, o, **kwargs):  # noqa: E501
         """Deletes an API Key by ID  # noqa: E501
 
         Deletes an API Key by ID  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_user_api_key(user_id, id, o, content_type, async_req=True)
+        >>> thread = api.delete_user_api_key(user_id, id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
         :param int user_id: User ID of the user to delete API Key for (required)
         :param int id: The ID of the API key to delete (required)
-        :param int o: The Organization of the user. (required)
-        :param str content_type: Specify JSON as the content type for body parameters (required)
+        :param int o: The Organization whose keys you want to delete. (required)
         :return: None
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.delete_user_api_key_with_http_info(user_id, id, o, content_type, **kwargs)  # noqa: E501
+            return self.delete_user_api_key_with_http_info(user_id, id, o, **kwargs)  # noqa: E501
         else:
-            (data) = self.delete_user_api_key_with_http_info(user_id, id, o, content_type, **kwargs)  # noqa: E501
+            (data) = self.delete_user_api_key_with_http_info(user_id, id, o, **kwargs)  # noqa: E501
             return data
 
-    def delete_user_api_key_with_http_info(self, user_id, id, o, content_type, **kwargs):  # noqa: E501
+    def delete_user_api_key_with_http_info(self, user_id, id, o, **kwargs):  # noqa: E501
         """Deletes an API Key by ID  # noqa: E501
 
         Deletes an API Key by ID  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_user_api_key_with_http_info(user_id, id, o, content_type, async_req=True)
+        >>> thread = api.delete_user_api_key_with_http_info(user_id, id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
         :param int user_id: User ID of the user to delete API Key for (required)
         :param int id: The ID of the API key to delete (required)
-        :param int o: The Organization of the user. (required)
-        :param str content_type: Specify JSON as the content type for body parameters (required)
+        :param int o: The Organization whose keys you want to delete. (required)
         :return: None
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = ['user_id', 'id', 'o', 'content_type']  # noqa: E501
+        all_params = ['user_id', 'id', 'o']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -325,10 +323,6 @@ class APIKeysApi(object):
         if ('o' not in params or
                 params['o'] is None):
             raise ValueError("Missing the required parameter `o` when calling `delete_user_api_key`")  # noqa: E501
-        # verify the required parameter 'content_type' is set
-        if ('content_type' not in params or
-                params['content_type'] is None):
-            raise ValueError("Missing the required parameter `content_type` when calling `delete_user_api_key`")  # noqa: E501
 
         collection_formats = {}
 
@@ -343,8 +337,6 @@ class APIKeysApi(object):
             query_params.append(('o', params['o']))  # noqa: E501
 
         header_params = {}
-        if 'content_type' in params:
-            header_params['Content-Type'] = params['content_type']  # noqa: E501
 
         form_params = []
         local_var_files = {}
@@ -376,16 +368,16 @@ class APIKeysApi(object):
     def get_organization_api_keys(self, id, **kwargs):  # noqa: E501
         """List All API Keys for Organization  # noqa: E501
 
-        You must have Full Administrator privileges for this endpoint  # noqa: E501
+        **PREREQUISITES:** You must have **Full Administrator** privileges! This endpoint allows you to list all keys for an organization.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_organization_api_keys(id, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Organization ID for retrieving API Keys (required)
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
+        :param int id: The ID of the organization to list keys for. (required)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: InlineResponse200
                  If the method is called asynchronously,
                  returns the request thread.
@@ -400,16 +392,16 @@ class APIKeysApi(object):
     def get_organization_api_keys_with_http_info(self, id, **kwargs):  # noqa: E501
         """List All API Keys for Organization  # noqa: E501
 
-        You must have Full Administrator privileges for this endpoint  # noqa: E501
+        **PREREQUISITES:** You must have **Full Administrator** privileges! This endpoint allows you to list all keys for an organization.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_organization_api_keys_with_http_info(id, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Organization ID for retrieving API Keys (required)
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
+        :param int id: The ID of the organization to list keys for. (required)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: InlineResponse200
                  If the method is called asynchronously,
                  returns the request thread.
@@ -479,16 +471,16 @@ class APIKeysApi(object):
     def get_user_api_key(self, user_id, id, o, **kwargs):  # noqa: E501
         """Retrieves an API key object by ID  # noqa: E501
 
-        Retrieves an API key object by ID  # noqa: E501
+        Note: The response does not contain the encrypted portion of the key. See [Decrypt User API Key](/openapi/reference/operation/decryptUserApiKey/)    # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_user_api_key(user_id, id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int user_id: User ID of the user to retrieve API key objects (required)
+        :param int user_id: The ID of the user to view keys for. (required)
         :param int id: The ID of the API key object to retrieve (required)
-        :param int o: The Organization of the user. (required)
+        :param int o: The Organization whose keys you want to view. (required)
         :return: ApiKey
                  If the method is called asynchronously,
                  returns the request thread.
@@ -503,16 +495,16 @@ class APIKeysApi(object):
     def get_user_api_key_with_http_info(self, user_id, id, o, **kwargs):  # noqa: E501
         """Retrieves an API key object by ID  # noqa: E501
 
-        Retrieves an API key object by ID  # noqa: E501
+        Note: The response does not contain the encrypted portion of the key. See [Decrypt User API Key](/openapi/reference/operation/decryptUserApiKey/)    # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_user_api_key_with_http_info(user_id, id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int user_id: User ID of the user to retrieve API key objects (required)
+        :param int user_id: The ID of the user to view keys for. (required)
         :param int id: The ID of the API key object to retrieve (required)
-        :param int o: The Organization of the user. (required)
+        :param int o: The Organization whose keys you want to view. (required)
         :return: ApiKey
                  If the method is called asynchronously,
                  returns the request thread.
@@ -590,7 +582,7 @@ class APIKeysApi(object):
     def get_user_api_keys(self, user_id, o, **kwargs):  # noqa: E501
         """Retrieves a list of API key objects for a user  # noqa: E501
 
-        Retrieves a list of API key objects for a user  # noqa: E501
+        Returns a list of API keys for the given user under the requested organization. This response does not include the encrypted portion of the key.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_user_api_keys(user_id, o, async_req=True)
@@ -599,8 +591,8 @@ class APIKeysApi(object):
         :param async_req bool
         :param int user_id: User ID of the user to retrieve API key objects (required)
         :param int o: The Organization of the user. (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
@@ -615,7 +607,7 @@ class APIKeysApi(object):
     def get_user_api_keys_with_http_info(self, user_id, o, **kwargs):  # noqa: E501
         """Retrieves a list of API key objects for a user  # noqa: E501
 
-        Retrieves a list of API key objects for a user  # noqa: E501
+        Returns a list of API keys for the given user under the requested organization. This response does not include the encrypted portion of the key.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_user_api_keys_with_http_info(user_id, o, async_req=True)
@@ -624,8 +616,8 @@ class APIKeysApi(object):
         :param async_req bool
         :param int user_id: User ID of the user to retrieve API key objects (required)
         :param int o: The Organization of the user. (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
@@ -711,7 +703,7 @@ class APIKeysApi(object):
         :param int o: The Organization of the key. (required)
         :param int user_id: User ID of the user to update keys for (required)
         :param int id: The ID of the API key to update (required)
-        :param ApiKeysIdBody body: The API Key updates
+        :param ApiKeysIdBody body: Enable/Disable API key
         :return: ApiKey
                  If the method is called asynchronously,
                  returns the request thread.
@@ -736,7 +728,7 @@ class APIKeysApi(object):
         :param int o: The Organization of the key. (required)
         :param int user_id: User ID of the user to update keys for (required)
         :param int id: The ID of the API key to update (required)
-        :param ApiKeysIdBody body: The API Key updates
+        :param ApiKeysIdBody body: Enable/Disable API key
         :return: ApiKey
                  If the method is called asynchronously,
                  returns the request thread.

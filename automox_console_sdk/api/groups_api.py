@@ -42,7 +42,7 @@ class GroupsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Organization ID for the created group (required)
+        :param int o: Organization ID for the created group. (required)
         :param ServerGroupCreateOrUpdateRequest body:
         :return: ServerGroup
                  If the method is called asynchronously,
@@ -65,7 +65,7 @@ class GroupsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Organization ID for the created group (required)
+        :param int o: Organization ID for the created group. (required)
         :param ServerGroupCreateOrUpdateRequest body:
         :return: ServerGroup
                  If the method is called asynchronously,
@@ -138,15 +138,15 @@ class GroupsApi(object):
     def delete_server_group(self, id, o, **kwargs):  # noqa: E501
         """Deletes a server group.  # noqa: E501
 
-        Any devices that belong to the deleted group will be moved to the organization's Default Group  # noqa: E501
+        **NOTE:** Any devices that belong to the deleted group will be moved to the organization's Default Group  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.delete_server_group(id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server Group ID for the specified group (required)
-        :param int o: Organization ID for the created group (required)
+        :param int id: Server Group ID for the specified group. (required)
+        :param int o: Organization ID for the created group. (required)
         :return: None
                  If the method is called asynchronously,
                  returns the request thread.
@@ -161,15 +161,15 @@ class GroupsApi(object):
     def delete_server_group_with_http_info(self, id, o, **kwargs):  # noqa: E501
         """Deletes a server group.  # noqa: E501
 
-        Any devices that belong to the deleted group will be moved to the organization's Default Group  # noqa: E501
+        **NOTE:** Any devices that belong to the deleted group will be moved to the organization's Default Group  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.delete_server_group_with_http_info(id, o, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server Group ID for the specified group (required)
-        :param int o: Organization ID for the created group (required)
+        :param int id: Server Group ID for the specified group. (required)
+        :param int o: Organization ID for the created group. (required)
         :return: None
                  If the method is called asynchronously,
                  returns the request thread.
@@ -248,8 +248,8 @@ class GroupsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server Group ID for the specified group (required)
-        :param int o: Organization ID for the specified group (required)
+        :param int id: Server Group ID for the specified group. (required)
+        :param int o: Organization ID for the specified group. (required)
         :return: ServerGroup
                  If the method is called asynchronously,
                  returns the request thread.
@@ -271,8 +271,8 @@ class GroupsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server Group ID for the specified group (required)
-        :param int o: Organization ID for the specified group (required)
+        :param int id: Server Group ID for the specified group. (required)
+        :param int o: Organization ID for the specified group. (required)
         :return: ServerGroup
                  If the method is called asynchronously,
                  returns the request thread.
@@ -351,9 +351,9 @@ class GroupsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Organization ID for retrieving groups (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+        :param int o: Organization ID for retrieving groups. (required)
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[ServerGroup]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -375,9 +375,9 @@ class GroupsApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Organization ID for retrieving groups (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter.
+        :param int o: Organization ID for retrieving groups. (required)
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[ServerGroup]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -445,9 +445,9 @@ class GroupsApi(object):
             collection_formats=collection_formats)
 
     def update_server_group(self, body, o, id, **kwargs):  # noqa: E501
-        """Updates a new server group.  # noqa: E501
+        """Updates an existing server group.  # noqa: E501
 
-        Updates a new server group.  # noqa: E501
+        Updates server group settings.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.update_server_group(body, o, id, async_req=True)
@@ -455,8 +455,8 @@ class GroupsApi(object):
 
         :param async_req bool
         :param ServerGroupCreateOrUpdateRequest body: (required)
-        :param int o: Organization ID for the created group (required)
-        :param int id: Server Group ID for the specified group (required)
+        :param int o: Organization ID for the created group. (required)
+        :param int id: Server Group ID for the specified group. (required)
         :return: None
                  If the method is called asynchronously,
                  returns the request thread.
@@ -469,9 +469,9 @@ class GroupsApi(object):
             return data
 
     def update_server_group_with_http_info(self, body, o, id, **kwargs):  # noqa: E501
-        """Updates a new server group.  # noqa: E501
+        """Updates an existing server group.  # noqa: E501
 
-        Updates a new server group.  # noqa: E501
+        Updates server group settings.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.update_server_group_with_http_info(body, o, id, async_req=True)
@@ -479,8 +479,8 @@ class GroupsApi(object):
 
         :param async_req bool
         :param ServerGroupCreateOrUpdateRequest body: (required)
-        :param int o: Organization ID for the created group (required)
-        :param int id: Server Group ID for the specified group (required)
+        :param int o: Organization ID for the created group. (required)
+        :param int id: Server Group ID for the specified group. (required)
         :return: None
                  If the method is called asynchronously,
                  returns the request thread.

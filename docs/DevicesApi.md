@@ -5,7 +5,7 @@ All URIs are relative to *https://console.automox.com/api*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**batch_update_devices**](DevicesApi.md#batch_update_devices) | **POST** /servers/batch | Updates multiple devices (server objects).
-[**delete_device**](DevicesApi.md#delete_device) | **DELETE** /servers/{id} | Deletes a device (server object).
+[**delete_device**](DevicesApi.md#delete_device) | **DELETE** /servers/{id} | Deletes a device (server object) from the organization.
 [**get_device_packages**](DevicesApi.md#get_device_packages) | **GET** /servers/{id}/packages | List Software Packages for Specific Device
 [**get_device_queues**](DevicesApi.md#get_device_queues) | **GET** /servers/{id}/queues | Upcoming Commands Queue for Specific Device
 [**get_devices**](DevicesApi.md#get_devices) | **GET** /servers | List All Devices
@@ -67,9 +67,9 @@ Name | Type | Description  | Notes
 # **delete_device**
 > delete_device(id, o)
 
-Deletes a device (server object).
+Deletes a device (server object) from the organization.
 
-Deletes a device (server object). The associated command queue will be purged. Any pending custom commands for the device are removed.
+**NOTE:** The associated command queue will be purged. Any pending custom commands for the device are removed.
 
 ### Example
 ```python
@@ -86,7 +86,7 @@ id = 56 # int | Server ID for the specified device
 o = 56 # int | Organization ID for the specified device
 
 try:
-    # Deletes a device (server object).
+    # Deletes a device (server object) from the organization.
     api_instance.delete_device(id, o)
 except ApiException as e:
     print("Exception when calling DevicesApi->delete_device: %s\n" % e)
@@ -132,10 +132,10 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.DevicesApi(automox_console_sdk.ApiClient(configuration))
-id = 56 # int | Server ID for the specified device
+id = 56 # int | Server ID for the specified device.
 o = 56 # int | Organization ID for the specified device
-page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (optional) (default to 0)
-limit = 500 # int | A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. (optional) (default to 500)
+page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 0)
+limit = 500 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 500)
 
 try:
     # List Software Packages for Specific Device
@@ -149,10 +149,10 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **int**| Server ID for the specified device | 
+ **id** | **int**| Server ID for the specified device. | 
  **o** | **int**| Organization ID for the specified device | 
- **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] [default to 0]
- **limit** | **int**| A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. | [optional] [default to 500]
+ **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 0]
+ **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with &#x60;page&#x60; parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 500]
 
 ### Return type
 
@@ -187,8 +187,8 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.DevicesApi(automox_console_sdk.ApiClient(configuration))
-id = 56 # int | Server ID for the specified device
-o = 56 # int | Organization ID for the specified device
+id = 56 # int | Server ID for the specified device.
+o = 56 # int | Organization ID for the specified device.
 
 try:
     # Upcoming Commands Queue for Specific Device
@@ -202,8 +202,8 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **int**| Server ID for the specified device | 
- **o** | **int**| Organization ID for the specified device | 
+ **id** | **int**| Server ID for the specified device. | 
+ **o** | **int**| Organization ID for the specified device. | 
 
 ### Return type
 
@@ -221,11 +221,11 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_devices**
-> list[Server] get_devices(o, limit, page, group_id=group_id, ps_version=ps_version, pending=pending, patch_status=patch_status, policy_id=policy_id, exception=exception, managed=managed)
+> list[ServerList] get_devices(o, limit, page, group_id=group_id, ps_version=ps_version, pending=pending, patch_status=patch_status, policy_id=policy_id, exception=exception, managed=managed)
 
 List All Devices
 
-This retrieves a detailed list of all devices (server objects) for the authenticated user.
+Retrieves a detailed list of all devices (server objects) for the authenticated user.
 
 ### Example
 ```python
@@ -238,16 +238,16 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.DevicesApi(automox_console_sdk.ApiClient(configuration))
-o = 56 # int | Organization ID. Response will include devices for the specified Automox Organization
-limit = 500 # int | A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. (default to 500)
-page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (default to 0)
+o = 56 # int | Organization ID. Response will include devices for the specified Automox Organization. The organization will be assumed based on the API key, if not specified.
+limit = 500 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (default to 500)
+page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (default to 0)
 group_id = 56 # int | Filter based on membership to a specific Server Group ID (optional)
 ps_version = 56 # int | Shows version of PowerShell running on the device, if applicable. (optional)
-pending = 56 # int | Filter based on status of pending patches. Format: pending=1 (optional)
-patch_status = 'patch_status_example' # str | Filter based on presence of ANY available patches that aren't already installed. Value must be 'missing' Format: patchStatus=missing (optional)
-policy_id = 56 # int | Filter based on association to a given Policy ID (optional)
-exception = 56 # int | Filter based on device's Exception status (optional)
-managed = 56 # int | Filter based on device's Managed status. Unmanaged indicates no linked policies. (optional)
+pending = 56 # int | Filter based on status of pending patches. Format: `pending=1` (optional)
+patch_status = 'missing' # str | Filter based on presence of ANY available patches that aren't already installed. Value must be 'missing' Format: `patchStatus=missing` (optional) (default to missing)
+policy_id = 56 # int | Filter based on association to a given Policy ID. Format: `policyId=12345` (optional)
+exception = 56 # int | Filter based on the exception property to exclude the device from reports. Device is still monitored when excluded from reports and statistics. Format: `exception=1` (optional)
+managed = 56 # int | Filter based on device's Managed status. Unmanaged indicates no linked policies. Format: `managed=0` (optional)
 
 try:
     # List All Devices
@@ -261,20 +261,20 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **o** | **int**| Organization ID. Response will include devices for the specified Automox Organization | 
- **limit** | **int**| A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. | [default to 500]
- **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [default to 0]
+ **o** | **int**| Organization ID. Response will include devices for the specified Automox Organization. The organization will be assumed based on the API key, if not specified. | 
+ **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [default to 500]
+ **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [default to 0]
  **group_id** | **int**| Filter based on membership to a specific Server Group ID | [optional] 
  **ps_version** | **int**| Shows version of PowerShell running on the device, if applicable. | [optional] 
- **pending** | **int**| Filter based on status of pending patches. Format: pending&#x3D;1 | [optional] 
- **patch_status** | **str**| Filter based on presence of ANY available patches that aren&#x27;t already installed. Value must be &#x27;missing&#x27; Format: patchStatus&#x3D;missing | [optional] 
- **policy_id** | **int**| Filter based on association to a given Policy ID | [optional] 
- **exception** | **int**| Filter based on device&#x27;s Exception status | [optional] 
- **managed** | **int**| Filter based on device&#x27;s Managed status. Unmanaged indicates no linked policies. | [optional] 
+ **pending** | **int**| Filter based on status of pending patches. Format: &#x60;pending&#x3D;1&#x60; | [optional] 
+ **patch_status** | **str**| Filter based on presence of ANY available patches that aren&#x27;t already installed. Value must be &#x27;missing&#x27; Format: &#x60;patchStatus&#x3D;missing&#x60; | [optional] [default to missing]
+ **policy_id** | **int**| Filter based on association to a given Policy ID. Format: &#x60;policyId&#x3D;12345&#x60; | [optional] 
+ **exception** | **int**| Filter based on the exception property to exclude the device from reports. Device is still monitored when excluded from reports and statistics. Format: &#x60;exception&#x3D;1&#x60; | [optional] 
+ **managed** | **int**| Filter based on device&#x27;s Managed status. Unmanaged indicates no linked policies. Format: &#x60;managed&#x3D;0&#x60; | [optional] 
 
 ### Return type
 
-[**list[Server]**](Server.md)
+[**list[ServerList]**](ServerList.md)
 
 ### Authorization
 
@@ -288,7 +288,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_server**
-> ServerWithPolicies get_server(id, o)
+> ServerWithPolicies get_server(id, o, ps_version=ps_version)
 
 List a Specific Device
 
@@ -305,12 +305,13 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.DevicesApi(automox_console_sdk.ApiClient(configuration))
-id = 56 # int | Server ID for the specified device
-o = 56 # int | Organization ID for the specified device
+id = 56 # int | Server ID for the specified device.
+o = 56 # int | Organization ID for the specified device.
+ps_version = 56 # int | The version of PowerShell running on the device. (optional)
 
 try:
     # List a Specific Device
-    api_response = api_instance.get_server(id, o)
+    api_response = api_instance.get_server(id, o, ps_version=ps_version)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DevicesApi->get_server: %s\n" % e)
@@ -320,8 +321,9 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **int**| Server ID for the specified device | 
- **o** | **int**| Organization ID for the specified device | 
+ **id** | **int**| Server ID for the specified device. | 
+ **o** | **int**| Organization ID for the specified device. | 
+ **ps_version** | **int**| The version of PowerShell running on the device. | [optional] 
 
 ### Return type
 
@@ -395,7 +397,7 @@ void (empty response body)
 
 Updates a device (server object).
 
-Updates a device (server object).
+Send a JSON object in the request body to update device details).
 
 ### Example
 ```python
@@ -409,8 +411,8 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = automox_console_sdk.DevicesApi(automox_console_sdk.ApiClient(configuration))
 body = automox_console_sdk.ServersIdBody() # ServersIdBody | Device update
-o = 56 # int | Organization ID for the specified device
-id = 56 # int | Server ID for the specified device
+o = 56 # int | Organization ID for the specified device.
+id = 56 # int | Server ID for the specified device.
 
 try:
     # Updates a device (server object).
@@ -424,8 +426,8 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**ServersIdBody**](ServersIdBody.md)| Device update | 
- **o** | **int**| Organization ID for the specified device | 
- **id** | **int**| Server ID for the specified device | 
+ **o** | **int**| Organization ID for the specified device. | 
+ **id** | **int**| Server ID for the specified device. | 
 
 ### Return type
 

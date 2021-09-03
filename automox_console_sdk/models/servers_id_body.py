@@ -29,6 +29,7 @@ class ServersIdBody(object):
     """
     swagger_types = {
         'server_group_id': 'int',
+        'ip_addrs': 'str',
         'exception': 'bool',
         'tags': 'list[str]',
         'custom_name': 'str'
@@ -36,19 +37,23 @@ class ServersIdBody(object):
 
     attribute_map = {
         'server_group_id': 'server_group_id',
+        'ip_addrs': 'ip_addrs',
         'exception': 'exception',
         'tags': 'tags',
         'custom_name': 'custom_name'
     }
 
-    def __init__(self, server_group_id=None, exception=None, tags=None, custom_name=None):  # noqa: E501
+    def __init__(self, server_group_id=None, ip_addrs=None, exception=None, tags=None, custom_name=None):  # noqa: E501
         """ServersIdBody - a model defined in Swagger"""  # noqa: E501
         self._server_group_id = None
+        self._ip_addrs = None
         self._exception = None
         self._tags = None
         self._custom_name = None
         self.discriminator = None
         self.server_group_id = server_group_id
+        if ip_addrs is not None:
+            self.ip_addrs = ip_addrs
         self.exception = exception
         if tags is not None:
             self.tags = tags
@@ -59,7 +64,7 @@ class ServersIdBody(object):
     def server_group_id(self):
         """Gets the server_group_id of this ServersIdBody.  # noqa: E501
 
-        Server Group ID of the group to which the device should belong  # noqa: E501
+        Server Group ID for the specified group.  # noqa: E501
 
         :return: The server_group_id of this ServersIdBody.  # noqa: E501
         :rtype: int
@@ -70,7 +75,7 @@ class ServersIdBody(object):
     def server_group_id(self, server_group_id):
         """Sets the server_group_id of this ServersIdBody.
 
-        Server Group ID of the group to which the device should belong  # noqa: E501
+        Server Group ID for the specified group.  # noqa: E501
 
         :param server_group_id: The server_group_id of this ServersIdBody.  # noqa: E501
         :type: int
@@ -81,10 +86,33 @@ class ServersIdBody(object):
         self._server_group_id = server_group_id
 
     @property
+    def ip_addrs(self):
+        """Gets the ip_addrs of this ServersIdBody.  # noqa: E501
+
+        Server IP address.  # noqa: E501
+
+        :return: The ip_addrs of this ServersIdBody.  # noqa: E501
+        :rtype: str
+        """
+        return self._ip_addrs
+
+    @ip_addrs.setter
+    def ip_addrs(self, ip_addrs):
+        """Sets the ip_addrs of this ServersIdBody.
+
+        Server IP address.  # noqa: E501
+
+        :param ip_addrs: The ip_addrs of this ServersIdBody.  # noqa: E501
+        :type: str
+        """
+
+        self._ip_addrs = ip_addrs
+
+    @property
     def exception(self):
         """Gets the exception of this ServersIdBody.  # noqa: E501
 
-        Set the exception property for the device  # noqa: E501
+        Use the exception property to exclude the device from reports and statistics.  # noqa: E501
 
         :return: The exception of this ServersIdBody.  # noqa: E501
         :rtype: bool
@@ -95,7 +123,7 @@ class ServersIdBody(object):
     def exception(self, exception):
         """Sets the exception of this ServersIdBody.
 
-        Set the exception property for the device  # noqa: E501
+        Use the exception property to exclude the device from reports and statistics.  # noqa: E501
 
         :param exception: The exception of this ServersIdBody.  # noqa: E501
         :type: bool
@@ -109,7 +137,7 @@ class ServersIdBody(object):
     def tags(self):
         """Gets the tags of this ServersIdBody.  # noqa: E501
 
-        List of tags  # noqa: E501
+        List of tags.  # noqa: E501
 
         :return: The tags of this ServersIdBody.  # noqa: E501
         :rtype: list[str]
@@ -120,7 +148,7 @@ class ServersIdBody(object):
     def tags(self, tags):
         """Sets the tags of this ServersIdBody.
 
-        List of tags  # noqa: E501
+        List of tags.  # noqa: E501
 
         :param tags: The tags of this ServersIdBody.  # noqa: E501
         :type: list[str]
@@ -132,7 +160,7 @@ class ServersIdBody(object):
     def custom_name(self):
         """Gets the custom_name of this ServersIdBody.  # noqa: E501
 
-        Custom name that will display in the console instead of the hostname  # noqa: E501
+        Custom name that will display in the console instead of the hostname.  # noqa: E501
 
         :return: The custom_name of this ServersIdBody.  # noqa: E501
         :rtype: str
@@ -143,7 +171,7 @@ class ServersIdBody(object):
     def custom_name(self, custom_name):
         """Sets the custom_name of this ServersIdBody.
 
-        Custom name that will display in the console instead of the hostname  # noqa: E501
+        Custom name that will display in the console instead of the hostname.  # noqa: E501
 
         :param custom_name: The custom_name of this ServersIdBody.  # noqa: E501
         :type: str

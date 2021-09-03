@@ -9,7 +9,6 @@ Name | Type | Description | Notes
 **processed_jobs** | **int** |  | [optional] 
 **progress** | **int** |  | [optional] 
 **failed_jobs** | **int** |  | [optional] 
-**options** | **list[object]** |  | [optional] 
 **created_at** | **datetime** |  | [optional] 
 **cancelled_at** | **datetime** |  | [optional] 
 **finished_at** | **datetime** |  | [optional] 

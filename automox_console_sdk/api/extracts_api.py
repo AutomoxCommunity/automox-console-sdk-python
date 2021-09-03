@@ -348,10 +348,10 @@ class ExtractsApi(object):
 
         :param async_req bool
         :param int o: Limit response to a specific Automox organization (required)
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with page parameter.
-        :param int page: The page of results you wish to be returned with page numbers starting at 0. Default: 0.
-        :param list[str] sort: The sort for the results. Options: created_at:desc/asc and status:desc/asc. Default: created_at:desc
-        :param str typeequals: The type of Data Extracts to list. Options: data-extract.
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. Default: 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param list[str] sort: The sort for the results. Options: `created_at:desc/asc` and `status:desc/asc`. Default: `created_at:desc`
+        :param str typeequals: The type of Data Extracts to list. Options: `patch-history`.
         :param datetime created_atgreater_than: Created at date is greater than the value submitted. If a time is not specified, greater_than will have a time of start of day.
         :param datetime created_atlesser_than: Created at date is less than the value submitted. If a time is not specified, less_than will have a time of end of day.
         :param datetime created_atgreater_than_or_equals: Created at date is greater than or equals the value submitted. If a time is not specified, greater_than_or_equals will have a time of start of day.
@@ -380,10 +380,10 @@ class ExtractsApi(object):
 
         :param async_req bool
         :param int o: Limit response to a specific Automox organization (required)
-        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with page parameter.
-        :param int page: The page of results you wish to be returned with page numbers starting at 0. Default: 0.
-        :param list[str] sort: The sort for the results. Options: created_at:desc/asc and status:desc/asc. Default: created_at:desc
-        :param str typeequals: The type of Data Extracts to list. Options: data-extract.
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. Default: 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param list[str] sort: The sort for the results. Options: `created_at:desc/asc` and `status:desc/asc`. Default: `created_at:desc`
+        :param str typeequals: The type of Data Extracts to list. Options: `patch-history`.
         :param datetime created_atgreater_than: Created at date is greater than the value submitted. If a time is not specified, greater_than will have a time of start of day.
         :param datetime created_atlesser_than: Created at date is less than the value submitted. If a time is not specified, less_than will have a time of end of day.
         :param datetime created_atgreater_than_or_equals: Created at date is greater than or equals the value submitted. If a time is not specified, greater_than_or_equals will have a time of start of day.

@@ -4,16 +4,16 @@ All URIs are relative to *https://console.automox.com/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**decrypt_user_api_key**](UsersApi.md#decrypt_user_api_key) | **POST** /users/{userId}/api_keys/{id}/decrypt | Retrieves the API Key secret by ID
+[**decrypt_user_api_key**](UsersApi.md#decrypt_user_api_key) | **POST** /users/{userId}/api_keys/{id}/decrypt | Decrypt User API Key
 [**get_user_by_id**](UsersApi.md#get_user_by_id) | **GET** /users/{userId} | Retrieves a user by user ID
 [**get_users**](UsersApi.md#get_users) | **GET** /users | List All Users With Access to a Given Organization
 
 # **decrypt_user_api_key**
 > InlineResponse2002 decrypt_user_api_key(user_id, id, o)
 
-Retrieves the API Key secret by ID
+Decrypt User API Key
 
-Retrieves the API Key secret by ID
+This endpoint allows you to decrypt the API key for an authenticated user.
 
 ### Example
 ```python
@@ -26,12 +26,12 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.UsersApi(automox_console_sdk.ApiClient(configuration))
-user_id = 56 # int | User ID of the user to retrieve API Keys
-id = 56 # int | The ID of the API key to retrieve
+user_id = 56 # int | The ID of the user to decrypt keys for.
+id = 56 # int | The ID of the API key to decrypt
 o = 56 # int | The Organization of the user.
 
 try:
-    # Retrieves the API Key secret by ID
+    # Decrypt User API Key
     api_response = api_instance.decrypt_user_api_key(user_id, id, o)
     pprint(api_response)
 except ApiException as e:
@@ -42,8 +42,8 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **user_id** | **int**| User ID of the user to retrieve API Keys | 
- **id** | **int**| The ID of the API key to retrieve | 
+ **user_id** | **int**| The ID of the user to decrypt keys for. | 
+ **id** | **int**| The ID of the API key to decrypt | 
  **o** | **int**| The Organization of the user. | 
 
 ### Return type
@@ -131,8 +131,8 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = automox_console_sdk.UsersApi(automox_console_sdk.ApiClient(configuration))
 o = 56 # int | The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization.
-page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (optional) (default to 0)
-limit = 500 # int | A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. (optional) (default to 500)
+page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 0)
+limit = 500 # int | A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 500)
 
 try:
     # List All Users With Access to a Given Organization
@@ -147,8 +147,8 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **o** | **int**| The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization. | 
- **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] [default to 0]
- **limit** | **int**| A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. | [optional] [default to 500]
+ **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 0]
+ **limit** | **int**| A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with &#x60;page&#x60; parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 500]
 
 ### Return type
 

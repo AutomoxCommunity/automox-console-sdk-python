@@ -8,7 +8,7 @@ Method | HTTP request | Description
 [**delete_server_group**](GroupsApi.md#delete_server_group) | **DELETE** /servergroups/{id} | Deletes a server group.
 [**get_server_group**](GroupsApi.md#get_server_group) | **GET** /servergroups/{id} | List Specific Group Object
 [**get_server_groups**](GroupsApi.md#get_server_groups) | **GET** /servergroups | List All Group Objects
-[**update_server_group**](GroupsApi.md#update_server_group) | **PUT** /servergroups/{id} | Updates a new server group.
+[**update_server_group**](GroupsApi.md#update_server_group) | **PUT** /servergroups/{id} | Updates an existing server group.
 
 # **create_server_group**
 > ServerGroup create_server_group(o, body=body)
@@ -28,7 +28,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.GroupsApi(automox_console_sdk.ApiClient(configuration))
-o = 56 # int | Organization ID for the created group
+o = 56 # int | Organization ID for the created group.
 body = automox_console_sdk.ServerGroupCreateOrUpdateRequest() # ServerGroupCreateOrUpdateRequest |  (optional)
 
 try:
@@ -43,7 +43,7 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **o** | **int**| Organization ID for the created group | 
+ **o** | **int**| Organization ID for the created group. | 
  **body** | [**ServerGroupCreateOrUpdateRequest**](ServerGroupCreateOrUpdateRequest.md)|  | [optional] 
 
 ### Return type
@@ -66,7 +66,7 @@ Name | Type | Description  | Notes
 
 Deletes a server group.
 
-Any devices that belong to the deleted group will be moved to the organization's Default Group
+**NOTE:** Any devices that belong to the deleted group will be moved to the organization's Default Group
 
 ### Example
 ```python
@@ -79,8 +79,8 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.GroupsApi(automox_console_sdk.ApiClient(configuration))
-id = 56 # int | Server Group ID for the specified group
-o = 56 # int | Organization ID for the created group
+id = 56 # int | Server Group ID for the specified group.
+o = 56 # int | Organization ID for the created group.
 
 try:
     # Deletes a server group.
@@ -93,8 +93,8 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **int**| Server Group ID for the specified group | 
- **o** | **int**| Organization ID for the created group | 
+ **id** | **int**| Server Group ID for the specified group. | 
+ **o** | **int**| Organization ID for the created group. | 
 
 ### Return type
 
@@ -129,8 +129,8 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.GroupsApi(automox_console_sdk.ApiClient(configuration))
-id = 56 # int | Server Group ID for the specified group
-o = 56 # int | Organization ID for the specified group
+id = 56 # int | Server Group ID for the specified group.
+o = 56 # int | Organization ID for the specified group.
 
 try:
     # List Specific Group Object
@@ -144,8 +144,8 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **int**| Server Group ID for the specified group | 
- **o** | **int**| Organization ID for the specified group | 
+ **id** | **int**| Server Group ID for the specified group. | 
+ **o** | **int**| Organization ID for the specified group. | 
 
 ### Return type
 
@@ -180,9 +180,9 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.GroupsApi(automox_console_sdk.ApiClient(configuration))
-o = 56 # int | Organization ID for retrieving groups
-page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. (optional) (default to 0)
-limit = 500 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. (optional) (default to 500)
+o = 56 # int | Organization ID for retrieving groups.
+page = 0 # int | The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 0)
+limit = 500 # int | A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (optional) (default to 500)
 
 try:
     # List All Group Objects
@@ -196,9 +196,9 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **o** | **int**| Organization ID for retrieving groups | 
- **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. | [optional] [default to 0]
- **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. | [optional] [default to 500]
+ **o** | **int**| Organization ID for retrieving groups. | 
+ **page** | **int**| The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 0]
+ **limit** | **int**| A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with &#x60;page&#x60; parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) | [optional] [default to 500]
 
 ### Return type
 
@@ -218,9 +218,9 @@ Name | Type | Description  | Notes
 # **update_server_group**
 > update_server_group(body, o, id)
 
-Updates a new server group.
+Updates an existing server group.
 
-Updates a new server group.
+Updates server group settings.
 
 ### Example
 ```python
@@ -234,11 +234,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = automox_console_sdk.GroupsApi(automox_console_sdk.ApiClient(configuration))
 body = automox_console_sdk.ServerGroupCreateOrUpdateRequest() # ServerGroupCreateOrUpdateRequest | 
-o = 56 # int | Organization ID for the created group
-id = 56 # int | Server Group ID for the specified group
+o = 56 # int | Organization ID for the created group.
+id = 56 # int | Server Group ID for the specified group.
 
 try:
-    # Updates a new server group.
+    # Updates an existing server group.
     api_instance.update_server_group(body, o, id)
 except ApiException as e:
     print("Exception when calling GroupsApi->update_server_group: %s\n" % e)
@@ -249,8 +249,8 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**ServerGroupCreateOrUpdateRequest**](ServerGroupCreateOrUpdateRequest.md)|  | 
- **o** | **int**| Organization ID for the created group | 
- **id** | **int**| Server Group ID for the specified group | 
+ **o** | **int**| Organization ID for the created group. | 
+ **id** | **int**| Server Group ID for the specified group. | 
 
 ### Return type
 

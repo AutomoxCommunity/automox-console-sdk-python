@@ -140,9 +140,9 @@ class DevicesApi(object):
             collection_formats=collection_formats)
 
     def delete_device(self, id, o, **kwargs):  # noqa: E501
-        """Deletes a device (server object).  # noqa: E501
+        """Deletes a device (server object) from the organization.  # noqa: E501
 
-        Deletes a device (server object). The associated command queue will be purged. Any pending custom commands for the device are removed.  # noqa: E501
+        **NOTE:** The associated command queue will be purged. Any pending custom commands for the device are removed.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.delete_device(id, o, async_req=True)
@@ -163,9 +163,9 @@ class DevicesApi(object):
             return data
 
     def delete_device_with_http_info(self, id, o, **kwargs):  # noqa: E501
-        """Deletes a device (server object).  # noqa: E501
+        """Deletes a device (server object) from the organization.  # noqa: E501
 
-        Deletes a device (server object). The associated command queue will be purged. Any pending custom commands for the device are removed.  # noqa: E501
+        **NOTE:** The associated command queue will be purged. Any pending custom commands for the device are removed.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.delete_device_with_http_info(id, o, async_req=True)
@@ -252,10 +252,10 @@ class DevicesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server ID for the specified device (required)
+        :param int id: Server ID for the specified device. (required)
         :param int o: Organization ID for the specified device (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Packages]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -277,10 +277,10 @@ class DevicesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server ID for the specified device (required)
+        :param int id: Server ID for the specified device. (required)
         :param int o: Organization ID for the specified device (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0.
-        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter.
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :return: list[Packages]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -363,8 +363,8 @@ class DevicesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server ID for the specified device (required)
-        :param int o: Organization ID for the specified device (required)
+        :param int id: Server ID for the specified device. (required)
+        :param int o: Organization ID for the specified device. (required)
         :return: list[Command]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -386,8 +386,8 @@ class DevicesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server ID for the specified device (required)
-        :param int o: Organization ID for the specified device (required)
+        :param int id: Server ID for the specified device. (required)
+        :param int o: Organization ID for the specified device. (required)
         :return: list[Command]
                  If the method is called asynchronously,
                  returns the request thread.
@@ -459,24 +459,24 @@ class DevicesApi(object):
     def get_devices(self, o, limit, page, **kwargs):  # noqa: E501
         """List All Devices  # noqa: E501
 
-        This retrieves a detailed list of all devices (server objects) for the authenticated user.  # noqa: E501
+        Retrieves a detailed list of all devices (server objects) for the authenticated user.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_devices(o, limit, page, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Organization ID. Response will include devices for the specified Automox Organization (required)
-        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0. (required)
+        :param int o: Organization ID. Response will include devices for the specified Automox Organization. The organization will be assumed based on the API key, if not specified. (required)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (required)
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (required)
         :param int group_id: Filter based on membership to a specific Server Group ID
         :param int ps_version: Shows version of PowerShell running on the device, if applicable.
-        :param int pending: Filter based on status of pending patches. Format: pending=1
-        :param str patch_status: Filter based on presence of ANY available patches that aren't already installed. Value must be 'missing' Format: patchStatus=missing
-        :param int policy_id: Filter based on association to a given Policy ID
-        :param int exception: Filter based on device's Exception status
-        :param int managed: Filter based on device's Managed status. Unmanaged indicates no linked policies.
-        :return: list[Server]
+        :param int pending: Filter based on status of pending patches. Format: `pending=1`
+        :param str patch_status: Filter based on presence of ANY available patches that aren't already installed. Value must be 'missing' Format: `patchStatus=missing`
+        :param int policy_id: Filter based on association to a given Policy ID. Format: `policyId=12345`
+        :param int exception: Filter based on the exception property to exclude the device from reports. Device is still monitored when excluded from reports and statistics. Format: `exception=1`
+        :param int managed: Filter based on device's Managed status. Unmanaged indicates no linked policies. Format: `managed=0`
+        :return: list[ServerList]
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -490,24 +490,24 @@ class DevicesApi(object):
     def get_devices_with_http_info(self, o, limit, page, **kwargs):  # noqa: E501
         """List All Devices  # noqa: E501
 
-        This retrieves a detailed list of all devices (server objects) for the authenticated user.  # noqa: E501
+        Retrieves a detailed list of all devices (server objects) for the authenticated user.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_devices_with_http_info(o, limit, page, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int o: Organization ID. Response will include devices for the specified Automox Organization (required)
-        :param int limit: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. (required)
-        :param int page: The page of results you wish to be returned with page numbers starting at 0. (required)
+        :param int o: Organization ID. Response will include devices for the specified Automox Organization. The organization will be assumed based on the API key, if not specified. (required)
+        :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (required)
+        :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination) (required)
         :param int group_id: Filter based on membership to a specific Server Group ID
         :param int ps_version: Shows version of PowerShell running on the device, if applicable.
-        :param int pending: Filter based on status of pending patches. Format: pending=1
-        :param str patch_status: Filter based on presence of ANY available patches that aren't already installed. Value must be 'missing' Format: patchStatus=missing
-        :param int policy_id: Filter based on association to a given Policy ID
-        :param int exception: Filter based on device's Exception status
-        :param int managed: Filter based on device's Managed status. Unmanaged indicates no linked policies.
-        :return: list[Server]
+        :param int pending: Filter based on status of pending patches. Format: `pending=1`
+        :param str patch_status: Filter based on presence of ANY available patches that aren't already installed. Value must be 'missing' Format: `patchStatus=missing`
+        :param int policy_id: Filter based on association to a given Policy ID. Format: `policyId=12345`
+        :param int exception: Filter based on the exception property to exclude the device from reports. Device is still monitored when excluded from reports and statistics. Format: `exception=1`
+        :param int managed: Filter based on device's Managed status. Unmanaged indicates no linked policies. Format: `managed=0`
+        :return: list[ServerList]
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -587,7 +587,7 @@ class DevicesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[Server]',  # noqa: E501
+            response_type='list[ServerList]',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -605,8 +605,9 @@ class DevicesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server ID for the specified device (required)
-        :param int o: Organization ID for the specified device (required)
+        :param int id: Server ID for the specified device. (required)
+        :param int o: Organization ID for the specified device. (required)
+        :param int ps_version: The version of PowerShell running on the device.
         :return: ServerWithPolicies
                  If the method is called asynchronously,
                  returns the request thread.
@@ -628,14 +629,15 @@ class DevicesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param int id: Server ID for the specified device (required)
-        :param int o: Organization ID for the specified device (required)
+        :param int id: Server ID for the specified device. (required)
+        :param int o: Organization ID for the specified device. (required)
+        :param int ps_version: The version of PowerShell running on the device.
         :return: ServerWithPolicies
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = ['id', 'o']  # noqa: E501
+        all_params = ['id', 'o', 'ps_version']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -668,6 +670,8 @@ class DevicesApi(object):
         query_params = []
         if 'o' in params:
             query_params.append(('o', params['o']))  # noqa: E501
+        if 'ps_version' in params:
+            query_params.append(('PS_VERSION', params['ps_version']))  # noqa: E501
 
         header_params = {}
 
@@ -812,7 +816,7 @@ class DevicesApi(object):
     def update_device(self, body, o, id, **kwargs):  # noqa: E501
         """Updates a device (server object).  # noqa: E501
 
-        Updates a device (server object).  # noqa: E501
+        Send a JSON object in the request body to update device details).  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.update_device(body, o, id, async_req=True)
@@ -820,8 +824,8 @@ class DevicesApi(object):
 
         :param async_req bool
         :param ServersIdBody body: Device update (required)
-        :param int o: Organization ID for the specified device (required)
-        :param int id: Server ID for the specified device (required)
+        :param int o: Organization ID for the specified device. (required)
+        :param int id: Server ID for the specified device. (required)
         :return: None
                  If the method is called asynchronously,
                  returns the request thread.
@@ -836,7 +840,7 @@ class DevicesApi(object):
     def update_device_with_http_info(self, body, o, id, **kwargs):  # noqa: E501
         """Updates a device (server object).  # noqa: E501
 
-        Updates a device (server object).  # noqa: E501
+        Send a JSON object in the request body to update device details).  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.update_device_with_http_info(body, o, id, async_req=True)
@@ -844,8 +848,8 @@ class DevicesApi(object):
 
         :param async_req bool
         :param ServersIdBody body: Device update (required)
-        :param int o: Organization ID for the specified device (required)
-        :param int id: Server ID for the specified device (required)
+        :param int o: Organization ID for the specified device. (required)
+        :param int id: Server ID for the specified device. (required)
         :return: None
                  If the method is called asynchronously,
                  returns the request thread.
