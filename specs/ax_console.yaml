@@ -1791,10 +1791,6 @@ components:
           type: string
         VERSION:
           type: string
-    ServerList:
-          type: array
-          items:
-            $ref: "#/components/schemas/Server"
     ServerGroup:
       type: object
       properties:
@@ -2383,7 +2379,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ServerList"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Server"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":

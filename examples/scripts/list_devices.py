@@ -22,5 +22,5 @@ devices_api = DevicesApi(client)
 organization = os.getenv('AUTOMOX_ORGANIZATION_ID')
 
 for d in devices_api.get_devices(o=organization, limit=500, page=0):
-    print(d["id"])
+    print(d.id)
     #print(f"Device ID: {d.id}, Hostname: {d.name}, Server Group ID: {d.server_group_id}, IP Addresses: {d.ip_addrs}")
