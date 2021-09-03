@@ -75,7 +75,6 @@ from automox_console_sdk.models.server_detail_disks import ServerDetailDISKS
 from automox_console_sdk.models.server_detail_nics import ServerDetailNICS
 from automox_console_sdk.models.server_group import ServerGroup
 from automox_console_sdk.models.server_group_create_or_update_request import ServerGroupCreateOrUpdateRequest
-from automox_console_sdk.models.server_list import ServerList
 from automox_console_sdk.models.server_policy_status import ServerPolicyStatus
 from automox_console_sdk.models.server_with_policies import ServerWithPolicies
 from automox_console_sdk.models.servers_batch_body import ServersBatchBody
