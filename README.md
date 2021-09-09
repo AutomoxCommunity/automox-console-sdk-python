@@ -42,7 +42,7 @@ pip install automox-console-sdk
 With each new release of the SDK, a published tag and Github Release will be created. To install the latest version of 
 SDK from Github:
 1. Download the latest wheel from the project's [Github Releases](https://github.com/AutomoxCommunity/automox-console-sdk-python/releases)
-2. Install the wheel locally: `pip install automox_console_sdk-0.0.1b1-py3-none-any.whl`
+2. Install the wheel locally: `pip install automox_console_sdk-0.1.1-py3-none-any.whl`
 3. Import the package:
 ```python
 import automox_console_sdk 
