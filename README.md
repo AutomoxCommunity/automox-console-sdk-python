@@ -26,6 +26,17 @@ and python.org [recommends upgrading to Python 3](https://www.python.org/doc/sun
 
 ## Installation & Usage
 
+### pip install
+
+The Automox SDK for Python is most easily installed with a single `pip` command to pull the latest package version from 
+the [Python package Index (PyPi)](https://pypi.org/). The published versions of the project are maintained at the 
+[PyPi Project page](https://pypi.org/project/automox-console-sdk/). Getting started is generally a simple as running 
+the following command on a system with Python 3.9+ installed:
+
+```shell
+pip install automox-console-sdk
+```
+
 ### Github Release install
 
 With each new release of the SDK, a published tag and Github Release will be created. To install the latest version of 
@@ -36,12 +47,6 @@ SDK from Github:
 ```python
 import automox_console_sdk 
 ```
-
-### pip install (COMING SOON)
-
-The team is currently working to publish to the [Python package Index (PyPi)](https://pypi.org/) which will allow for
-even easier adoption of the SDK. Once published, it will be possible to install with `pip install automox_console_sdk`
-or through the use of a requirements file.
 
 ## Getting Started
 
