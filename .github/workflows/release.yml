@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    tags:
+    - "v*.*.*"
+
+jobs:
+  release:
+
+    runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: 3.9
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install Dependencies
+        run: |
+          python3 -m pip install --user --upgrade setuptools wheel twine
+      - name: Create Package
+        run: |
+          rm -rf dist/
+          python3 setup.py sdist bdist_wheel
+      - name: Get tag version
+        id: get_tag_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+      - name: Get project version
+        id: get_project_version
+        run: echo ::set-output name=VERSION::$(jq -r '.packageVersion' generation/config.json)
+      - name: Compare Project Version to Tag
+        if: ${{ steps.get_tag_version.outputs.VERSION != steps.get_project_version.outputs.VERSION }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('Project version and tag version are different; check the version for release prior to continuing')
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            specs/ax_console.yaml
+            dist/*
+#      - name: Publish
+#        env:
+#          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+#          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+#        run: |
+#          python3 -m twine upload dist/*
