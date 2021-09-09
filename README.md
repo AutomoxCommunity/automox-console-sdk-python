@@ -50,7 +50,7 @@ import automox_console_sdk
 
 ## Getting Started
 
-Please follow the [installation procedure](#installation--usage) and then move on to the following sections.
+Please follow the [installation procedure](https://github.com/AutomoxCommunity/automox-console-sdk-python#installation--usage) and then move on to the following sections.
 
 ### The Basics
 
@@ -58,7 +58,7 @@ Prior to using the SDK, it is necessary to generate an [Automox API Key](https:/
 used for authorizing requests to the Automox API. Steps for creating an API key for you user account can be found 
 [here](https://docs.automox.com/home/automox-settings/accessing-your-api-keys#adding-api-keys).
 
-Once an API key has been created, it can then be used with the [example scripts](examples/scripts) provided with the 
+Once an API key has been created, it can then be used with the [example scripts](https://github.com/AutomoxCommunity/automox-console-sdk-python/tree/main/examples/scripts) provided with the 
 SDK. By importing the package and creating an Automox ApiClient, you will then be ready to leverage SDK functionality:
 
 ```python
@@ -88,13 +88,13 @@ for d in devices_api.get_devices(limit=500, page=0):
     print(f"Device ID: {d.id}, Hostname: {d.name}, Server Group ID: {d.server_group_id}, IP Addresses: {d.ip_addrs}")
 ```
 
-A fully-implemented [script example](examples/scripts/list_devices.py) of listing devices is provided along with a
+A fully-implemented [script example](https://github.com/AutomoxCommunity/automox-console-sdk-python/blob/main/examples/scripts/list_devices.py) of listing devices is provided along with a
 growing number of other examples of using the Automox SDK for Python. Feel free to contribute any scripts you have found 
 helpful with the Community!
 
 ### Example Scripts
 
-To get started without writing a single line of Python, [Example Scripts](examples/scripts) have been included with the 
+To get started without writing a single line of Python, [Example Scripts](https://github.com/AutomoxCommunity/automox-console-sdk-python/tree/main/examples/scripts) have been included with the 
 SDK. These scripts show off simple functionality such as:
 - Listing Devices
 - Updating a Device
@@ -104,17 +104,17 @@ They should be used as reference as you are building your own scripts and utilit
 
 ### Use Cases Examples (COMING SOON)
 
-[Use Case Examples](examples/use-cases) have been provided to show off end to end utility of leveraging the Automox SDK
+[Use Case Examples](https://github.com/AutomoxCommunity/automox-console-sdk-python/tree/main/examples/use-cases) have been provided to show off end to end utility of leveraging the Automox SDK
 within varying environments. These use cases can be used as-is or modified to meet your environment needs. 
 
 ## Limitations
 
-All functionality provided by the Automox SDK for Python is based on the Autmox Console API specification that is 
-publicly published. If there is functionality that is incomplete or does not yet exist, please reached out to your 
+All functionality provided by the Automox Console SDK for Python is based on the Autmox Console API specification that 
+is publicly published. If there is functionality that is incomplete or does not yet exist, please reached out to your 
 Customer Success Manager or [contact support](https://support.automox.com/help/contacting-automox-support) along with
 the details of what you would like to see in future releases of the SDK.
 
 [//]: # "Link anchor definitions"
-[Automox Logo]: assets/AX-Horiz-Logo.png
+[Automox Logo]: https://raw.githubusercontent.com/AutomoxCommunity/automox-console-sdk-python/main/assets/AX-Horiz-Logo.png
 [Automox Console API]: https://developer.automox.com/developer-portal/
-[Documentation]: docs/README.md
+[Documentation]: https://github.com/AutomoxCommunity/automox-console-sdk-python/blob/main/docs/README.md
