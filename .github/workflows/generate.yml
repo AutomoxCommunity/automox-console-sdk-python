@@ -40,6 +40,12 @@ jobs:
       - name: Generate Client
         run: |
           java -jar generation/swagger-codegen-cli.jar generate -i specs/ax_console.yaml -l python -c generation/config.json -o ./
+      - name: Get project version
+        id: get_project_version
+        run: echo ::set-output name=VERSION::$(jq -r '.packageVersion' generation/config.json)
+      - name: Update setup.py Version
+        run: |
+          sed -i 's/VERSION = ".*"/VERSION = "${{ steps.get_project_version.outputs.VERSION }}"/' setup.py
       - name: Push Changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
