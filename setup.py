@@ -13,7 +13,7 @@
 from setuptools import setup, find_packages  # noqa: H301
 
 NAME = "automox-console-sdk"
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 DESCRIPTION = "Automox Console SDK for Python"
 
 with open('README.md', 'r') as fh:
