@@ -36,7 +36,7 @@ Both the Automox API Key and Organization ID inputs can be defined as environmen
 to avoid continual prompting. This can be accomplished by exporting the AUTOMOX_API_KEY and AUTOMOX_ORGANIZATION_ID environment 
 variables:
 ```shell
-AUTOMOX_API_KEY=<API KEY HERE> AUTOMOX_ORGANIZATION_ID=<ORG ID HERE> python update_devices_by_csv.py
+AUTOMOX_API_KEY=<API KEY HERE> AUTOMOX_ORGANIZATION_ID=<ORG ID HERE> python group_devices_by_activedirectory_ou.py
 ```
 
 In addition, it is possible to set the following environment variables for defining Active Directory/LDAP 
