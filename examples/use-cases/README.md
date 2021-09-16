@@ -6,3 +6,5 @@ be generally applied and useful to a variety of environments, [contributions](ht
 
 Use Case Scripts:
 - [Updating Automox Devices based on a CSV file](update_devices_by_csv)
+- [Group Automox Devices based on ServiceNow CMDB](group_devices_by_servicenow_cmdb)
+- [Group and Tag Devices based on Active Directory](group_devices_by_activedirectory_ou)
