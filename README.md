@@ -102,10 +102,11 @@ SDK. These scripts show off simple functionality such as:
 
 They should be used as reference as you are building your own scripts and utilities with the Automox SDK.
 
-### Use Cases Examples (COMING SOON)
+### Use Cases Examples
 
-[Use Case Examples](https://github.com/AutomoxCommunity/automox-console-sdk-python/tree/main/examples/use-cases) have been provided to show off end to end utility of leveraging the Automox SDK
-within varying environments. These use cases can be used as-is or modified to meet your environment needs. 
+[Use Case Examples](https://github.com/AutomoxCommunity/automox-console-sdk-python/tree/main/examples/use-cases) have 
+been provided to show off end to end utility of leveraging the Automox SDK within varying environments. These use cases 
+can be used as-is or modified to meet your environment needs. 
 
 ## Limitations
 
