@@ -3,7 +3,7 @@ In order to improve the efficiency and administration of Automox devices, it is 
 1. Pull Automox Devices
 2. Pull Automox Groups; identifying the default group
 3. Process a CSV by mapping the provided hostname and IP address of each row
-4. Update the matched Automox device by hostname or IP address with the defined field values
+4. Update the matched Automox devices with the appropriate group and tag values as defined from the CSV
 
 An example CSV is included with columns denoting the `hostname`, `ip_address`, `group`, `location`, and `environment` 
 fields. This CSV is simply used as an example and the columns can be updated to reflect your environment needs.
