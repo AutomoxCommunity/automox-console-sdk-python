@@ -3,10 +3,10 @@ from automox_console_sdk.api import DevicesApi
 from automox_console_sdk.api import GroupsApi
 from automox_console_sdk.models import ServersIdBody, ServerGroupCreateOrUpdateRequest
 from getpass import getpass
-import ldap
-from ldap.controls import SimplePagedResultsControl
+import ldap3
 import re
 import os
+import ssl
 
 
 def map_automox_devices(d_api):
@@ -52,10 +52,7 @@ def get_automox_groups(g_api):
 
 
 def get_ou_from_dn(dn):
-    exploded_dn = ldap.dn.explode_dn(dn, flags=ldap.DN_FORMAT_LDAPV2)
-    parent_ou = ','.join(exploded_dn[1:])
-
-    return(parent_ou)
+    return(','.join(ldap3.utils.dn.to_dn(dn)[1:]))
 
 
 if __name__ == '__main__':
@@ -82,7 +79,7 @@ if __name__ == '__main__':
     tag_attributes = tag_attributes.split(',')
     tag_prefix = 'AD-'
 
-    ldap_attributes = [hn_attribute, fqdn_attribute] + tag_attributes
+    ldap_attributes = list(filter(None, [hn_attribute, fqdn_attribute] + tag_attributes))
     counter_created_groups, counter_matched_devices, counter_unmatched_devices = 0, 0, 0
 
     config = automox.Configuration()
@@ -99,39 +96,43 @@ if __name__ == '__main__':
     groups, default_server_group_id = get_automox_groups(groups_api)
 
     # Pull computers from LDAP/Active Directory
-    connect = ldap.initialize(ldap_url)
     try:
-        connect.protocol_version = ldap.VERSION3
-        connect.set_option(ldap.OPT_REFERRALS, 0)
-
-        bind = connect.simple_bind_s(ldap_user, ldap_password)
+        if ldap_url.startswith('ldaps://'):
+            tls = ldap3.Tls(ca_certs_file=os.getenv('CA_CERT_FILE'),
+                            validate=ssl.CERT_REQUIRED,
+                            version=ssl.PROTOCOL_TLSv1)
+            server = ldap3.Server(ldap_url, use_ssl = True, tls = tls)
+        else:
+            server = ldap3.Server(ldap_url)
+        conn = ldap3.Connection(server, ldap_user, ldap_password, client_strategy=ldap3.SAFE_SYNC, auto_bind=True)
     except Exception as e:
         exit(f"Failed to connect to {ldap_url}: {e}")
 
-    page_control = SimplePagedResultsControl(True, size=1, cookie='')
+    search_params = {'search_base': ldap_base,
+                     'search_filter': ldap_computer_filter,
+                     'attributes': ldap_attributes,
+                     'paged_size': 1000}
 
     while True:
-        # Page LDAP Query
-        response = connect.search_ext(base=ldap_base,
-                                      scope=ldap.SCOPE_SUBTREE,
-                                      filterstr=ldap_computer_filter,
-                                      attrlist=ldap_attributes,
-                                      serverctrls=[page_control])
-
-        rtype, ldap_devices, rmsgid, serverctrls = connect.result3(response)
+        try:
+            status, result, response, _ = conn.search(**search_params)
+        except ldap3.core.exceptions.LDAPAttributeError as lae:
+            exit(f"Failed to query directory due to an invalid attribute being requested, please confirm spelling and "
+                 f"try again: {lae}")
 
         # Process devices returned by LDAP/AD
-        for device_dn, d in ldap_devices:
+        for d in response:
+            device_dn = d.get('dn')
             if device_dn is None:
                 continue
 
             device = None
             try:
-                device_hostname = d[hn_attribute][0].decode("utf-8").lower()
+                device_hostname = d.get('attributes').get(hn_attribute).lower()
             except Exception:
                 device_hostname = None
             try:
-                device_fqdn = d.get(fqdn_attribute)[0].decode("utf-8")
+                device_fqdn = d.get('attributes').get(fqdn_attribute)[0].lower()
             except Exception:
                 device_fqdn = None
             # Check by hostname first
@@ -157,9 +158,9 @@ if __name__ == '__main__':
                         tags.add(t)
                 managed_tags = set()
                 for ta in tag_attributes:
-                    tag_value = d.get(ta)
+                    tag_value = d.get('attributes').get(ta)
                     if tag_value is not None:
-                        managed_tags.add(f"{tag_prefix}-{ta}-{tag_value[0].decode('utf-8')}")
+                        managed_tags.add(f"{tag_prefix}-{ta}-{tag_value}")
                 tags.update(managed_tags)
 
                 # Create group if it doesn't exist yet
@@ -187,14 +188,11 @@ if __name__ == '__main__':
                 counter_unmatched_devices += 1
 
         # Should we page again
-        controls = [control for control in serverctrls
-                    if control.controlType == SimplePagedResultsControl.controlType]
-        if not controls:
-            print('The server ignores RFC 2696 control')
+        cookie = conn.result['controls']['1.2.840.113556.1.4.319']['value']['cookie']
+        if cookie:
+            search_params['paged_cookie'] = cookie
+        else:
             break
-        if not controls[0].cookie:
-            break
-        page_control.cookie = controls[0].cookie
 
     print(f"Script complete; matched devices: {counter_matched_devices}, unmatched devices: "
           f"{counter_unmatched_devices}, groups created: {counter_created_groups}")

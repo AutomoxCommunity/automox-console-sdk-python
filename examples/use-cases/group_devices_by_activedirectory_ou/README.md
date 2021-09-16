@@ -25,7 +25,7 @@ To run the script, first make sure Python 3 is installed on the host system and 
 follow the below steps:
 1. Create a virtual environment: `python3 -m venv venv`
 2. Source virtual environment: `source venv/bin/activate`
-3. Install the Automox Console SDK and python-ldap library: `pip install automox-console-sdk python-ldap`
+3. Install the Automox Console SDK and python3 library: `pip install automox-console-sdk python3`
 4. Navigate to the script directory: `cd examples/use-cases/group_devices_by_activedirectory_ou`   
 4. Run the scripts: `python group_devices_by_activedirectory_ou.py`
 
@@ -36,7 +36,7 @@ Both the Automox API Key and Organization ID inputs can be defined as environmen
 to avoid continual prompting. This can be accomplished by exporting the AUTOMOX_API_KEY and AUTOMOX_ORGANIZATION_ID environment 
 variables:
 ```shell
-AUTOMOX_API_KEY=<API KEY HERE> AUTOMOX_ORGANIZATION_ID=<ORG ID HERE> python update_devices_by_csv.py
+AUTOMOX_API_KEY=<API KEY HERE> AUTOMOX_ORGANIZATION_ID=<ORG ID HERE> python group_devices_by_activedirectory_ou.py
 ```
 
 In addition, it is possible to set the following environment variables for defining Active Directory/LDAP 
@@ -82,4 +82,38 @@ Successfully updated Device ID 5678 (hostname-3, None)
 Successfully updated Device ID 9012 (hostname-2, None)
 Successfully updated Device ID 3456 (hostname-1, hostname-1.example.local)
 Script complete; matched devices: 4, unmatched devices: 2, groups created: 0
+```
+
+## Troubleshooting
+### Using a Self-Signed Certificate
+If leveraging a self-signed certificate for TLS communication to Active Directory, it is possible to store the 
+certificate within a file for use with the script:
+```shell
+echo quit | openssl s_client -showcerts -connect <AD HOST>:<PORT DEFAULT 636> > cacert.pem
+```
+
+This will result in a certificate stored with BEGIN and END blocks similar to:
+```shell
+-----BEGIN CERTIFICATE-----
+MIIDYTCCAkmgAwIBAgIQKwvdJ/q0aIpKccZYqkbLjDANBgkqhkiG9w0BAQsFADAb
+....
+ZN7q0fY=
+-----END CERTIFICATE-----
+```
+
+If using a self-signed certificate, make sure to define the `CA_CERT_FILE` environment variable when running the script
+and provide the absolute path to `cacert.pem`.
+
+### Error: Certificate doesn't match any name
+When this error is encountered, it means the CN defined within the certificate chain does not match to that of the server
+responding to the request. It is important to make sure DNS is configured - or a host entry - and that the request being
+make to the AD/LDAP server is with a hostname that matches the certificate CN for the destination.
+
+In the example error below, the expected commonName was `dc.example.local` instead of `127.0.0.1`:
+```
+Failed to connect to ldaps://127.0.0.1:7636: socket ssl wrapping error: certificate {'subject': ((('commonName', 
+'dc.example.local'),),), 'issuer': ((('commonName', 'dc.example.local'),),), 'version': 3, 'serialNumber': 
+'2B0BDD27FAB4688A4A71C658AA46CB8C', 'notBefore': 'Sep 14 16:31:23 2021 GMT', 'notAfter': 'Sep 14 16:41:22 2023 GMT', 
+'subjectAltName': (('DNS', 'dc.example.local'), ('DNS', '127.0.0.1'), ('DNS', 'localhost'), ('DNS', 
+'localhost.localdomain'), ('DNS', '::1'))} doesn't match any name in ['127.0.0.1'] 
 ```
