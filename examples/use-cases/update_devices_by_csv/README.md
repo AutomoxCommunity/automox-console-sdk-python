@@ -1,7 +1,5 @@
 # Update Automox Devices by CSV
-A common need is the ability to take a CSV source file to use for grouping a tagging of Automox devices within the 
-Console for filtering, reporting, and scoping needs. This example script shows how to leverage the Automox Console SDK
-to:
+In order to improve the efficiency and administration of Automox devices, it is possible to leverage a CSV source file and the provided script for the grouping and tagging of Automox devices.  By grouping devices, it makes it that much easier to search for devices, leverage reporting filtering, and scope policies. This script shows how to leverage the Automox Console SDK to:
 1. Pull Automox Devices
 2. Pull Automox Groups; identifying the default group
 3. Process a CSV by mapping the provided hostname and IP address of each row
