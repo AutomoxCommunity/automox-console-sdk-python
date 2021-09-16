@@ -53,7 +53,7 @@ AUTOMOX_API_KEY=<API KEY HERE> \
 AUTOMOX_ORGANIZATION_ID=<ORG ID HERE> \
 LDAP_URL="ldap://example.local:389" \
 LDAP_USER="user@example.local" \
-LDAP_PASSWORD=<PASSWORD HERE>t \
+LDAP_PASSWORD=<PASSWORD HERE> \
 LDAP_BASE="DC=example,DC=local" \
 LDAP_COMPUTER_FILTER="(&(objectClass=computer))" \
 python group_devices_by_activedirectory_ou.py
