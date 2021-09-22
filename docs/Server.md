@@ -30,6 +30,8 @@ Name | Type | Description | Notes
 **custom_name** | **str** |  | [optional] 
 **exception** | **bool** |  | [optional] 
 **total_count** | **int** |  | [optional] 
+**is_compatible** | **bool** |  | [optional] 
+**compatibility_checks** | [**CompatibilityChecks**](CompatibilityChecks.md) |  | [optional] 
 **policy_status** | [**list[ServerPolicyStatus]**](ServerPolicyStatus.md) |  | [optional] 
 **last_scan_failed** | **bool** |  | [optional] 
 **pending** | **bool** |  | [optional] 
