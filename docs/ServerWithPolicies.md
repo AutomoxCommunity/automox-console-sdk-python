@@ -31,7 +31,7 @@ Name | Type | Description | Notes
 **custom_name** | **str** |  | [optional] 
 **exception** | **bool** |  | [optional] 
 **total_count** | **int** |  | [optional] 
-**server_policies** | [**list[OneOfServerWithPoliciesServerPoliciesItems]**](Object.md) |  | [optional] 
+**server_policies** | **list[OneOfServerWithPoliciesServerPoliciesItems]** |  | [optional] 
 **policy_status** | [**list[ServerPolicyStatus]**](ServerPolicyStatus.md) |  | [optional] 
 **last_scan_failed** | **bool** |  | [optional] 
 **pending** | **bool** |  | [optional] 

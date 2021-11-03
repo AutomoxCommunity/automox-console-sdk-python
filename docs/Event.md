@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **server_id** | **int** |  | [optional] 
 **organization_id** | **int** |  | [optional] 
 **policy_id** | **int** |  | [optional] 
-**data** | [**OneOfEventData**](OneOfEventData.md) |  | [optional] 
+**data** | **OneOfEventData** |  | [optional] 
 **server_name** | **str** |  | [optional] 
 **policy_name** | **str** |  | [optional] 
 **policy_type_name** | **str** |  | [optional] 

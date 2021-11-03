@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 **organization_id** | **int** | Organization ID for the specified policy | 
 **name** | **str** | The name of the policy. | 
 **policy_type_name** | **str** | The name of the type of policy you are creating. Optional when updating an existing policy. | 
-**configuration** | [**OneOfPatchPolicyConfiguration**](OneOfPatchPolicyConfiguration.md) | The policy configuration. This varies depending on the type of policy being used. | 
+**configuration** | **OneOfPatchPolicyConfiguration** | The policy configuration. This varies depending on the type of policy being used. | 
 **schedule_days** | **int** | Decimal value of binary day schedule. See [Policy and Device Filters, and Scheduling - Example Days per Week](/developer-portal/policy_filters_schedule/#example-days-per-week). | 
 **schedule_weeks_of_month** | **int** | Decimal value of binary week schedule. See [Policy and Device Filters, and Scheduling - Example Weeks per Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month). | [optional] 
 **schedule_months** | **int** | Decimal value of binary month schedule. See [Policy and Device Filters, and Scheduling - Example Months per Year](/developer-portal/policy_filters_schedule/#example-months-per-year). | [optional] 

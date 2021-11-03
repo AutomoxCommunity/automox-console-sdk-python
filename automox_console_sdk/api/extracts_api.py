@@ -151,7 +151,7 @@ class ExtractsApi(object):
         :param async_req bool
         :param int id: The ID of the Data Extract to download. (required)
         :param int o: Organization ID (required)
-        :return: Object
+        :return: object
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -174,7 +174,7 @@ class ExtractsApi(object):
         :param async_req bool
         :param int id: The ID of the Data Extract to download. (required)
         :param int o: Organization ID (required)
-        :return: Object
+        :return: object
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -234,7 +234,7 @@ class ExtractsApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='Object',  # noqa: E501
+            response_type='object',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),

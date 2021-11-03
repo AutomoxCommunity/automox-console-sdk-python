@@ -43,8 +43,8 @@ class PoliciesApi(object):
 
         :param async_req bool
         :param int o: Organization ID for the specified policy. (required)
-        :param Object body:
-        :return: list[Object]
+        :param object body:
+        :return: list[object]
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -66,8 +66,8 @@ class PoliciesApi(object):
 
         :param async_req bool
         :param int o: Organization ID for the specified policy. (required)
-        :param Object body:
-        :return: list[Object]
+        :param object body:
+        :return: list[object]
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -127,7 +127,7 @@ class PoliciesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[Object]',  # noqa: E501
+            response_type='list[object]',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -481,7 +481,7 @@ class PoliciesApi(object):
         :param int o: Organization ID for retrieving policies (required)
         :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
-        :return: list[Object]
+        :return: list[object]
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -505,7 +505,7 @@ class PoliciesApi(object):
         :param int o: Organization ID for retrieving policies (required)
         :param int page: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
         :param int limit: A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
-        :return: list[Object]
+        :return: list[object]
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -563,7 +563,7 @@ class PoliciesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[Object]',  # noqa: E501
+            response_type='list[object]',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -779,7 +779,7 @@ class PoliciesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Object body: (required)
+        :param object body: (required)
         :param int o: Organization ID for the specified policy (required)
         :param int id: Policy ID for the specified policy (required)
         :return: None
@@ -803,7 +803,7 @@ class PoliciesApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Object body: (required)
+        :param object body: (required)
         :param int o: Organization ID for the specified policy (required)
         :param int id: Policy ID for the specified policy (required)
         :return: None
