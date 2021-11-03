@@ -3,16 +3,14 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**auto_patch** | **bool** | Enable or Disable automatic execution of the policy. | 
-**notify_user** | **bool** | Display notification 15 minutes before patching. | 
-**missed_patch_window** | **bool** | Enable or Disable Missed Patch Window setting. | [optional] 
-**auto_reboot** | **bool** | Enable or Disable automatic reboots following policy execution. | 
-**filters** | **list[str]** | Use only with &#x60;filter_type&#x60; of &#x60;exclude&#x60; or &#x60;include&#x60;. Use &#x60;*&#x60; for wildcard. | [optional] 
-**device_filters_enabled** | **bool** | Enable or disable Device Filters. | [optional] 
+**auto_patch** | **bool** | Enable or disable Auto Patch. | 
+**auto_reboot** | **bool** | Enable or disable Auto Reboot. | 
+**notify_user** | **bool** |  | 
+**missed_patch_window** | **bool** |  | [optional] 
+**patch_rule** | **str** | Use only with Patch policy. | 
+**filter_type** | **str** | The type of filter being used. Use only with &#x60;patch_rule&#x60; &#x3D; &#x60;filter&#x60; | [optional] 
+**device_filters_enabled** | **bool** | Enable or disable Device Targeting Filters. | [optional] [default to False]
 **device_filters** | [**DeviceFilters**](DeviceFilters.md) |  | [optional] 
-**filter_type** | **str** | Use only with &#x60;patch_rule&#x60; of &#x60;filter&#x60; | [optional] 
-**advanced_filter** | [**list[PatchPolicyConfigurationAdvancedFilter]**](PatchPolicyConfigurationAdvancedFilter.md) | Object array. Include one object per advanced filter line. See [Policy and Device Filters, and Scheduling - Advanced Filters](/developer-portal/policy_filters_schedule/#advanced-filters) | [optional] 
-**severity_filter** | **list[str]** | String array. Use only with &#x60;filter_type&#x60; of &#x60;severity&#x60;. Defines severity ratings to include in patching. Format: [\&quot;low\&quot;,\&quot;medium\&quot;,\&quot;high\&quot;,\&quot;critical\&quot;,\&quot;none\&quot;,\&quot;unknown\&quot;] | [optional] 
 **include_optional** | **bool** | Enable or disable inclusion of optional Windows patches for this policy **NOTE:** Will default to false if not included. | [optional] [default to False]
 **notify_reboot_user** | **bool** | Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions. | [optional] 
 **notify_deferred_reboot_user** | **bool** | If &#x60;true&#x60;, this shows a post-install reboot notification message, if &#x60;notify_reboot_deferred&#x60; is also &#x60;true&#x60;. If &#x60;notify_reboot_deferred&#x60; is &#x60;false&#x60; or &#x60;null&#x60;, this will sync with the existing &#x60;notify_reboot_user&#x60; parameter. | [optional] 

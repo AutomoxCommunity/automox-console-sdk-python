@@ -14,7 +14,7 @@ Method | HTTP request | Description
 [**update_policy**](PoliciesApi.md#update_policy) | **PUT** /policies/{id} | Updates a specific policy object for the authenticated user.
 
 # **create_policy**
-> list[Policy] create_policy(o, body=body)
+> list[Object] create_policy(o, body=body)
 
 Create a New Policy
 
@@ -32,7 +32,7 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
 o = 56 # int | Organization ID for the specified policy.
-body = automox_console_sdk.PoliciesBody() # PoliciesBody |  (optional)
+body = automox_console_sdk.Object() # Object |  (optional)
 
 try:
     # Create a New Policy
@@ -47,11 +47,11 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **o** | **int**| Organization ID for the specified policy. | 
- **body** | [**PoliciesBody**](PoliciesBody.md)|  | [optional] 
+ **body** | [**Object**](Object.md)|  | [optional] 
 
 ### Return type
 
-[**list[Policy]**](Policy.md)
+[**list[Object]**](Object.md)
 
 ### Authorization
 
@@ -224,7 +224,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_policies**
-> list[Policy] get_policies(o, page=page, limit=limit)
+> list[Object] get_policies(o, page=page, limit=limit)
 
 List All Policy Objects
 
@@ -263,7 +263,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**list[Policy]**](Policy.md)
+[**list[Object]**](Object.md)
 
 ### Authorization
 
@@ -277,7 +277,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_policy**
-> Policy get_policy(id, o)
+> InlineResponse2001 get_policy(id, o)
 
 List Specific Policy Object
 
@@ -314,7 +314,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Policy**](Policy.md)
+[**InlineResponse2001**](InlineResponse2001.md)
 
 ### Authorization
 
@@ -394,7 +394,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
-body = automox_console_sdk.Policy() # Policy | 
+body = automox_console_sdk.Object() # Object | 
 o = 56 # int | Organization ID for the specified policy
 id = 56 # int | Policy ID for the specified policy
 
@@ -409,7 +409,7 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**Policy**](Policy.md)|  | 
+ **body** | [**Object**](Object.md)|  | 
  **o** | **int**| Organization ID for the specified policy | 
  **id** | **int**| Policy ID for the specified policy | 
 
