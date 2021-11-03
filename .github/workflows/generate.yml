@@ -24,7 +24,7 @@ jobs:
     needs: [validate]
     env:
       JAVA_VERSION: 1.11
-      SWAGGER_CODEGEN_VERSION: 3.0.27
+      SWAGGER_CODEGEN_VERSION: 3.0.29
 
     steps:
       - uses: actions/checkout@v2
