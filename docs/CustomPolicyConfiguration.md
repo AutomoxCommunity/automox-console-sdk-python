@@ -3,7 +3,6 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**auto_patch** | **bool** | Enable or Disable automatic execution of the policy. | 
 **auto_reboot** | **bool** | Enable or Disable automatic reboots following policy execution. | 
 **notify_reboot_user** | **bool** | Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions. | [optional] 
 **device_filters_enabled** | **bool** | Enable or disable Device Filters. | [optional] 

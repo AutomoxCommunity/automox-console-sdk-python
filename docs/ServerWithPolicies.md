@@ -32,7 +32,7 @@ Name | Type | Description | Notes
 **exception** | **bool** |  | [optional] 
 **total_count** | **int** |  | [optional] 
 **server_policies** | **list[OneOfServerWithPoliciesServerPoliciesItems]** |  | [optional] 
-**policy_status** | [**list[ServerPolicyStatus]**](ServerPolicyStatus.md) |  | [optional] 
+**policy_status** | [**list[ServerWithPoliciesPolicyStatus]**](ServerWithPoliciesPolicyStatus.md) |  | [optional] 
 **last_scan_failed** | **bool** |  | [optional] 
 **pending** | **bool** |  | [optional] 
 **compliant** | **bool** |  | [optional] 

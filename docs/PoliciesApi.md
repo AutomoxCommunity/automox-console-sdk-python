@@ -12,9 +12,10 @@ Method | HTTP request | Description
 [**get_policy**](PoliciesApi.md#get_policy) | **GET** /policies/{id} | List Specific Policy Object
 [**get_policy_stats**](PoliciesApi.md#get_policy_stats) | **GET** /policystats | List Policy Compliance Stats
 [**update_policy**](PoliciesApi.md#update_policy) | **PUT** /policies/{id} | Updates a specific policy object for the authenticated user.
+[**upload_policy_file**](PoliciesApi.md#upload_policy_file) | **POST** /policies/{id}/files | Upload installation file to a Required Software policy.
 
 # **create_policy**
-> list[object] create_policy(o, body=body)
+> create_policy(o, body=body)
 
 Create a New Policy
 
@@ -79,8 +80,7 @@ body = {
 
 try:
     # Create a New Policy
-    api_response = api_instance.create_policy(o, body=body)
-    pprint(api_response)
+    api_instance.create_policy(o, body=body)
 except ApiException as e:
     print("Exception when calling PoliciesApi->create_policy: %s\n" % e)
 ```
@@ -94,7 +94,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**list[object]**
+void (empty response body)
 
 ### Authorization
 
@@ -510,6 +510,56 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **upload_policy_file**
+> upload_policy_file(id, file=file)
+
+Upload installation file to a Required Software policy.
+
+Upload file to a Required Software policy.
+
+### Example
+```python
+from __future__ import print_function
+import time
+import automox_console_sdk
+from automox_console_sdk.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
+id = 56 # int | The policy ID for the target policy.
+file = 'file_example' # str |  (optional)
+
+try:
+    # Upload installation file to a Required Software policy.
+    api_instance.upload_policy_file(id, file=file)
+except ApiException as e:
+    print("Exception when calling PoliciesApi->upload_policy_file: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **int**| The policy ID for the target policy. | 
+ **file** | **str**|  | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
