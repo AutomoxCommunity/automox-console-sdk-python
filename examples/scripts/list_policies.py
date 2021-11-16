@@ -1,5 +1,5 @@
 import automox_console_sdk as automox
-from automox_console_sdk.api import DevicesApi
+from automox_console_sdk.api import PoliciesApi
 import logging
 import os
 import sys
@@ -17,17 +17,17 @@ ch.setLevel(logging.INFO)
 logger.addHandler(ch)
 config.debug = False
 
-devices_api = DevicesApi(client)
+policies_api = PoliciesApi(client)
 
 organization = os.getenv('AUTOMOX_ORGANIZATION_ID')
 
 page = 0
 while True:
-    devices_page = devices_api.get_devices(o=organization, limit=500, page=page)
-    for d in devices_page:
-        print(f"Device ID: {d.id}, Hostname: {d.name}, Server Group ID: {d.server_group_id}, IP Addresses: {d.ip_addrs}")
+    policies_page = policies_api.get_policies(o=organization, limit=500, page=page)
+    for policy in policies_page:
+        print(f"Policy ID: {policy['id']}, Name: {policy['name']}, Type: {policy['policy_type_name']}")
 
-    if len(devices_page) == 0:
+    if len(policies_page) == 0:
         break
 
     page += 1
