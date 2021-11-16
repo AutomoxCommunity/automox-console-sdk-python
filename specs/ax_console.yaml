@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Automox Console API
   description: API for use with the Automox Console
-  version: "2021-10-04"
+  version: "2021-11-16"
   contact:
     name: Automox Support
     email: support@automox.com
@@ -50,7 +50,7 @@ components:
       content:
         application/json:
           schema:
-            description: ""
+            description: "Unauthorized"
             type: object
             properties:
               errors:
@@ -97,9 +97,11 @@ components:
       type: object
       properties:
         id:
+          description: The ID of the API key
           type: integer
           format: int64
         name:
+          description: The username of the user
           type: string
         is_enabled:
           type: boolean
@@ -883,12 +885,16 @@ components:
         - notes
         - server_groups
       properties:
+        id:
+          description: Policy ID
+          type: integer
+          format: int64
         organization_id:
           description: Organization ID for the specified policy
           type: integer
           format: int64
         name:
-          description: The name of the policy.
+          description: The name of the policy
           type: string
         policy_type_name:
           description: The name of the type of policy you are creating. Optional when updating an existing policy.
@@ -938,11 +944,6 @@ components:
         schedule_time:
           description: 'Scheduled time for automatic policy execution. Format: `"hh:mm"`'
           type: string
-        next_remediation:
-          description: The date and time the next remediation will be executed for the policy.
-          type: string
-          nullable: true
-          format: date-time
         server_groups:
           description: An array containing a list of the server group IDs to be affected by the policy.
           type: array
@@ -1160,7 +1161,7 @@ components:
     RequiredSoftwarePolicy:
       type: object
       title: Required Software Policy
-      description: Required Software Policy object
+      description: "Required Software Policy. *NOTE: To upload installation file, see [/policies/{id}/files](/openapi/axconsole/operation/uploadPolicyFile)*"
       required:
         - name
         - organization_id
@@ -1171,6 +1172,10 @@ components:
         - notes
         - server_groups
       properties:
+        id:
+          description: Policy ID
+          type: integer
+          format: int64
         name:
           description: The name of the policy.
           type: string
@@ -1216,10 +1221,6 @@ components:
         schedule_time:
           description: 'Scheduled time for automatic policy execution. Format: `"hh:mm"`'
           type: string
-        next_remediation:
-          type: string
-          nullable: true
-          format: date-time
         server_groups:
           type: array
           items:
@@ -1260,6 +1261,10 @@ components:
         - notes
         - server_groups
       properties:
+        id:
+          description: Policy ID
+          type: integer
+          format: int64
         name:
           type: string
         organization_id:
@@ -1303,10 +1308,6 @@ components:
         schedule_time:
           description: 'Scheduled time for automatic policy execution. Format: `"hh:mm"`'
           type: string
-        next_remediation:
-          type: string
-          nullable: true
-          format: date-time
         server_groups:
           type: array
           items:
@@ -1629,12 +1630,8 @@ components:
     CustomPolicyConfiguration:
       type: object
       required:
-        - auto_patch
         - auto_reboot
       properties:
-        auto_patch:
-          description: Enable or Disable automatic execution of the policy.
-          type: boolean
         auto_reboot:
           description: Enable or Disable automatic reboots following policy execution.
           type: boolean
@@ -2150,10 +2147,6 @@ components:
                 type: string
               create_time:
                 type: string
-              next_remediation:
-                type: string
-                nullable: true
-                format: date-time
         last_scan_failed:
           type: boolean
         pending:
@@ -3535,6 +3528,17 @@ paths:
                   description:
                     Only needed for `InstallUpdate`. Includes the name of the patches
                     to install.
+            examples:
+              getOS:
+                summary: Trigger a scan of the target device
+                value: { "command_type_name": "GetOS" }
+              InstallUpdate:
+                summary: Install a specific patch
+                value:
+                  {
+                    "command_type_name": "InstallUpdate",
+                    "args": "KB12345 KB67890",
+                  }
       x-codeSamples:
         - lang: PowerShell
           source: >
@@ -4144,8 +4148,8 @@ paths:
                 items:
                   anyOf:
                     - $ref: "#/components/schemas/PatchPolicy"
-                    - $ref: "#/components/schemas/CustomPolicy"
                     - $ref: "#/components/schemas/RequiredSoftwarePolicy"
+                    - $ref: "#/components/schemas/CustomPolicy"
         "400":
           $ref: "#/components/responses/Error"
         "401":
@@ -4232,7 +4236,7 @@ paths:
                     "server_groups": [250624, 90125],
                     "notes": "Here are some notes",
                   }
-              RequiredSWPolicy:
+              RequiredSoftwarePolicy:
                 summary: A Required Software Policy
                 value:
                   {
@@ -4328,7 +4332,8 @@ paths:
                     "schedule_weeks_of_month": 20,
                     "schedule_months": 4680,
                     "schedule_time": "12:00",
-                    "configuration": {
+                    "configuration":
+                      {
                         "auto_patch": true,
                         "patch_rule": "manual",
                         "auto_reboot": true,
@@ -4343,11 +4348,7 @@ paths:
                         "custom_notification_max_delays": 3,
                         "custom_notification_patch_message": "System Update: An important update will be installed.",
                         "custom_notification_reboot_message": "An important update will be installed; reboot may be required.",
-                        "custom_notification_deferment_periods": [
-                            1,
-                            4,
-                            8
-                        ],
+                        "custom_notification_deferment_periods": [1, 4, 8],
                         "custom_notification_patch_message_mac": "System Update: An important update will be installed.",
                         "custom_notification_reboot_message_mac": "An important update will be installed; reboot may be required.",
                         "custom_pending_reboot_notification_message": "Updates require reboot: Please save your work.",
@@ -4355,18 +4356,12 @@ paths:
                         "custom_pending_reboot_notification_max_delays": 3,
                         "custom_pending_reboot_notification_message_mac": "Updates require reboot: Please save your work.",
                         "notify_deferred_reboot_user_auto_deferral_enabled": false,
-                        "custom_pending_reboot_notification_deferment_periods": [
-                            1,
-                            4,
-                            8
-                        ]
-                    },
-                    "server_groups": [
-                        250624,
-                        90125
-                    ],
-                    "notes": "Here are some notes"
-                }
+                        "custom_pending_reboot_notification_deferment_periods":
+                          [1, 4, 8],
+                      },
+                    "server_groups": [250624, 90125],
+                    "notes": "Here are some notes",
+                  }
       x-codeSamples:
         - lang: PowerShell
           source: >
@@ -4377,79 +4372,73 @@ paths:
                 "Content-Type" = "application/json"
             }
 
-            $url = "https://console.automox.com/api/policies/12345?o=0000"
+            $url = "https://console.automox.com/api/policies?o=9999"
 
             $body = @"
-              {
-                "name": "API Created",
-                "policy_type_name": "patch",
-                "organization_id": 0000,
-                "configuration": {
-                  "auto_patch": false,
-                  "auto_reboot": true,
-                  "notify_reboot_user": true,
+            {
+              "name": "Patch All Policy",
+              "policy_type_name": "patch",
+              "organization_id": 9999,
+              "schedule_days": 42,
+              "schedule_weeks_of_month": 20,
+              "schedule_months": 4680,
+              "schedule_time": "12:00",
+              "configuration": {
+                  "auto_patch": true,
                   "notify_user": true,
-                  "missed_patch_window": true,
-                  "patch_rule": "advanced",
-                  "filters": ["*KB2267602*","*Exclude This Too*"],
-                  "severity_filter": ["low","medium","high","critical","none","unknown"],
+                  "auto_reboot": true,
+                  "patch_rule": "all",
+                  "filter_type": "all",
+                  "missed_patch_window": false,
+                  "device_filters_enabled": true,
+                  "device_filters": [
+                      {
+                          "field": "tag",
+                          "op": "in",
+                          "value": [
+                              "Windows",
+                              "Win10"
+                          ]
+                      }
+                  ],
                   "include_optional": true,
-                  "custom_notification_patch_message": "Notification Text before normal patch - Windows - Max 125 Char",
-                  "custom_notification_reboot_message": "Notification Text before reboot patch - Windows - Max 125 Char",
-                  "custom_notification_patch_message_mac": "Notification Text before normal patch - Mac - Max 70 Char",
-                  "custom_notification_reboot_message_mac": "Notification Text before reboot patch - Mac - Max 70 Char",
+                  "notify_reboot_user": true,
+                  "notify_deferred_reboot_user": true,
+                  "custom_notification_patch_message": "Important updates are going to be installed!",
+                  "custom_notification_patch_message_mac": "Important updates are going to be installed!",
+                  "custom_notification_reboot_message": "Reboot needed to finish installing updates!",
+                  "custom_notification_reboot_message_mac": "Reboot needed to finish installing updates!",
                   "custom_notification_max_delays": 3,
-                  "custom_notification_deferment_periods": [1, 4, 8],
-                  "notify_user_message_timeout": 120,
-                  "notify_user_auto_deferral_enabled": false,
-                  "notify_deferred_reboot_user_message_timeout": 120,
-                  "notify_deferred_reboot_user_auto_deferral_enabled": true,
-                  "advanced_filter": [
-                          {
-                              "left": "patch-source",
-                              "right": "windowsupdate",
-                              "condition": "is"
-                          },
-                          {
-                              "left": "severity",
-                              "right": "medium",
-                              "condition": "greater-than-or-equal-to"
-                          }
-                      ]
-                    "device_filters": [
-                          {
-                              "field": "os_family",
-                              "op": "in",
-                              "value": ["Windows"]
-                          },
-                          {
-                              "field": "hostname",
-                              "op": "like_any",
-                              "value": ["WinDev2104Eval"]
-                          }
-                        ],
-                },
-                "schedule_days": 146,
-                "schedule_weeks_of_month": 42,
-                "schedule_months": 4162,
-                "schedule_time": "01:00",
-                "notes": "Patch every Mon,Thu,Fri\n1st,3rd,5th Week\nJan,Jun,Dec",
-                "server_groups": [23500]
-              }
-              "@
+                  "custom_notification_deferment_periods": [
+                      1,
+                      4,
+                      8
+                  ],
+                  "custom_pending_reboot_notification_message": "Your computer needs to reboot to install updates!",
+                  "custom_pending_reboot_notification_message_mac": "Your computer needs to reboot to install updates!",
+                  "custom_pending_reboot_notification_deferment_periods": [
+                      1,
+                      4,
+                      8
+                  ],
+                  "notify_user_message_timeout": 15,
+                  "notify_deferred_reboot_user_message_timeout": 15,
+                  "notify_user_auto_deferral_enabled": true,
+                  "notify_deferred_reboot_user_auto_deferral_enabled": true
+              },
+              "notify_user": true,
+              "server_groups": [
+                  250624,
+                  90125
+              ],
+              "notes": "Here are some notes"
+            }
+            "@
+
             Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body
       responses:
-        "200":
-          description: Successful Operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  anyOf:
-                    - $ref: "#/components/schemas/PatchPolicy"
-                    - $ref: "#/components/schemas/CustomPolicy"
-                    - $ref: "#/components/schemas/RequiredSoftwarePolicy"
+        "201":
+          description: Created
         "400":
           $ref: "#/components/responses/Error"
         "401":
@@ -4594,7 +4583,7 @@ paths:
                     "server_groups": [250624, 90125],
                     "notes": "Here are some notes",
                   }
-              RequiredSWPolicy:
+              RequiredSoftwarePolicy:
                 summary: A Required Software Policy
                 value:
                   {
@@ -4690,7 +4679,8 @@ paths:
                     "schedule_weeks_of_month": 20,
                     "schedule_months": 4680,
                     "schedule_time": "12:00",
-                    "configuration": {
+                    "configuration":
+                      {
                         "auto_patch": true,
                         "patch_rule": "manual",
                         "auto_reboot": true,
@@ -4705,11 +4695,7 @@ paths:
                         "custom_notification_max_delays": 3,
                         "custom_notification_patch_message": "System Update: An important update will be installed.",
                         "custom_notification_reboot_message": "An important update will be installed; reboot may be required.",
-                        "custom_notification_deferment_periods": [
-                            1,
-                            4,
-                            8
-                        ],
+                        "custom_notification_deferment_periods": [1, 4, 8],
                         "custom_notification_patch_message_mac": "System Update: An important update will be installed.",
                         "custom_notification_reboot_message_mac": "An important update will be installed; reboot may be required.",
                         "custom_pending_reboot_notification_message": "Updates require reboot: Please save your work.",
@@ -4717,18 +4703,12 @@ paths:
                         "custom_pending_reboot_notification_max_delays": 3,
                         "custom_pending_reboot_notification_message_mac": "Updates require reboot: Please save your work.",
                         "notify_deferred_reboot_user_auto_deferral_enabled": false,
-                        "custom_pending_reboot_notification_deferment_periods": [
-                            1,
-                            4,
-                            8
-                        ]
-                    },
-                    "server_groups": [
-                        250624,
-                        90125
-                    ],
-                    "notes": "Here are some notes"
-                }
+                        "custom_pending_reboot_notification_deferment_periods":
+                          [1, 4, 8],
+                      },
+                    "server_groups": [250624, 90125],
+                    "notes": "Here are some notes",
+                  }
       x-codeSamples:
         - lang: PowerShell
           source: >
@@ -4795,7 +4775,10 @@ paths:
                 "schedule_months": 4162,
                 "schedule_time": "01:00",
                 "notes": "Patch every Mon,Thu,Fri\n1st,3rd,5th Week\nJan,Jun,Dec",
-                "server_groups": [23500]
+                "server_groups": [
+                  250624,
+                  90125
+                ]
               }
               "@
             Invoke-WebRequest -Method Put -Uri $url -Headers $headers -Body $body
@@ -4836,7 +4819,6 @@ paths:
 
             $url = "https://console.automox.com/api/policies/12345?o=0000"
 
-
             $response = (Invoke-WebRequest -Method Delete -Uri $url -Headers $headers).Content
       responses:
         "204":
@@ -4851,6 +4833,54 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
+  "/policies/{id}/files":
+    post:
+      tags:
+        - Policies
+      summary: Upload installation file to a Required Software policy.
+      description: Upload file to a Required Software policy.
+      operationId: uploadPolicyFile
+      parameters:
+        - name: id
+          in: path
+          description: "The policy ID for the target policy."
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+              "Authorization" = "Bearer $apiKey"
+              "Content-Type" = "multipart/form-data"
+            }
+            $url = "https://console.automox.com/api/policies/{id}/files"
+            $form = @{
+              file = Get-Item -Path 'the path to your file goes here'
+            }
+
+            $response = (Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Form $form").Content
+      responses:
+        "201":
+          description: Successful Operation
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
   "/policies/{id}/action":
     post:
       tags:
@@ -5554,7 +5584,15 @@ paths:
                     "The time at which (in UTC) the key should automatically expire.
                     Format is ISO8601. Example: 2020-08-05T18:21:47+0000"
                   type: string
-                  format: datetime
+                  format: date-time
+            examples:
+              createKey:
+                summary: Create an API key for a given User in a given Organization
+                value:
+                  {
+                    "name": "My Test API Key",
+                    "expires_at": "2021-12-05T18:21:47+0000",
+                  }
       x-codeSamples:
         - lang: PowerShell
           source: >
@@ -5562,11 +5600,17 @@ paths:
 
             $headers = @{ "Authorization" = "Bearer $apiKey" }
 
+            $body = @"
+              {
+                "name": "My Test API Key",
+                "expires_at": "2021-12-05T18:21:47+0000"
+              }
+              "@
 
-            $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000&page=0&limit=25'
+            $url = 'https://console.automox.com/api/users/{98765}/api_keys/?o=0000'
 
 
-            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
+            $response = (Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body -ContentType "application/json").Content
       responses:
         "200":
           description: Successful Operation
@@ -5621,7 +5665,7 @@ paths:
             $headers = @{ "Authorization" = "Bearer $apiKey" }
 
 
-            $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000&page=0&limit=25'
+            $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000'
 
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
@@ -5803,7 +5847,7 @@ paths:
             $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999/decrypt?o=0000'
 
 
-            $response = (Invoke-WebRequest -Method Delete -Uri $url -Headers $headers -ContentType "application/json").Content
+            $response = (Invoke-WebRequest -Method Post -Uri $url -Headers $headers -ContentType "application/json").Content
       responses:
         "200":
           description: Successful Operation
@@ -6059,7 +6103,7 @@ paths:
 
             $headers = @{ "Authorization" = "Bearer $apiKey" }
 
-            $url = "https://console.automox.com/api/data-extracts?o=0000&limit=25&page=0"
+            $url = "https://console.automox.com/api/data-extracts?o=0000&limit=25&page=0&status:in=queued"
 
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
@@ -6132,6 +6176,18 @@ paths:
                       type: string
                       minLength: 1
                       format: date-time
+            examples:
+              createDataExtract:
+                summary: Create a new Data Extract
+                value:
+                  {
+                    "type": "patch-history",
+                    "parameters":
+                      {
+                        "start_time": "2021-05-28T13:31:57.510Z",
+                        "end_time": "2021-05-30T06:42:12.117Z",
+                      },
+                  }
       x-codeSamples:
         - lang: PowerShell
           source: >
@@ -6146,15 +6202,15 @@ paths:
 
             $body = @”
 
-            {
-              “type”: “patch-history”,
-              “parameters”: {
-                “start_time”: "2021-05-28T13:31:57.510Z",
-                “end_time”:  "2021-05-30T06:42:12.117Z"
-                }
-            }
+                    {
+                      "type": "patch-history",
+                      "parameters": {
+                        "start_time": '2021-05-28T13:31:57.510Z',
+                        "end_time": '2021-05-30T06:42:12.117Z'
+                      }
+                    }
 
-            ”@
+                  ”@
 
 
             $response = (Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body -ContentType "application/json").Content
@@ -6202,7 +6258,7 @@ paths:
             $url = "https://console.automox.com/api/data-extracts/000"
 
 
-            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
       responses:
         "200":
           description: Successful Operation
@@ -6256,7 +6312,7 @@ paths:
             $url = 'https://console.automox.com/api/data-extracts/000/download?o=0000'
 
 
-            Invoke-WebRequest -Method Get -Uri $url -Headers $headers -OutFile "$env:userprofile\Downloads\patch-history_report.csv"
+            Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/octet-stream" -OutFile "$env:userprofile\Downloads\patch-history_report.csv"
       responses:
         "200":
           description: Downloads the extract file automatically.
