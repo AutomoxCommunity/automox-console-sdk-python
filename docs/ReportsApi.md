@@ -68,7 +68,7 @@ Name | Type | Description  | Notes
 
 Non-Compliance Report
 
-Retrieve the non-compliant devices report. This endpoint is deprecated. Please use [GET /reports/needs-attention](/openapi/reference/operation/getNeedsAttentionReport) instead.
+Retrieve the non-compliant devices report. This endpoint is deprecated. Please use [GET /reports/needs-attention](/openapi/axconsole/operation/getNeedsAttentionReport) instead.
 
 ### Example
 ```python

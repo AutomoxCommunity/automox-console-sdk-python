@@ -221,7 +221,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_devices**
-> list[Server] get_devices(o, limit, page, group_id=group_id, ps_version=ps_version, pending=pending, patch_status=patch_status, policy_id=policy_id, exception=exception, managed=managed, filters=filters, sort_columns=sort_columns, sort_dir=sort_dir)
+> list[Server] get_devices(o, limit, page, group_id=group_id, ps_version=ps_version, pending=pending, patch_status=patch_status, policy_id=policy_id, exception=exception, managed=managed, filters_is_compatible=filters_is_compatible, sort_columns=sort_columns, sort_dir=sort_dir)
 
 List All Devices
 
@@ -248,13 +248,13 @@ patch_status = 'missing' # str | Filter based on presence of ANY available patch
 policy_id = 56 # int | Filter based on association to a given Policy ID. Format: `policyId=12345` (optional)
 exception = 56 # int | Filter based on the exception property to exclude the device from reports. Device is still monitored when excluded from reports and statistics. Format: `exception=1` (optional)
 managed = 56 # int | Filter based on device's Managed status. Unmanaged indicates no linked policies. Format: `managed=0` (optional)
-filters = automox_console_sdk.Filters() # Filters | Filter on compatible devices (optional)
+filters_is_compatible = true # bool |  (optional)
 sort_columns = 'sort_columns_example' # str | The column you want to sort by. (optional)
 sort_dir = 'sort_dir_example' # str | The sort direction, ascending or descending. (optional)
 
 try:
     # List All Devices
-    api_response = api_instance.get_devices(o, limit, page, group_id=group_id, ps_version=ps_version, pending=pending, patch_status=patch_status, policy_id=policy_id, exception=exception, managed=managed, filters=filters, sort_columns=sort_columns, sort_dir=sort_dir)
+    api_response = api_instance.get_devices(o, limit, page, group_id=group_id, ps_version=ps_version, pending=pending, patch_status=patch_status, policy_id=policy_id, exception=exception, managed=managed, filters_is_compatible=filters_is_compatible, sort_columns=sort_columns, sort_dir=sort_dir)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DevicesApi->get_devices: %s\n" % e)
@@ -274,7 +274,7 @@ Name | Type | Description  | Notes
  **policy_id** | **int**| Filter based on association to a given Policy ID. Format: &#x60;policyId&#x3D;12345&#x60; | [optional] 
  **exception** | **int**| Filter based on the exception property to exclude the device from reports. Device is still monitored when excluded from reports and statistics. Format: &#x60;exception&#x3D;1&#x60; | [optional] 
  **managed** | **int**| Filter based on device&#x27;s Managed status. Unmanaged indicates no linked policies. Format: &#x60;managed&#x3D;0&#x60; | [optional] 
- **filters** | [**Filters**](.md)| Filter on compatible devices | [optional] 
+ **filters_is_compatible** | **bool**|  | [optional] 
  **sort_columns** | **str**| The column you want to sort by. | [optional] 
  **sort_dir** | **str**| The sort direction, ascending or descending. | [optional] 
 

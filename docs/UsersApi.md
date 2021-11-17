@@ -9,7 +9,7 @@ Method | HTTP request | Description
 [**get_users**](UsersApi.md#get_users) | **GET** /users | List All Users With Access to a Given Organization
 
 # **decrypt_user_api_key**
-> InlineResponse2002 decrypt_user_api_key(user_id, id, o)
+> InlineResponse2003 decrypt_user_api_key(user_id, id, o)
 
 Decrypt User API Key
 
@@ -48,7 +48,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2002**](InlineResponse2002.md)
+[**InlineResponse2003**](InlineResponse2003.md)
 
 ### Authorization
 

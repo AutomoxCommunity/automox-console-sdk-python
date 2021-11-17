@@ -21,5 +21,13 @@ devices_api = DevicesApi(client)
 
 organization = os.getenv('AUTOMOX_ORGANIZATION_ID')
 
-for d in devices_api.get_devices(o=organization, limit=500, page=0):
-    print(f"Device ID: {d.id}, Hostname: {d.name}, Server Group ID: {d.server_group_id}, IP Addresses: {d.ip_addrs}")
+page = 0
+while True:
+    devices_page = devices_api.get_devices(o=organization, limit=500, page=page)
+    for d in devices_page:
+        print(f"Device ID: {d.id}, Hostname: {d.name}, Server Group ID: {d.server_group_id}, IP Addresses: {d.ip_addrs}")
+
+    if len(devices_page) == 0:
+        break
+
+    page += 1

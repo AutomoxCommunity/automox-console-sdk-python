@@ -12,9 +12,10 @@ Method | HTTP request | Description
 [**get_policy**](PoliciesApi.md#get_policy) | **GET** /policies/{id} | List Specific Policy Object
 [**get_policy_stats**](PoliciesApi.md#get_policy_stats) | **GET** /policystats | List Policy Compliance Stats
 [**update_policy**](PoliciesApi.md#update_policy) | **PUT** /policies/{id} | Updates a specific policy object for the authenticated user.
+[**upload_policy_file**](PoliciesApi.md#upload_policy_file) | **POST** /policies/{id}/files | Upload installation file to a Required Software policy.
 
 # **create_policy**
-> list[Policy] create_policy(o, body=body)
+> create_policy(o, body=body)
 
 Create a New Policy
 
@@ -32,12 +33,54 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
 o = 56 # int | Organization ID for the specified policy.
-body = automox_console_sdk.PoliciesBody() # PoliciesBody |  (optional)
+body = {
+  "summary" : "A Patch All Policy",
+  "value" : {
+    "name" : "Test Patch All Policy",
+    "policy_type_name" : "patch",
+    "organization_id" : 9999,
+    "schedule_days" : 42,
+    "schedule_weeks_of_month" : 20,
+    "schedule_months" : 4680,
+    "schedule_time" : "12:00",
+    "configuration" : {
+      "auto_patch" : true,
+      "notify_user" : true,
+      "auto_reboot" : true,
+      "patch_rule" : "all",
+      "filter_type" : "all",
+      "missed_patch_window" : false,
+      "device_filters_enabled" : true,
+      "device_filters" : [ {
+        "field" : "tag",
+        "op" : "in",
+        "value" : [ "Windows", "Win10" ]
+      } ],
+      "include_optional" : true,
+      "notify_reboot_user" : true,
+      "notify_deferred_reboot_user" : true,
+      "custom_notification_patch_message" : "Important updates are going to be installed!",
+      "custom_notification_patch_message_mac" : "Important updates are going to be installed!",
+      "custom_notification_reboot_message" : "Reboot needed to finish installing updates!",
+      "custom_notification_reboot_message_mac" : "Reboot needed to finish installing updates!",
+      "custom_notification_max_delays" : 3,
+      "custom_notification_deferment_periods" : [ 1, 4, 8 ],
+      "custom_pending_reboot_notification_message" : "Your computer needs to reboot to install updates!",
+      "custom_pending_reboot_notification_message_mac" : "Your computer needs to reboot to install updates!",
+      "custom_pending_reboot_notification_deferment_periods" : [ 1, 4, 8 ],
+      "notify_user_message_timeout" : 15,
+      "notify_deferred_reboot_user_message_timeout" : 15,
+      "notify_user_auto_deferral_enabled" : true,
+      "notify_deferred_reboot_user_auto_deferral_enabled" : true
+    },
+    "server_groups" : [ 250624, 90125 ],
+    "notes" : "Here are some notes"
+  }
+} # object |  (optional)
 
 try:
     # Create a New Policy
-    api_response = api_instance.create_policy(o, body=body)
-    pprint(api_response)
+    api_instance.create_policy(o, body=body)
 except ApiException as e:
     print("Exception when calling PoliciesApi->create_policy: %s\n" % e)
 ```
@@ -47,11 +90,11 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **o** | **int**| Organization ID for the specified policy. | 
- **body** | [**PoliciesBody**](PoliciesBody.md)|  | [optional] 
+ **body** | [**object**](object.md)|  | [optional] 
 
 ### Return type
 
-[**list[Policy]**](Policy.md)
+void (empty response body)
 
 ### Authorization
 
@@ -224,7 +267,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_policies**
-> list[Policy] get_policies(o, page=page, limit=limit)
+> list[object] get_policies(o, page=page, limit=limit)
 
 List All Policy Objects
 
@@ -263,7 +306,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**list[Policy]**](Policy.md)
+**list[object]**
 
 ### Authorization
 
@@ -277,7 +320,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_policy**
-> Policy get_policy(id, o)
+> InlineResponse2001 get_policy(id, o)
 
 List Specific Policy Object
 
@@ -314,7 +357,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Policy**](Policy.md)
+[**InlineResponse2001**](InlineResponse2001.md)
 
 ### Authorization
 
@@ -394,7 +437,50 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
-body = automox_console_sdk.Policy() # Policy | 
+body = {
+  "summary" : "A Patch All Policy",
+  "value" : {
+    "name" : "Test Patch All Policy",
+    "policy_type_name" : "patch",
+    "organization_id" : 9999,
+    "schedule_days" : 42,
+    "schedule_weeks_of_month" : 20,
+    "schedule_months" : 4680,
+    "schedule_time" : "12:00",
+    "configuration" : {
+      "auto_patch" : true,
+      "notify_user" : true,
+      "auto_reboot" : true,
+      "patch_rule" : "all",
+      "filter_type" : "all",
+      "missed_patch_window" : false,
+      "device_filters_enabled" : true,
+      "device_filters" : [ {
+        "field" : "tag",
+        "op" : "in",
+        "value" : [ "Windows", "Win10" ]
+      } ],
+      "include_optional" : true,
+      "notify_reboot_user" : true,
+      "notify_deferred_reboot_user" : true,
+      "custom_notification_patch_message" : "Important updates are going to be installed!",
+      "custom_notification_patch_message_mac" : "Important updates are going to be installed!",
+      "custom_notification_reboot_message" : "Reboot needed to finish installing updates!",
+      "custom_notification_reboot_message_mac" : "Reboot needed to finish installing updates!",
+      "custom_notification_max_delays" : 3,
+      "custom_notification_deferment_periods" : [ 1, 4, 8 ],
+      "custom_pending_reboot_notification_message" : "Your computer needs to reboot to install updates!",
+      "custom_pending_reboot_notification_message_mac" : "Your computer needs to reboot to install updates!",
+      "custom_pending_reboot_notification_deferment_periods" : [ 1, 4, 8 ],
+      "notify_user_message_timeout" : 15,
+      "notify_deferred_reboot_user_message_timeout" : 15,
+      "notify_user_auto_deferral_enabled" : true,
+      "notify_deferred_reboot_user_auto_deferral_enabled" : true
+    },
+    "server_groups" : [ 250624, 90125 ],
+    "notes" : "Here are some notes"
+  }
+} # object | 
 o = 56 # int | Organization ID for the specified policy
 id = 56 # int | Policy ID for the specified policy
 
@@ -409,7 +495,7 @@ except ApiException as e:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**Policy**](Policy.md)|  | 
+ **body** | [**object**](object.md)|  | 
  **o** | **int**| Organization ID for the specified policy | 
  **id** | **int**| Policy ID for the specified policy | 
 
@@ -424,6 +510,56 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **upload_policy_file**
+> upload_policy_file(id, file=file)
+
+Upload installation file to a Required Software policy.
+
+Upload file to a Required Software policy.
+
+### Example
+```python
+from __future__ import print_function
+import time
+import automox_console_sdk
+from automox_console_sdk.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = automox_console_sdk.PoliciesApi(automox_console_sdk.ApiClient(configuration))
+id = 56 # int | The policy ID for the target policy.
+file = 'file_example' # str |  (optional)
+
+try:
+    # Upload installation file to a Required Software policy.
+    api_instance.upload_policy_file(id, file=file)
+except ApiException as e:
+    print("Exception when calling PoliciesApi->upload_policy_file: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **int**| The policy ID for the target policy. | 
+ **file** | **str**|  | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

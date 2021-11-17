@@ -1,8 +1,8 @@
-openapi: 3.0.2
+openapi: 3.0.3
 info:
   title: Automox Console API
   description: API for use with the Automox Console
-  version: "2021-09-20"
+  version: "2021-11-16"
   contact:
     name: Automox Support
     email: support@automox.com
@@ -10,7 +10,7 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
 servers:
-  - url: "https://console.automox.com/api"
+  - url: https://console.automox.com/api
 components:
   securitySchemes:
     bearerAuth:
@@ -50,7 +50,7 @@ components:
       content:
         application/json:
           schema:
-            description: ""
+            description: "Unauthorized"
             type: object
             properties:
               errors:
@@ -97,9 +97,11 @@ components:
       type: object
       properties:
         id:
+          description: The ID of the API key
           type: integer
           format: int64
         name:
+          description: The username of the user
           type: string
         is_enabled:
           type: boolean
@@ -126,7 +128,7 @@ components:
       properties:
         id:
           type: string
-          example: "942b355c-1fdd-4465-af21-0e6c206b35f3"
+          example: 942b355c-1fdd-4465-af21-0e6c206b35f3
         total_jobs:
           type: integer
         pending_jobs:
@@ -155,7 +157,7 @@ components:
       example:
         command_type_name: InstallUpdate
         args: KB12345 KB67890
-        exec_time: "2017-06-29T16:39:50.951Z"
+        exec_time: 2017-06-29T16:39:50.951Z
       properties:
         id:
           type: integer
@@ -179,7 +181,7 @@ components:
           type: string
           nullable: true
           example: '"KB12345 KB67890"'
-          description: "List of patches to apply, or NULL if issuing a Reboot"
+          description: List of patches to apply, or NULL if issuing a Reboot
         response:
           type: string
         response_time:
@@ -193,7 +195,7 @@ components:
           nullable: true
           format: date-time
           example: "2017-06-29T16:39:50.951Z"
-          description: "Time to execute the command, or NULL if issuing a Reboot"
+          description: Time to execute the command, or NULL if issuing a Reboot
     CompatibilityChecks:
       type: object
       properties:
@@ -240,12 +242,12 @@ components:
           user_id: 1
           status: queued
           is_completed: false
-          created_at: "2021-03-30T16:03:04.608690+0000"
+          created_at: 2021-03-30T16:03:04.608690+0000
           download_expires_at: null
           download_url: null
           parameters:
-            start_time: "2021-02-03T00:00:00+0000"
-            end_time: "2021-03-18T16:19:00+0000"
+            start_time: 2021-02-03T00:00:00+0000
+            end_time: 2021-03-18T16:19:00+0000
       properties:
         id:
           type: integer
@@ -271,8 +273,8 @@ components:
           format: date-time
         download_expires_at:
           type: string
-          format: date-time
           nullable: true
+          format: date-time
         download_url:
           type: string
           nullable: true
@@ -299,6 +301,7 @@ components:
         - download_url
         - parameters
     DeviceFilters:
+      description: Device Targeting Filters. See [Device Filter Parameters](/developer-portal/policy_filters_schedule/#device-filters---filter-parameters) for more information.
       type: array
       items:
         type: object
@@ -477,15 +480,15 @@ components:
           nullable: true
         trialend:
           type: string
-          format: date-time
           nullable: true
+          format: date-time
         firstname:
           type: string
           nullable: true
         trialstart:
           type: string
-          format: date-time
           nullable: true
+          format: date-time
     SamlData:
       type: object
     SlackData:
@@ -753,7 +756,11 @@ components:
           type: string
         device_limit:
           type: number
-          description: "If your organization has a server limit (you will have contacted support for this), then this is the value for your organization. Otherwise, null."
+          nullable: true
+          description:
+            If your organization has a server limit (you will have contacted
+            support for this), then this is the value for your organization.
+            Otherwise, null.
         device_count:
           type: number
           description: The current number of installed devices for your organization
@@ -864,8 +871,10 @@ components:
           format: date-time
         needsApproval:
           type: boolean
-    Policy:
+    PatchPolicy:
       type: object
+      title: Patch Policy object
+      description: Patch Policy object
       required:
         - name
         - organization_id
@@ -876,24 +885,19 @@ components:
         - notes
         - server_groups
       properties:
-        configuration:
-          $ref: "#/components/schemas/PolicyConfiguration"
         id:
-          description: The ID of the relevant policy.
+          description: Policy ID
           type: integer
           format: int64
-        name:
-          description: Name of the policy
-          type: string
-        notes:
-          description: Policy notes
-          type: string
         organization_id:
           description: Organization ID for the specified policy
           type: integer
           format: int64
+        name:
+          description: The name of the policy
+          type: string
         policy_type_name:
-          description: Name for the policy type
+          description: The name of the type of policy you are creating. Optional when updating an existing policy.
           type: string
           enum:
             - patch
@@ -903,44 +907,70 @@ components:
             patch: Patch Policy
             custom: Worklet Policy
             required_software: Required Software Policy
+        configuration:
+          description: The policy configuration. This varies depending on the type of policy being used.
+          discriminator:
+            propertyName: patch_rule
+            mapping:
+              all: "#/components/schemas/PatchPolicyConfiguration"
+              filter: "#/components/schemas/PatchFilterPolicyConfiguration"
+              manual: "#/components/schemas/PatchPolicyConfiguration"
+              advanced: "#/components/schemas/PatchAdvancedPolicyConfiguration"
+          oneOf:
+            - $ref: "#/components/schemas/PatchPolicyConfiguration"
+            - $ref: "#/components/schemas/PatchFilterPolicyConfiguration"
+            - $ref: "#/components/schemas/PatchAdvancedPolicyConfiguration"
         schedule_days:
-          description: "Decimal value of binary day schedule. See [Policy and Device Filters, and Scheduling - Example Days per Week](/developer-portal/policy_filters_schedule/#example-days-per-week)."
+          description:
+            Decimal value of binary day schedule. See [Policy and Device
+            Filters, and Scheduling - Example Days per
+            Week](/developer-portal/policy_filters_schedule/#example-days-per-week).
           type: integer
           format: int64
         schedule_weeks_of_month:
-          description: "Decimal value of binary week schedule. See [Policy and Device Filters, and Scheduling - Example Weeks per Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month)."
+          description:
+            Decimal value of binary week schedule. See [Policy and Device
+            Filters, and Scheduling - Example Weeks per
+            Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month).
           type: integer
           format: int64
         schedule_months:
-          description: "Decimal value of binary month schedule. See [Policy and Device Filters, and Scheduling - Example Months per Year](/developer-portal/policy_filters_schedule/#example-months-per-year)."
+          description:
+            Decimal value of binary month schedule. See [Policy and Device
+            Filters, and Scheduling - Example Months per
+            Year](/developer-portal/policy_filters_schedule/#example-months-per-year).
           type: integer
           format: int64
         schedule_time:
           description: 'Scheduled time for automatic policy execution. Format: `"hh:mm"`'
           type: string
-        next_remediation:
-          type: string
-          format: date-time
-          nullable: true
         server_groups:
-          description: "Integer array. Server groups to link with the policy"
+          description: An array containing a list of the server group IDs to be affected by the policy.
           type: array
           items:
             type: integer
-            format: int64
-    UpdateAndCreatePolicyConfiguration:
+    PatchPolicyConfiguration:
       type: object
+      title: Patch Policy Configuration
+      description: Policy configuration used for Patch Policies
       required:
         - auto_patch
-        - patch_rule
-        - auto_reboot
         - notify_user
+        - auto_reboot
+        - patch_rule
       properties:
         auto_patch:
-          description: "Enable or Disable automatic execution of the policy."
+          description: Enable or disable Auto Patch.
+          type: boolean
+        auto_reboot:
+          description: Enable or disable Auto Reboot.
+          type: boolean
+        notify_user:
+          type: boolean
+        missed_patch_window:
           type: boolean
         patch_rule:
-          description: "Use only with Patch Policy."
+          description: Use only with Patch policy.
           type: string
           enum:
             - all
@@ -952,153 +982,376 @@ components:
             filter: Patch All Except or Patch Only or Patch by Severity
             manual: Manually Approve
             advanced: Advanced Patch Policy
-        auto_reboot:
-          description: "Enable or Disable automatic reboots following policy execution."
-          type: boolean
         filter_type:
-          description: "Use only with `patch_rule` of `filter`"
+          description: The type of filter being used. Use only with `patch_rule` = `filter`
           type: string
           enum:
-            - exclude
             - include
+            - exclude
             - severity
           x-enumDescriptions:
             exclude: Patch All Except
             include: Patch Only
             severity: Patch by Severity
-        notify_user:
-          description: "Display notification 15 minutes before patching."
-          type: boolean
         device_filters_enabled:
-          description: Enable or disable Device Filters.
-          type: boolean
-        device_filters:
-          $ref: "#/components/schemas/DeviceFilters"
-        evaluation_code:
-          type: string
-          nullable: true
-        include_optional:
-          description: "Enable or disable inclusion of optional Windows patches for this policy. Note: Will default to `false` if not included."
+          description: Enable or disable Device Targeting Filters.
           type: boolean
           default: false
-        remediation_code:
-          type: string
-          nullable: true
-        installation_code:
-          type: string
-          nullable: true
+        device_filters:
+          $ref: "#/components/schemas/DeviceFilters"
+        include_optional:
+          description:
+            Enable or disable inclusion of optional Windows patches for this
+            policy **NOTE:** Will default to false if not included.
+          type: boolean
+          default: false
         notify_reboot_user:
-          description: "Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions."
+          description:
+            Display modified notification 15 minutes before patching. This
+            message should inform the user that a reboot will follow patching
+            actions.
           type: boolean
         notify_deferred_reboot_user:
-          description: "If `true`, this shows a post-install reboot notification message, if `notify_reboot_deferred` is also `true`. If `notify_reboot_deferred` is `false` or `null`, this will sync with the existing `notify_reboot_user` parameter."
+          description:
+            If `true`, this shows a post-install reboot notification message,
+            if `notify_reboot_deferred` is also `true`. If
+            `notify_reboot_deferred` is `false` or `null`, this will sync with
+            the existing `notify_reboot_user` parameter.
           type: boolean
           nullable: true
+        custom_notification_patch_message:
+          description:
+            Message to display before a non-rebooting patch policy executes on
+            a Windows device. Maximum 125 characters
+          type: string
+          maxLength: 125
+        custom_notification_patch_message_mac:
+          description:
+            Message to display before a non-rebooting patch policy executes on
+            a macOS device. Maximum 70 characters
+          type: string
+          maxLength: 70
+        custom_notification_reboot_message:
+          description:
+            Message to display before a rebooting patch policy executes on a
+            Windows device. Reboot will follow patching actions. Maximum 125
+            characters
+          type: string
+          maxLength: 125
+        custom_notification_reboot_message_mac:
+          description:
+            Message to display before a rebooting patch policy executes on a
+            macOS device. Reboot will follow patching actions. Maximum 70
+            characters
+          type: string
+          maxLength: 70
         custom_notification_max_delays:
-          description: "Number of deferral chances before patching is forced."
+          description:
+            Maximum number of times a user is allowed to defer the reboot. The
+            default is 0.
           type: integer
           format: int64
-        custom_notification_patch_message:
-          description: Message to display before a non-rebooting patch policy executes on a Windows device. Maximum 125 characters
-          type: string
-          maxLength: 125
-        custom_notification_reboot_message:
-          description: Message to display before a rebooting patch policy executes on a Windows device. Reboot will follow patching actions. Maximum 125 characters
-          type: string
-          maxLength: 125
+          default: 0
         custom_notification_deferment_periods:
-          description: "Integer array: Deferral time periods (hours) that users can choose from. Include up to 3. All 3 must be distinct with a maximum of 24"
+          description:
+            "Integer array: Deferral time periods (hours) that users can choose
+            from. Include up to 3. All 3 must be distinct with a maximum of 24.
+            Default values: 1, 4, 8"
           type: array
           items:
             type: integer
-            default: [1, 4, 8]
-        custom_notification_patch_message_mac:
-          description: Message to display before a non-rebooting patch policy executes on a macOS device. Maximum 70 characters
-          type: string
-          maxLength: 70
-        custom_notification_reboot_message_mac:
-          description: "The custom reboot message for macOS, which overrides `custom_pending_reboot_notification_message` string, if provided."
-          type: string
-          maxLength: 70
+            format: int64
+            default:
+              - 1
+              - 4
+              - 8
         custom_pending_reboot_notification_message:
-          description: "Custom reboot message."
+          description: Custom reboot message.
           type: string
           maxLength: 125
+        custom_pending_reboot_notification_message_mac:
+          description: The custom reboot message for macOS, which overrides
+            `custom_pending_reboot_notification_message` string, if provided.
+          type: string
+          maxLength: 70
+        custom_pending_reboot_notification_max_delays:
+          description:
+            Maximum number of times a user is allowed to defer the reboot. The
+            default is 0.
+          type: integer
+          format: int64
+          default: 0
+        custom_pending_reboot_notification_deferment_periods:
+          description:
+            "The time period options available to defer a reboot for each
+            deferral selection. Default values: 1, 4, 8"
+          type: array
+          items:
+            type: integer
+            format: int64
+            default:
+              - 1
+              - 4
+              - 8
         notify_user_message_timeout:
-          description: "The amount of time a patch notification appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes."
+          description:
+            "The amount of time a patch notification appears before timing out
+            and closing. Min: 15 min. Max: 480 min. Default is 15 minutes."
+          type: integer
+          default: 15
+          minimum: 15
+          maximum: 480
+        notify_deferred_reboot_user_message_timeout:
+          description:
+            "The amount of time a deferrable reboot notification message
+            appears before timing out and closing. Min: 15 min. Max: 480 min.
+            Default is 15 minutes."
           type: integer
           default: 15
           minimum: 15
           maximum: 480
         notify_user_auto_deferral_enabled:
-          description: "If a patch notification times out, apply the highest configured patch deferral."
+          description:
+            If a patch notification times out, apply the highest configured
+            patch deferral.
           type: boolean
-        notify_deferred_reboot_user_message_timeout:
-          description: "The amount of time a deferrable reboot notification message appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes."
-          type: integer
-          default: 15
-          minimum: 15
-          maximum: 480
+          default: false
         notify_deferred_reboot_user_auto_deferral_enabled:
-          description: "If a reboot notification times out, apply the highest configured reboot deferral."
+          description:
+            If a reboot notification times out, apply the highest configured
+            reboot deferral.
           type: boolean
-        custom_pending_reboot_notification_max_delays:
-          description: "Maximum number of times a user is allowed to defer the reboot. The default is 0."
+          default: false
+      example:
+        auto_patch: true
+        auto_reboot: true
+        notify_user: true
+        missed_patch_window: true
+        patch_rule: all
+        device_filters_enabled: true
+        device_filters:
+          - field: tag
+            op: in
+            value:
+              - Windows
+              - Win10
+        include_optional: true
+        notify_reboot_user: true
+        notify_deferred_reboot_user: true
+        custom_notification_patch_message: Necessary Windows updates are about to be installed!
+        custom_notification_patch_message_mac: Necessary Mac updates are about to be installed!
+        custom_notification_reboot_message: Necessary Windows updates are about to be installed! Reboot Needed!
+        custom_notification_reboot_message_mac: Necessary Mac updates are about to be installed! Reboot Needed!
+        custom_notification_max_delays: 0
+        custom_notification_deferment_periods:
+          - 1
+          - 4
+          - 8
+        custom_pending_reboot_notification_message: Your computer needs to restart to finish installing updates!
+        custom_pending_reboot_notification_message_mac: Your Mac needs to restart to finish installing updates!
+        custom_pending_reboot_notification_max_delays: 0
+        custom_pending_reboot_notification_deferment_periods:
+          - 2
+          - 4
+          - 6
+        notify_user_message_timeout: 15
+        notify_deferred_reboot_user_timeout: 15
+        notify_user_auto_deferral_enabled: false
+        notify_deferred_reboot_user_auto_deferral_enabled: false
+    RequiredSoftwarePolicy:
+      type: object
+      title: Required Software Policy
+      description: "Required Software Policy. *NOTE: To upload installation file, see [/policies/{id}/files](/openapi/axconsole/operation/uploadPolicyFile)*"
+      required:
+        - name
+        - organization_id
+        - policy_type_name
+        - schedule_days
+        - schedule_time
+        - configuration
+        - notes
+        - server_groups
+      properties:
+        id:
+          description: Policy ID
           type: integer
           format: int64
-          default: 0
-        custom_pending_reboot_notification_message_mac:
-          description: "Message to display before a rebooting patch policy executes on a macOS device. Reboot will follow patching actions. Maximum 70 characters"
+        name:
+          description: The name of the policy.
           type: string
-          maxLength: 70
-        custom_pending_reboot_notification_deferment_periods:
-          description: "The time period options available to defer a reboot for each deferral selection. Default values: 1, 4, 8"
+        organization_id:
+          description: Organization ID for the specified policy
+          type: integer
+          format: int64
+        policy_type_name:
+          description: The name of the type of policy you are creating. Optional when updating an existing policy.
+          type: string
+          enum:
+            - patch
+            - custom
+            - required_software
+          default: required_software
+          x-enumDescriptions:
+            patch: Patch Policy
+            custom: Worklet Policy
+            required_software: Required Software Policy
+        configuration:
+          $ref: "#/components/schemas/RequiredSoftwarePolicyConfiguration"
+        schedule_days:
+          description:
+            Decimal value of binary day schedule. See [Policy and Device
+            Filters, and Scheduling - Example Days per
+            Week](/developer-portal/policy_filters_schedule/#example-days-per-week).
+          type: integer
+          format: int64
+        schedule_weeks_of_month:
+          description:
+            Decimal value of binary week schedule. See [Policy and Device
+            Filters, and Scheduling - Example Weeks per
+            Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month).
+          type: integer
+          format: int64
+        schedule_months:
+          description:
+            Decimal value of binary month schedule. See [Policy and Device
+            Filters, and Scheduling - Example Months per
+            Year](/developer-portal/policy_filters_schedule/#example-months-per-year).
+          type: integer
+          format: int64
+        schedule_time:
+          description: 'Scheduled time for automatic policy execution. Format: `"hh:mm"`'
+          type: string
+        server_groups:
           type: array
           items:
             type: integer
-            default: [1, 4, 8]
-    PatchPolicyConfiguration:
+      example:
+        {
+          "name": "Test RequiredSoftwarePolicy",
+          "policy_type_name": "required_software",
+          "organization_id": 9999,
+          "schedule_days": 42,
+          "schedule_weeks_of_month": 20,
+          "schedule_months": 4680,
+          "schedule_time": "12:00",
+          "configuration":
+            {
+              "os_family": "Windows",
+              "package_name": "NotePadPlusPlus",
+              "package_version": "7.8.4",
+              "evaluation_code": null,
+              "remediation_code": null,
+              "installation_code": ".\\npp.7.8.4.Installer.x64.exe /S",
+            },
+          "notify_user": true,
+          "server_groups": [250624, 90125],
+          "notes": "Here are some notes",
+        }
+    CustomPolicy:
+      type: object
+      title: Custom (Worklet) Policy
+      description: Custom (Worklet) Policy object
+      required:
+        - name
+        - organization_id
+        - policy_type_name
+        - schedule_days
+        - schedule_time
+        - configuration
+        - notes
+        - server_groups
+      properties:
+        id:
+          description: Policy ID
+          type: integer
+          format: int64
+        name:
+          type: string
+        organization_id:
+          description: Organization ID for the specified policy
+          type: integer
+          format: int64
+        policy_type_name:
+          type: string
+          enum:
+            - patch
+            - custom
+            - required_software
+          default: custom
+          x-enumDescriptions:
+            patch: Patch Policy
+            custom: Worklet Policy
+            required_software: Required Software Policy
+        configuration:
+          $ref: "#/components/schemas/CustomPolicyConfiguration"
+        schedule_days:
+          description:
+            Decimal value of binary day schedule. See [Policy and Device
+            Filters, and Scheduling - Example Days per
+            Week](/developer-portal/policy_filters_schedule/#example-days-per-week).
+          type: integer
+          format: int64
+        schedule_weeks_of_month:
+          description:
+            Decimal value of binary week schedule. See [Policy and Device
+            Filters, and Scheduling - Example Weeks per
+            Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month).
+          type: integer
+          format: int64
+        schedule_months:
+          description:
+            Decimal value of binary month schedule. See [Policy and Device
+            Filters, and Scheduling - Example Months per
+            Year](/developer-portal/policy_filters_schedule/#example-months-per-year).
+          type: integer
+          format: int64
+        schedule_time:
+          description: 'Scheduled time for automatic policy execution. Format: `"hh:mm"`'
+          type: string
+        server_groups:
+          type: array
+          items:
+            type: integer
+    PatchAdvancedPolicyConfiguration:
       type: object
       required:
         - auto_patch
-        - notify_user
         - auto_reboot
       properties:
         auto_patch:
-          description: "Enable or Disable automatic execution of the policy."
-          type: boolean
-        notify_user:
-          description: "Display notification 15 minutes before patching."
+          description: Enable or Disable automatic execution of the policy.
           type: boolean
         missed_patch_window:
-          description: "Enable or Disable Missed Patch Window setting."
+          description: Enable or Disable the Missed Patch Window setting.
           type: boolean
+        patch_rule:
+          description: Use only with the `patch` policy type.
+          type: string
+          default: advanced
+          enum:
+            - all
+            - filter
+            - manual
+            - advanced
+          x-enumDescriptions:
+            all: Patch All
+            filter: Patch All Except or Patch Only or Patch by Severity
+            manual: Manually Approve
+            advanced: Advanced Patch Policy
         auto_reboot:
-          description: "Enable or Disable automatic reboots following policy execution."
+          description: Enable or Disable automatic reboots following policy execution.
           type: boolean
-        filters:
-          description: "Use only with `filter_type` of `exclude` or `include`. Use `*` for wildcard."
-          type: array
-          items:
-            type: string
         device_filters_enabled:
           description: Enable or disable Device Filters.
           type: boolean
+          default: false
         device_filters:
           $ref: "#/components/schemas/DeviceFilters"
-        filter_type:
-          description: "Use only with `patch_rule` of `filter`"
-          type: string
-          enum:
-            - exclude
-            - include
-            - severity
-          x-enumDescriptions:
-            exclude: Patch All Except
-            include: Patch Only
-            severity: Patch by Severity
         advanced_filter:
-          description: "Object array. Include one object per advanced filter line. See [Policy and Device Filters, and Scheduling - Advanced Filters](/developer-portal/policy_filters_schedule/#advanced-filters)"
+          description:
+            Object array. Include one object per advanced filter line. See
+            [Policy and Device Filters, and Scheduling - Advanced
+            Filters](/developer-portal/policy_filters_schedule/#advanced-filters)
           type: array
           items:
             type: object
@@ -1111,75 +1364,82 @@ components:
                   - patch-source
                   - patch-os
                   - type
+                  - patch-days-old
                 x-enumDescriptions:
                   display-name: Filter by display name
                   severity: Filter by severity
                   patch-source: Filter by patch source
                   patch-os: Filter by patch OS
                   type: Filter by type
+                  patch-days-old: Filter by patch age
               right:
-                type: string
-                enum:
-                  - "text string"
-                  - other
-                  - none
-                  - low
-                  - medium
-                  - high
-                  - critical
-                  - windowsupdate
-                  - opera
-                  - mozilla
-                  - adobe
-                  - oracle
-                  - apple
-                  - microsoft
-                  - windows
-                  - mac
-                  - linux
-                  - upgrades
-                  - updates
-                  - update-rollups
-                  - service-packs
-                  - security-updates
-                  - tools
-                  - guidance
-                  - feature-packs
-                  - developer-kits
-                  - definition-updates
-                  - critical-updates
-                  - connectors
-                  - application
-                x-enumDescriptions:
-                  "text string": Enter a text string. Use to filter by Display Name.
-                  other: Use to filter by Severity
-                  low: Use to filter by Severity
-                  medium: Use to filter by Severity
-                  high: Use to filter by Severity
-                  critical: Use to filter by Severity
-                  windowsupdate: Use to filter by Patch Source
-                  opera: Use to filter by Patch Source
-                  mozilla: Use to filter by Patch Source
-                  adobe: Use to filter by Patch Source
-                  oracle: Use to filter by Patch Source
-                  apple: Use to filter by Patch Source
-                  microsoft: Use to filter by Patch Source
-                  windows: Use to filter by Patch OS
-                  mac: Use to filter by Patch OS
-                  linux: Use to filter by Patch OS
-                  upgrades: Use to filter by Type
-                  updates: Use to filter by Type
-                  update-rollups: Use to filter by Type
-                  service-packs: Use to filter by Type
-                  security-updates: Use to filter by Type
-                  tools: Use to filter by Type
-                  guidance: Use to filter by Type
-                  feature-packs: Use to filter by Type
-                  developer-kits: Use to filter by Type
-                  definition-updates: Use to filter by Type
-                  critical-updates: Use to filter by Type
-                  connectors: Use to filter by Type
-                  application: Use to filter by Type
+                oneOf:
+                  - type: string
+                    enum:
+                      - text string
+                      - other
+                      - none
+                      - low
+                      - medium
+                      - high
+                      - critical
+                      - windowsupdate
+                      - opera
+                      - mozilla
+                      - adobe
+                      - oracle
+                      - apple
+                      - microsoft
+                      - windows
+                      - mac
+                      - linux
+                      - upgrades
+                      - updates
+                      - update-rollups
+                      - service-packs
+                      - security-updates
+                      - tools
+                      - guidance
+                      - feature-packs
+                      - developer-kits
+                      - definition-updates
+                      - critical-updates
+                      - connectors
+                      - application
+                    x-enumDescriptions:
+                      text string: Enter a text string. Use to filter by Display Name.
+                      other: Use to filter by Severity
+                      low: Use to filter by Severity
+                      medium: Use to filter by Severity
+                      high: Use to filter by Severity
+                      critical: Use to filter by Severity
+                      windowsupdate: Use to filter by Patch Source
+                      opera: Use to filter by Patch Source
+                      mozilla: Use to filter by Patch Source
+                      adobe: Use to filter by Patch Source
+                      oracle: Use to filter by Patch Source
+                      apple: Use to filter by Patch Source
+                      microsoft: Use to filter by Patch Source
+                      windows: Use to filter by Patch OS
+                      mac: Use to filter by Patch OS
+                      linux: Use to filter by Patch OS
+                      upgrades: Use to filter by Type
+                      updates: Use to filter by Type
+                      update-rollups: Use to filter by Type
+                      service-packs: Use to filter by Type
+                      security-updates: Use to filter by Type
+                      tools: Use to filter by Type
+                      guidance: Use to filter by Type
+                      feature-packs: Use to filter by Type
+                      developer-kits: Use to filter by Type
+                      definition-updates: Use to filter by Type
+                      critical-updates: Use to filter by Type
+                      connectors: Use to filter by Type
+                      application: Use to filter by Type
+                  - type: integer
+                    description: Use with `patch-days-old`
+                    minimum: 1
+                    maximum: 180
               condition:
                 type: string
                 enum:
@@ -1187,110 +1447,199 @@ components:
                   - does-not-contain
                   - is
                   - is-not
+                  - less-than
                   - less-than-or-equal-to
+                  - greater-than
                   - greater-than-or-equal-to
                 x-enumDescriptions:
                   contains: Use with `display-name`
                   does-not-contain: Use with `display-name`
-                  is: Use with `severity`, `patch-source`, `patch-os`, `type`
-                  is-not: Use with `severity`, `patch-source`, `patch-os`, `type`
-                  less-than-or-equal-to: Use with `severity`
-                  greater-than-or-equal-to: Use with `severity`
-        severity_filter:
-          description: 'String array. Use only with `filter_type` of `severity`. Defines severity ratings to include in patching. Format: ["low","medium","high","critical","none","unknown"]'
-          type: array
-          items:
-            type: string
+                  is: Use with `severity`, `patch-source`, `patch-os`, `type`, `patch-days-old`
+                  is-not:
+                    Use with `severity`, `patch-source`, `patch-os`, `type`,
+                    `patch-days-old`
+                  less-than: Use with `patch-days-old`
+                  less-than-or-equal-to: Use with `severity`, `patch-days-old`
+                  greater-than-or-equal-to: Use with `severity`, `patch-days-old`
         include_optional:
-          description: "Enable or disable inclusion of optional Windows patches for this policy **NOTE:** Will default to false if not included."
+          description:
+            Enable or disable inclusion of optional Windows patches for this
+            policy **NOTE:** Will default to false if not included.
           type: boolean
           default: false
         notify_reboot_user:
-          description: "Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions."
+          description:
+            Display modified notification 15 minutes before patching. This
+            message should inform the user that a reboot will follow patching
+            actions.
           type: boolean
         notify_deferred_reboot_user:
-          description: "If `true`, this shows a post-install reboot notification message, if `notify_reboot_deferred` is also `true`. If `notify_reboot_deferred` is `false` or `null`, this will sync with the existing `notify_reboot_user` parameter."
+          description:
+            If `true`, this shows a post-install reboot notification message,
+            if `notify_reboot_deferred` is also `true`. If
+            `notify_reboot_deferred` is `false` or `null`, this will sync with
+            the existing `notify_reboot_user` parameter.
           type: boolean
           nullable: true
         custom_notification_patch_message:
-          description: Message to display before a non-rebooting patch policy executes on a Windows device. Maximum 125 characters
+          description:
+            Message to display before a non-rebooting patch policy executes on
+            a Windows device. Maximum 125 characters
           type: string
           maxLength: 125
         custom_notification_patch_message_mac:
-          description: Message to display before a non-rebooting patch policy executes on a macOS device. Maximum 70 characters
+          description:
+            Message to display before a non-rebooting patch policy executes on
+            a macOS device. Maximum 70 characters
           type: string
           maxLength: 70
         custom_notification_reboot_message:
-          description: Message to display before a rebooting patch policy executes on a Windows device. Reboot will follow patching actions. Maximum 125 characters
+          description:
+            Message to display before a rebooting patch policy executes on a
+            Windows device. Reboot will follow patching actions. Maximum 125
+            characters
           type: string
           maxLength: 125
         custom_notification_reboot_message_mac:
-          description: Message to display before a rebooting patch policy executes on a macOS device. Reboot will follow patching actions. Maximum 70 characters
+          description:
+            Message to display before a rebooting patch policy executes on a
+            macOS device. Reboot will follow patching actions. Maximum 70
+            characters
           type: string
           maxLength: 70
         custom_notification_max_delays:
-          description: "Maximum number of times a user is allowed to defer the reboot. The default is 0."
+          description:
+            Maximum number of times a user is allowed to defer the reboot. The
+            default is 0.
           type: integer
           format: int64
           default: 0
         custom_notification_deferment_periods:
-          description: "Integer array: Deferral time periods (hours) that users can choose from. Include up to 3. All 3 must be distinct with a maximum of 24. Default values: 1, 4, 8"
+          description:
+            "Integer array: Deferral time periods (hours) that users can choose
+            from. Include up to 3. All 3 must be distinct with a maximum of 24.
+            Default values: 1, 4, 8"
           type: array
           items:
             type: integer
             format: int64
-            default: [1, 4, 8]
+            default:
+              - 1
+              - 4
+              - 8
         custom_pending_reboot_notification_message:
-          description: "Custom reboot message."
+          description: Custom reboot message.
           type: string
           maxLength: 125
         custom_pending_reboot_notification_message_mac:
-          description: "The custom reboot message for macOS, which overrides `custom_pending_reboot_notification_message` string, if provided."
+          description: The custom reboot message for macOS, which overrides
+            `custom_pending_reboot_notification_message` string, if provided.
           type: string
           maxLength: 70
         custom_pending_reboot_notification_max_delays:
-          description: "Maximum number of times a user is allowed to defer the reboot. The default is 0."
+          description:
+            Maximum number of times a user is allowed to defer the reboot. The
+            default is 0.
           type: integer
           format: int64
           default: 0
         custom_pending_reboot_notification_deferment_periods:
-          description: "The time period options available to defer a reboot for each deferral selection. Default values: 1, 4, 8"
+          description:
+            "The time period options available to defer a reboot for each
+            deferral selection. Default values: 1, 4, 8"
           type: array
           items:
             type: integer
             format: int64
-            default: [1, 4, 8]
+            default:
+              - 1
+              - 4
+              - 8
         notify_user_message_timeout:
-          description: "The amount of time a patch notification appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes."
+          description:
+            "The amount of time a patch notification appears before timing out
+            and closing. Min: 15 min. Max: 480 min. Default is 15 minutes."
           type: integer
           default: 15
           minimum: 15
           maximum: 480
         notify_deferred_reboot_user_message_timeout:
-          description: "The amount of time a deferrable reboot notification message appears before timing out and closing. Min: 15 min. Max: 480 min. Default is 15 minutes."
+          description:
+            "The amount of time a deferrable reboot notification message
+            appears before timing out and closing. Min: 15 min. Max: 480 min.
+            Default is 15 minutes."
           type: integer
           default: 15
           minimum: 15
           maximum: 480
         notify_user_auto_deferral_enabled:
-          description: "If a patch notification times out, apply the highest configured patch deferral."
+          description:
+            If a patch notification times out, apply the highest configured
+            patch deferral.
           type: boolean
           default: false
         notify_deferred_reboot_user_auto_deferral_enabled:
-          description: "If a reboot notification times out, apply the highest configured reboot deferral."
+          description:
+            If a reboot notification times out, apply the highest configured
+            reboot deferral.
           type: boolean
           default: false
-    RequiredSoftwarePolicyConfiguration:
+      example:
+        auto_patch: true
+        auto_reboot: true
+        notify_user: true
+        missed_patch_window: true
+        advanced_filter:
+          - left: severity
+            condition: is
+            right: critical
+          - left: patch-os
+            condition: is
+            right: windows
+        patch_rule: advanced
+        device_filters_enabled: true
+        device_filters:
+          - field: tag
+            op: in
+            value:
+              - Windows
+              - Win10
+        include_optional: true
+        notify_reboot_user: true
+        notify_deferred_reboot_user: true
+        custom_notification_patch_message: Necessary Windows updates are about to be installed!
+        custom_notification_patch_message_mac: Necessary Mac updates are about to be installed!
+        custom_notification_reboot_message: Necessary Windows updates are about to be installed! Reboot Needed!
+        custom_notification_reboot_message_mac: Necessary Mac updates are about to be installed! Reboot Needed!
+        custom_notification_max_delays: 0
+        custom_notification_deferment_periods:
+          - 1
+          - 4
+          - 8
+        custom_pending_reboot_notification_message: Your computer needs to restart to finish installing updates!
+        custom_pending_reboot_notification_message_mac: Your Mac needs to restart to finish installing updates!
+        custom_pending_reboot_notification_max_delays: 0
+        custom_pending_reboot_notification_deferment_periods:
+          - 2
+          - 4
+          - 6
+        notify_user_message_timeout: 15
+        notify_deferred_reboot_user_timeout: 15
+        notify_user_auto_deferral_enabled: false
+        notify_deferred_reboot_user_auto_deferral_enabled: false
+    CustomPolicyConfiguration:
       type: object
       required:
-        - auto_patch
-        - notify_user
+        - auto_reboot
       properties:
-        auto_patch:
-          description: "Enable or Disable automatic execution of the policy."
+        auto_reboot:
+          description: Enable or Disable automatic reboots following policy execution.
           type: boolean
-        notify_user:
-          description: "Display notification 15 minutes before patching."
+        notify_reboot_user:
+          description:
+            Display modified notification 15 minutes before patching. This
+            message should inform the user that a reboot will follow patching
+            actions.
           type: boolean
         device_filters_enabled:
           description: Enable or disable Device Filters.
@@ -1298,7 +1647,209 @@ components:
         device_filters:
           $ref: "#/components/schemas/DeviceFilters"
         missed_patch_window:
-          description: "Enable or Disable Missed Patch Window setting"
+          description: Enable or Disable the Missed Patch Window setting
+          type: boolean
+        os_family:
+          description: Define the OS family of the worklet policy
+          type: string
+          enum:
+            - Windows
+            - Mac
+            - Linux
+        evaluation_code:
+          description: The evaluation code of the worklet.
+          type: string
+        remediation_code:
+          description: The remediation code of the worklet.
+          type: string
+    PatchFilterPolicyConfiguration:
+      type: object
+      required:
+        - auto_patch
+        - patch_rule
+        - auto_reboot
+      properties:
+        auto_patch:
+          description: Enable or Disable automatic execution of the policy.
+          type: boolean
+        auto_reboot:
+          description: Enable or Disable automatic reboots following policy execution.
+          type: boolean
+        patch_rule:
+          description: Use only with Patch policy.
+          type: string
+          default: filter
+          enum:
+            - all
+            - filter
+            - manual
+            - advanced
+          x-enumDescriptions:
+            all: Patch All
+            filter: Patch All Except or Patch Only or Patch by Severity
+            manual: Manually Approve
+            advanced: Advanced Patch Policy
+        filter_type:
+          description: Use only with `patch_rule` of `filter`
+          type: string
+          enum:
+            - include
+            - exclude
+            - severity
+          x-enumDescriptions:
+            exclude: Patch All Except
+            include: Patch Only
+            severity: Patch by Severity
+        filters:
+          description:
+            Define packages to filter on. Use with `patch_rule` of `filter` and
+            `filter_type` of `include` or `exclude`
+          type: array
+          items:
+            type: string
+        device_filters_enabled:
+          description: Enable or disable Device Filters.
+          type: boolean
+          default: false
+        device_filters:
+          $ref: "#/components/schemas/DeviceFilters"
+        severity_filter:
+          description: Use only where `filter_type` is `severity`
+          type: array
+          nullable: true
+          items:
+            type: string
+            enum:
+              - none
+              - unknown
+              - low
+              - medium
+              - high
+              - critical
+        notify_reboot_user:
+          description:
+            Display modified notification 15 minutes before patching. This
+            message should inform the user that a reboot will follow patching
+            actions.
+          type: boolean
+        notify_deferred_reboot_user:
+          description:
+            If `true`, this shows a post-install reboot notification message,
+            if `notify_reboot_deferred` is also `true`. If
+            `notify_reboot_deferred` is `false` or `null`, this will sync with
+            the existing `notify_reboot_user` parameter.
+          type: boolean
+          nullable: true
+        custom_notification_max_delays:
+          description: Number of deferral chances before patching is forced.
+          type: integer
+          format: int64
+        custom_notification_patch_message:
+          description:
+            Message to display before a non-rebooting patch policy executes on
+            a Windows device. Maximum 125 characters
+          type: string
+          maxLength: 125
+        custom_notification_reboot_message:
+          description:
+            Message to display before a rebooting patch policy executes on a
+            Windows device. Reboot will follow patching actions. Maximum 125
+            characters
+          type: string
+          maxLength: 125
+        custom_notification_deferment_periods:
+          description:
+            "Integer array: Deferral time periods (hours) that users can choose
+            from. Include up to 3. All 3 must be distinct with a maximum of 24"
+          type: array
+          items:
+            type: integer
+            default:
+              - 1
+              - 4
+              - 8
+        custom_notification_patch_message_mac:
+          description:
+            Message to display before a non-rebooting patch policy executes on
+            a macOS device. Maximum 70 characters
+          type: string
+          maxLength: 70
+        custom_notification_reboot_message_mac:
+          description: The custom reboot message for macOS, which overrides
+            `custom_pending_reboot_notification_message` string, if provided.
+          type: string
+          maxLength: 70
+        custom_pending_reboot_notification_message:
+          description: Custom reboot message.
+          type: string
+          maxLength: 125
+        notify_user_message_timeout:
+          description:
+            "The amount of time a patch notification appears before timing out
+            and closing. Min: 15 min. Max: 480 min. Default is 15 minutes."
+          type: integer
+          default: 15
+          minimum: 15
+          maximum: 480
+        notify_user_auto_deferral_enabled:
+          description:
+            If a patch notification times out, apply the highest configured
+            patch deferral.
+          type: boolean
+        notify_deferred_reboot_user_message_timeout:
+          description:
+            "The amount of time a deferrable reboot notification message
+            appears before timing out and closing. Min: 15 min. Max: 480 min.
+            Default is 15 minutes."
+          type: integer
+          default: 15
+          minimum: 15
+          maximum: 480
+        notify_deferred_reboot_user_auto_deferral_enabled:
+          description:
+            If a reboot notification times out, apply the highest configured
+            reboot deferral.
+          type: boolean
+        custom_pending_reboot_notification_max_delays:
+          description:
+            Maximum number of times a user is allowed to defer the reboot. The
+            default is 0.
+          type: integer
+          format: int64
+          default: 0
+        custom_pending_reboot_notification_message_mac:
+          description:
+            Message to display before a rebooting patch policy executes on a
+            macOS device. Reboot will follow patching actions. Maximum 70
+            characters
+          type: string
+          maxLength: 70
+        custom_pending_reboot_notification_deferment_periods:
+          description:
+            "The time period options available to defer a reboot for each
+            deferral selection. Default values: 1, 4, 8"
+          type: array
+          items:
+            type: integer
+            default:
+              - 1
+              - 4
+              - 8
+    RequiredSoftwarePolicyConfiguration:
+      type: object
+      required:
+        - package_name
+        - package_version
+        - installation_code
+      properties:
+        device_filters_enabled:
+          description: Enable or disable Device Filters.
+          type: boolean
+          default: false
+        device_filters:
+          $ref: "#/components/schemas/DeviceFilters"
+        missed_patch_window:
+          description: Enable or Disable Missed Patch Window setting
           type: boolean
         os_family:
           type: string
@@ -1308,45 +1859,6 @@ components:
           type: string
         installation_code:
           type: string
-    CustomPolicyConfiguration:
-      type: object
-      required:
-        - auto_patch
-        - notify_user
-      properties:
-        auto_patch:
-          description: "Enable or Disable automatic execution of the policy."
-          type: boolean
-        notify_user:
-          description: "Display notification 15 minutes before patching."
-          type: boolean
-        device_filters_enabled:
-          description: Enable or disable Device Filters.
-          type: boolean
-        device_filters:
-          $ref: "#/components/schemas/DeviceFilters"
-        missed_patch_window:
-          description: "Enable or Disable Missed Patch Window setting"
-          type: boolean
-        os_family:
-          type: string
-        test_code:
-          type: string
-        evaluation_code:
-          type: string
-    PolicyConfiguration:
-      oneOf:
-        - $ref: "#/components/schemas/PatchPolicyConfiguration"
-        - $ref: "#/components/schemas/RequiredSoftwarePolicyConfiguration"
-        - $ref: "#/components/schemas/CustomPolicyConfiguration"
-        - $ref: "#/components/schemas/UpdateAndCreatePolicyConfiguration"
-      example:
-        auto_patch: true
-        notify_user: true
-        missed_patch_window: true
-        os_family: Windows
-        test_code: ""
-        evaluation_code: ""
     PolicyDeviceFiltersPreview:
       type: object
       properties:
@@ -1399,6 +1911,7 @@ components:
                 type: integer
               uuid:
                 type: string
+                format: uuid
               name:
                 type: string
               custom_name:
@@ -1538,6 +2051,7 @@ components:
           format: int64
         uuid:
           type: string
+          format: uuid
         name:
           type: string
         instance_id:
@@ -1633,10 +2147,6 @@ components:
                 type: string
               create_time:
                 type: string
-              next_remediation:
-                type: string
-                format: date-time
-                nullable: true
         last_scan_failed:
           type: boolean
         pending:
@@ -1700,6 +2210,7 @@ components:
           format: int64
         uuid:
           type: string
+          format: uuid
         name:
           type: string
         instance_id:
@@ -1760,7 +2271,10 @@ components:
         server_policies:
           type: array
           items:
-            $ref: "#/components/schemas/Policy"
+            oneOf:
+              - $ref: "#/components/schemas/PatchPolicy"
+              - $ref: "#/components/schemas/CustomPolicy"
+              - $ref: "#/components/schemas/RequiredSoftwarePolicy"
         policy_status:
           type: array
           items:
@@ -1799,8 +2313,8 @@ components:
                 type: string
               next_remediation:
                 type: string
-                format: date-time
                 nullable: true
+                format: date-time
         last_scan_failed:
           type: boolean
         pending:
@@ -1932,29 +2446,43 @@ components:
           description: Name of the group
           type: string
         refresh_interval:
-          description: "Frequency of device refreshes (scans) in minutes. Minimum: 360 Maximum: 1440"
+          description:
+            "Frequency of device refreshes (scans) in minutes. Minimum: 360
+            Maximum: 1440"
           type: integer
           minimum: 360
           maximum: 1440
         parent_server_group_id:
-          description: "ID of the parent group. Use the organization's Default Group ID to make this a top-level group. See [About Automox API - Default Group ID](/developer-portal/about-ax-api#Default-Group-ID)"
+          description:
+            ID of the parent group. Use the organization's Default Group ID to
+            make this a top-level group. See [About Automox API - Default Group
+            ID](/developer-portal/about-ax-api#Default-Group-ID)
           type: integer
         ui_color:
-          description: "The highlight color for the group. Primarily used on the System Management view. Format: #059F1D"
+          description:
+            "The highlight color for the group. Primarily used on the System
+            Management view. Format: #059F1D"
           type: string
         notes:
           description: Use to define notes that are displayed while editing the policy
           type: string
         enable_os_auto_update:
-          description: "Enforce automatic update settings Options: `null`: Keep Device's Setting. `true`: Enable OS automatic updates. `false`: Disable OS automatic updates."
+          description:
+            "Enforce automatic update settings Options: `null`: Keep Device's
+            Setting. `true`: Enable OS automatic updates. `false`: Disable OS
+            automatic updates."
           type: boolean
           nullable: true
         enable_wsus:
-          description: "Enforce WSUS settings for Windows devices. Options: `null`: Keep Device's Setting. `true`: force WSUS. `false`: force Windows Update."
+          description:
+            "Enforce WSUS settings for Windows devices. Options: `null`: Keep
+            Device's Setting. `true`: force WSUS. `false`: force Windows
+            Update."
           type: boolean
           nullable: true
         wsus_server:
-          description: 'WSUS server address. Use with `enable_wsus`. Format: `"https://myserver.com:8530"`'
+          description: 'WSUS server address. Use with `enable_wsus`. Format:
+            `"https://myserver.com:8530"`'
           type: string
         policies:
           description: List of Policies to link to this group.
@@ -1977,7 +2505,7 @@ components:
           format: int64
         manual_approval:
           type: boolean
-          description: "true = Approved, false = Rejected"
+          description: true = Approved, false = Rejected
         manual_approval_time:
           type: string
           format: date-time
@@ -2068,8 +2596,8 @@ components:
           - network
           - share
         is_verified: true
-        create_time: "2021-03-25T20:04:42+0000"
-        update_time: "2021-03-25T20:04:42+0000"
+        create_time: 2021-03-25T20:04:42+0000
+        update_time: 2021-03-25T20:04:42+0000
       properties:
         id:
           type: integer
@@ -2118,8 +2646,8 @@ components:
           exit 1
         remediation_code: |
           echo "Hello World"
-        create_time: "2021-03-25T20:04:42+0000"
-        update_time: "2021-03-25T20:04:42+0000"
+        create_time: 2021-03-25T20:04:42+0000
+        update_time: 2021-03-25T20:04:42+0000
       properties:
         id:
           type: integer
@@ -2229,19 +2757,27 @@ paths:
       tags:
         - Events
       summary: Retrieve All Event Objects for the Authenticated User
-      description: "Events Include: Policy Actions, Device Addition/Removal, User Addition/Removal"
+      description:
+        "Events Include: Policy Actions, Device Addition/Removal, User
+        Addition/Removal"
       operationId: getEvents
       parameters:
         - name: page
           in: query
-          description: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
           schema:
             type: integer
             default: 0
         - name: countOnly
           in: query
-          description: Use instead of `page` or `limit` to retrieve only the total count of events for the organization, or when used with an `eventName`, retrieve a count of that specific type of event.
+          description:
+            Use instead of `page` or `limit` to retrieve only the total count
+            of events for the organization, or when used with an `eventName`,
+            retrieve a count of that specific type of event.
           required: false
           schema:
             type: integer
@@ -2310,21 +2846,28 @@ paths:
               user.removed: User was removed from organization.
         - name: startDate
           in: query
-          description: "Limit responses to include only events after this date. Format: (YYYY-MM-DD)."
+          description:
+            "Limit responses to include only events after this date. Format:
+            (YYYY-MM-DD)."
           required: false
           schema:
             type: string
             format: date
         - name: endDate
           in: query
-          description: "Limit responses to include only events before this date. Format: (YYYY-MM-DD)."
+          description:
+            "Limit responses to include only events before this date. Format:
+            (YYYY-MM-DD)."
           required: false
           schema:
             type: string
             format: date
         - name: limit
           in: query
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            A limit on the number of results to be returned, between 1 and 500,
+            with a default of 500. Use with page parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
           schema:
             type: integer
@@ -2333,16 +2876,22 @@ paths:
             default: 500
         - name: o
           in: query
-          description: Organization ID. Response will include devices for the specified Automox organization. The organization will be assumed based on the API key, if not specified.
+          description:
+            Organization ID. Response will include devices for the specified
+            Automox organization. The organization will be assumed based on the
+            API key, if not specified.
           required: true
           schema:
             type: integer
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/events?o=0000&limit=2&startDate=2019-05-04&endDate=2019-05-07"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -2369,7 +2918,9 @@ paths:
       tags:
         - Devices
       summary: List All Devices
-      description: "Retrieves a detailed list of all devices (server objects) for the authenticated user."
+      description:
+        Retrieves a detailed list of all devices (server objects) for the
+        authenticated user.
       operationId: getDevices
       parameters:
         - name: groupId
@@ -2386,7 +2937,10 @@ paths:
             type: integer
         - name: o
           in: query
-          description: Organization ID. Response will include devices for the specified Automox Organization. The organization will be assumed based on the API key, if not specified.
+          description:
+            Organization ID. Response will include devices for the specified
+            Automox Organization. The organization will be assumed based on the
+            API key, if not specified.
           required: true
           schema:
             type: integer
@@ -2401,20 +2955,28 @@ paths:
               - 1
         - name: patchStatus
           in: query
-          description: "Filter based on presence of ANY available patches that aren't already installed. Value must be 'missing' Format: `patchStatus=missing`"
+          description:
+            "Filter based on presence of ANY available patches that aren't
+            already installed. Value must be 'missing' Format:
+            `patchStatus=missing`"
           required: false
           schema:
             type: string
             default: missing
         - name: policyId
           in: query
-          description: "Filter based on association to a given Policy ID. Format: `policyId=12345`"
+          description:
+            "Filter based on association to a given Policy ID. Format:
+            `policyId=12345`"
           required: false
           schema:
             type: integer
         - name: exception
           in: query
-          description: "Filter based on the exception property to exclude the device from reports. Device is still monitored when excluded from reports and statistics. Format: `exception=1`"
+          description:
+            "Filter based on the exception property to exclude the device from
+            reports. Device is still monitored when excluded from reports and
+            statistics. Format: `exception=1`"
           required: false
           schema:
             type: integer
@@ -2423,7 +2985,9 @@ paths:
               - 1
         - name: managed
           in: query
-          description: "Filter based on device's Managed status. Unmanaged indicates no linked policies. Format: `managed=0`"
+          description:
+            "Filter based on device's Managed status. Unmanaged indicates no
+            linked policies. Format: `managed=0`"
           required: false
           schema:
             type: integer
@@ -2432,7 +2996,10 @@ paths:
               - 1
         - name: limit
           in: query
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            A limit on the number of results to be returned, between 1 and 500,
+            with a default of 500. Use with page parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
           required: true
           schema:
             type: integer
@@ -2441,7 +3008,10 @@ paths:
             default: 500
         - name: page
           in: query
-          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)
           required: true
           schema:
             type: integer
@@ -2478,13 +3048,15 @@ paths:
               desc: Descending order
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/servers?o=:orgID&page=0&limit=500"
 
-            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
 
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
         "200":
           description: successful operation
@@ -2529,13 +3101,16 @@ paths:
           description: The version of PowerShell running on the device.
           required: false
           schema:
-              type: integer
+            type: integer
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/servers/123456?o=0000"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -2558,8 +3133,8 @@ paths:
     put:
       tags:
         - Devices
-      summary: "Updates a device (server object)."
-      description: "Send a JSON object in the request body to update device details)."
+      summary: Updates a device (server object).
+      description: Send a JSON object in the request body to update device details).
       operationId: updateDevice
       parameters:
         - name: id
@@ -2591,7 +3166,9 @@ paths:
                   description: Server IP address.
                   type: string
                 exception:
-                  description: Use the exception property to exclude the device from reports and statistics.
+                  description:
+                    Use the exception property to exclude the device from reports and
+                    statistics.
                   type: boolean
                 tags:
                   description: List of tags.
@@ -2599,17 +3176,22 @@ paths:
                   items:
                     type: string
                 custom_name:
-                  description: Custom name that will display in the console instead of the hostname.
+                  description:
+                    Custom name that will display in the console instead of the
+                    hostname.
                   type: string
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{
                 "Authorization" = "Bearer $apiKey"
                 "Content-Type" = "application/json"
             }
+
             $body = @"
+
             {
                 "server_group_id": 12345,
                 "tags": [
@@ -2620,8 +3202,11 @@ paths:
                 "custom_name": null,
                 "exception": false
             }
+
             "@
+
             $url = "https://console.automox.com/api/servers/123456?o=0000"
+
 
             Invoke-WebRequest -Method Put -Uri $url -Headers $headers -Body $body
       responses:
@@ -2635,7 +3220,9 @@ paths:
       tags:
         - Devices
       summary: Deletes a device (server object) from the organization.
-      description: "**NOTE:** The associated command queue will be purged. Any pending custom commands for the device are removed."
+      description:
+        "**NOTE:** The associated command queue will be purged. Any pending
+        custom commands for the device are removed."
       operationId: deleteDevice
       parameters:
         - name: id
@@ -2671,8 +3258,8 @@ paths:
     post:
       tags:
         - Devices
-      summary: 'Updates multiple devices (server objects).'
-      description: 'Updates multiple devices (server objects) in a batch.'
+      summary: Updates multiple devices (server objects).
+      description: Updates multiple devices (server objects) in a batch.
       operationId: batchUpdateDevices
       parameters:
         - name: o
@@ -2722,8 +3309,9 @@ paths:
                           type: string
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{
                 "Authorization" = "Bearer $apiKey"
                 "Content-Type" = "application/json"
@@ -2743,6 +3331,7 @@ paths:
 
             $url = "https://console.automox.com/api/servers/batch?o=0"
 
+
             Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body
       responses:
         "200":
@@ -2761,13 +3350,15 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /servers/{id}/packages:
+  "/servers/{id}/packages":
     get:
       tags:
         - Devices
         - Packages
       summary: List Software Packages for Specific Device
-      description: "Returns the software packages for the specified device. Packages Include: Pending updates and currently installed updates/applications"
+      description:
+        "Returns the software packages for the specified device. Packages
+        Include: Pending updates and currently installed updates/applications"
       operationId: getDevicePackages
       parameters:
         - name: id
@@ -2787,7 +3378,10 @@ paths:
             default: 0
           in: query
           name: page
-          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)
         - schema:
             type: integer
             minimum: 1
@@ -2795,13 +3389,19 @@ paths:
             default: 500
           in: query
           name: limit
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            A limit on the number of results to be returned, between 1 and 500,
+            with a default of 500. Use with `page` parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/servers/123456/packages?o=0000"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -2823,7 +3423,7 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /servers/{id}/queues:
+  "/servers/{id}/queues":
     get:
       tags:
         - Devices
@@ -2846,10 +3446,13 @@ paths:
             type: integer
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/servers/123456/queues?o=0000"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -2876,7 +3479,9 @@ paths:
         - Devices
         - Commands
       summary: Issue a command to a device
-      description: "Force a device to Scan, Patch, or Reboot for immediate execution. **Note: The `installAllUpdates` option ignores any Policy Filters**"
+      description:
+        "Force a device to Scan, Patch, or Reboot for immediate execution.
+        **Note: The `installAllUpdates` option ignores any Policy Filters**"
       operationId: issueDeviceCommand
       parameters:
         - name: id
@@ -2910,42 +3515,67 @@ paths:
                   x-enumDescriptions:
                     GetOS: Triggers a device scan.
                     InstallUpdate: Installs a specific patch.
-                    InstallAllUpdates: "Installs all available patches. **NOTE: This ignores any Policy Filters!**"
-                    policy_{policy_id}_test: Evaluates compliance against a Worklet.
-                    policy_{policy_id}_remediate: Forces remediation of a Worklet or Required Software Policy.
+                    InstallAllUpdates:
+                      "Installs all available patches. **NOTE: This ignores any
+                      Policy Filters!**"
+                    "policy_{policy_id}_test": Evaluates compliance against a Worklet.
+                    "policy_{policy_id}_remediate":
+                      Forces remediation of a Worklet or Required
+                      Software Policy.
                     Reboot: Forces a reboot.
                 args:
                   type: string
-                  description: "Only needed for `InstallUpdate`. Includes the name of the patches to install."
+                  description:
+                    Only needed for `InstallUpdate`. Includes the name of the patches
+                    to install.
+            examples:
+              getOS:
+                summary: Trigger a scan of the target device
+                value: { "command_type_name": "GetOS" }
+              InstallUpdate:
+                summary: Install a specific patch
+                value:
+                  {
+                    "command_type_name": "InstallUpdate",
+                    "args": "KB12345 KB67890",
+                  }
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{
                 "Authorization" = "Bearer $apiKey"
                 "Content-Type" = "application/json"
             }
+
             $body = @{
               command_type_name = "Reboot"
             }
 
+
             $url = "https://console.automox.com/api/servers/123456/queues?o=0000"
+
 
             Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body ($body | ConvertTo-Json)
         - lang: PowerShell
           label: PowerShell (with ARGS)
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{
                 "Authorization" = "Bearer $apiKey"
                 "Content-Type" = "application/json"
             }
+
             $body = @{
               command_type_name = "InstallUpdate"
               args = "2e7e5661-f7c8-4a21-a65a-52d0fdf8841a"
             }
 
+
             $url = "https://console.automox.com/api/servers/123456/queues?o=0000"
+
 
             Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body ($body | ConvertTo-Json)
       responses:
@@ -2971,7 +3601,10 @@ paths:
             type: integer
         - name: page
           in: query
-          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
           schema:
             type: integer
@@ -2983,14 +3616,20 @@ paths:
             default: 500
           in: query
           name: limit
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            A limit on the number of results to be returned, between 1 and 500,
+            with a default of 500. Use with `page` parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/servergroups?o=0000"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -3032,8 +3671,9 @@ paths:
               $ref: "#/components/schemas/ServerGroupCreateOrUpdateRequest"
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{
                 "Authorization" = "Bearer $apiKey"
                 "Content-Type" = "application/json"
@@ -3057,6 +3697,7 @@ paths:
 
             $url = "https://console.automox.com/api/servergroups?o=0000"
 
+
             Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body
       responses:
         "200":
@@ -3071,7 +3712,7 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/UnauthorizedAction"
-  /servergroups/{id}:
+  "/servergroups/{id}":
     get:
       tags:
         - Groups
@@ -3093,10 +3734,13 @@ paths:
             type: integer
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/servergroups/12345?o=0000"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -3143,13 +3787,16 @@ paths:
               $ref: "#/components/schemas/ServerGroupCreateOrUpdateRequest"
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{
                 "Authorization" = "Bearer $apiKey"
                 "Content-Type" = "application/json"
             }
+
             $body = @"
+
             {
                 "name": "API Modified",
                 "refresh_interval": 1380,
@@ -3164,9 +3811,12 @@ paths:
                     25754
                 ]
             }
+
             "@
 
+
             $url = "https://console.automox.com/api/servergroups/123456?o=0000"
+
 
             Invoke-WebRequest -Method Put -Uri $url -Headers $headers -Body $body
       responses:
@@ -3182,7 +3832,9 @@ paths:
       tags:
         - Groups
       summary: Deletes a server group.
-      description: "**NOTE:** Any devices that belong to the deleted group will be moved to the organization's Default Group"
+      description:
+        "**NOTE:** Any devices that belong to the deleted group will be
+        moved to the organization's Default Group"
       operationId: deleteServerGroup
       parameters:
         - name: id
@@ -3227,7 +3879,10 @@ paths:
             default: 0
           in: query
           name: page
-          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)
         - schema:
             type: integer
             minimum: 1
@@ -3235,13 +3890,19 @@ paths:
             default: 500
           in: query
           name: limit
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            A limit on the number of results to be returned, between 1 and 500,
+            with a default of 500. Use with `page` parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/orgs"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -3268,7 +3929,9 @@ paths:
       tags:
         - Packages
       summary: List All Software Packages for All Devices
-      description: This will list all pending/installed updates, and all installed applications, for all devices in a given organization.
+      description:
+        This will list all pending/installed updates, and all installed
+        applications, for all devices in a given organization.
       operationId: getOrganizationPackages
       parameters:
         - name: id
@@ -3289,7 +3952,9 @@ paths:
             format: int64
         - name: awaiting
           in: query
-          description: "Filter based installation status of package. `awaiting=1`:  Packages that are currently available but not installed. `awaiting=0`:  Packages that are already installed."
+          description: "Filter based installation status of package.
+            `awaiting=1`:  Packages that are currently available but not
+            installed. `awaiting=0`:  Packages that are already installed."
           required: false
           schema:
             type: integer
@@ -3299,7 +3964,7 @@ paths:
             format: int64
         - name: o
           in: query
-          description: "Organization ID of the target organization."
+          description: Organization ID of the target organization.
           required: true
           schema:
             type: integer
@@ -3309,7 +3974,10 @@ paths:
           in: query
           required: false
           name: page
-          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)
         - schema:
             type: integer
             minimum: 1
@@ -3317,14 +3985,20 @@ paths:
             default: 500
           in: query
           name: limit
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            A limit on the number of results to be returned, between 1 and 500,
+            with a default of 500. Use with `page` parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = 'https://console.automox.com/api/orgs/0000/packages?o=0000&awaiting=1&includeUnmanaged=0'
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -3346,12 +4020,14 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /orgs/{id}/api_keys:
+  "/orgs/{id}/api_keys":
     get:
       tags:
         - API Keys
       summary: List All API Keys for Organization
-      description: "**PREREQUISITES:** You must have **Full Administrator** privileges! This endpoint allows you to list all keys for an organization."
+      description: "**PREREQUISITES:** You must have **Full Administrator**
+        privileges! This endpoint allows you to list all keys for an
+        organization."
       operationId: getOrganizationApiKeys
       parameters:
         - name: id
@@ -3362,7 +4038,10 @@ paths:
             type: integer
         - name: limit
           in: query
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            A limit on the number of results to be returned, between 1 and 500,
+            with a default of 500. Use with `page` parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
           schema:
             type: integer
@@ -3371,17 +4050,23 @@ paths:
             default: 500
         - name: page
           in: query
-          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
           schema:
             type: integer
             default: 0
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/orgs/{0000}/api_keys"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -3427,7 +4112,10 @@ paths:
             default: 0
           in: query
           name: page
-          description: "The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)
         - schema:
             type: integer
             minimum: 1
@@ -3435,13 +4123,19 @@ paths:
             default: 500
           in: query
           name: limit
-          description: "A limit on the number of results to be returned, between 1 and 500, with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            A limit on the number of results to be returned, between 1 and 500,
+            with a default of 500. Use with `page` parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/policies?o=0000"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -3452,7 +4146,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Policy"
+                  anyOf:
+                    - $ref: "#/components/schemas/PatchPolicy"
+                    - $ref: "#/components/schemas/RequiredSoftwarePolicy"
+                    - $ref: "#/components/schemas/CustomPolicy"
         "400":
           $ref: "#/components/responses/Error"
         "401":
@@ -3467,7 +4164,10 @@ paths:
       tags:
         - Policies
       summary: Create a New Policy
-      description: Creates a new policy for a specified organization. For more info on filter types and scheduling, see [Policy and Device Filters, and Scheduling](/developer-portal/policy_filters_schedule).
+      description:
+        Creates a new policy for a specified organization. For more info on
+        filter types and scheduling, see [Policy and Device Filters, and
+        Scheduling](/developer-portal/policy_filters_schedule).
       operationId: createPolicy
       parameters:
         - name: o
@@ -3480,144 +4180,265 @@ paths:
         content:
           application/json:
             schema:
-              required:
-                - name
-                - policy_type_name
-                - organization_id
-                - schedule_days
-                - schedule_weeks_of_month
-                - schedule_months
-                - schedule_time
-                - configuration
-                - notify_user
-              properties:
-                name:
-                  description: The name of the policy.
-                  type: string
-                policy_type_name:
-                  type: string
-                  enum:
-                    - patch
-                    - custom
-                    - required_software
-                  x-enumDescriptions:
-                    patch: Patch Policy
-                    custom: Worklet Policy
-                    required_software: Required Software Policy
-                organization_id:
-                  description: Organization ID for the specified policy
-                  type: integer
-                schedule_days:
-                  description: "Decimal value of binary day schedule. See [Policy and Device Filters, and Scheduling - Example Days per Week](/developer-portal/policy_filters_schedule/#example-days-per-week)."
-                  type: integer
-                schedule_weeks_of_month:
-                  description: "Decimal value of binary week schedule. See [Policy and Device Filters, and Scheduling - Example Weeks per Month](/developer-portal/policy_filters_schedule/#example-weeks-per-month)."
-                  type: integer
-                schedule_months:
-                  description: "Decimal value of binary month schedule. See [Policy and Device Filters, and Scheduling - Example Months per Year](/developer-portal/policy_filters_schedule/#example-months-per-year)."
-                  type: integer
-                schedule_time:
-                  description: 'Scheduled time for automatic policy execution. Format: `"hh:mm"`'
-                  type: string
-                configuration:
-                  $ref: "#/components/schemas/PolicyConfiguration"
-                notify_user:
-                  description: "Display notification 15 minutes before patching."
-                  type: boolean
-                notes:
-                  description: Policy notes
-                  type: string
-                server_groups:
-                  description: "Integer array. Server groups to link with the policy"
-                  type: array
-                  items:
-                    type: integer
-                auto_patch:
-                  description: "Enable or Disable automatic execution of the policy."
-                  type: boolean
-                auto_reboot:
-                  description: "Enable or Disable automatic reboots following policy execution."
-                  type: boolean
-                notify_reboot_user:
-                  description: "Display modified notification 15 minutes before patching. This message should inform the user that a reboot will follow patching actions."
-                  type: boolean
+              discriminator:
+                propertyName: policy_type_name
+                mapping:
+                  patch: "#/components/schemas/PatchPolicy"
+                  custom: "#/components/schemas/CustomPolicy"
+                  required_software: "#/components/schemas/RequiredSoftwarePolicy"
+            examples:
+              PatchAll:
+                summary: A Patch All Policy
+                value:
+                  {
+                    "name": "Test Patch All Policy",
+                    "policy_type_name": "patch",
+                    "organization_id": 9999,
+                    "schedule_days": 42,
+                    "schedule_weeks_of_month": 20,
+                    "schedule_months": 4680,
+                    "schedule_time": "12:00",
+                    "configuration":
+                      {
+                        "auto_patch": true,
+                        "notify_user": true,
+                        "auto_reboot": true,
+                        "patch_rule": "all",
+                        "filter_type": "all",
+                        "missed_patch_window": false,
+                        "device_filters_enabled": true,
+                        "device_filters":
+                          [
+                            {
+                              "field": "tag",
+                              "op": "in",
+                              "value": ["Windows", "Win10"],
+                            },
+                          ],
+                        "include_optional": true,
+                        "notify_reboot_user": true,
+                        "notify_deferred_reboot_user": true,
+                        "custom_notification_patch_message": "Important updates are going to be installed!",
+                        "custom_notification_patch_message_mac": "Important updates are going to be installed!",
+                        "custom_notification_reboot_message": "Reboot needed to finish installing updates!",
+                        "custom_notification_reboot_message_mac": "Reboot needed to finish installing updates!",
+                        "custom_notification_max_delays": 3,
+                        "custom_notification_deferment_periods": [1, 4, 8],
+                        "custom_pending_reboot_notification_message": "Your computer needs to reboot to install updates!",
+                        "custom_pending_reboot_notification_message_mac": "Your computer needs to reboot to install updates!",
+                        "custom_pending_reboot_notification_deferment_periods":
+                          [1, 4, 8],
+                        "notify_user_message_timeout": 15,
+                        "notify_deferred_reboot_user_message_timeout": 15,
+                        "notify_user_auto_deferral_enabled": true,
+                        "notify_deferred_reboot_user_auto_deferral_enabled": true,
+                      },
+                    "server_groups": [250624, 90125],
+                    "notes": "Here are some notes",
+                  }
+              RequiredSoftwarePolicy:
+                summary: A Required Software Policy
+                value:
+                  {
+                    "name": "Test Required Software Policy",
+                    "policy_type_name": "required_software",
+                    "organization_id": 9999,
+                    "schedule_days": 42,
+                    "schedule_weeks_of_month": 20,
+                    "schedule_months": 4680,
+                    "schedule_time": "12:00",
+                    "configuration":
+                      {
+                        "os_family": "Windows",
+                        "package_name": "NotePadPlusPlus",
+                        "package_version": "7.8.4",
+                        "evaluation_code": null,
+                        "remediation_code": null,
+                        "installation_code": ".\\npp.7.8.4.Installer.x64.exe /S",
+                      },
+                    "notify_user": true,
+                    "server_groups": [250624, 90125],
+                    "notes": "Here are some notes",
+                  }
+              PatchAdvancedFilterPolicy:
+                summary: A Patch Policy using Advanced Filters
+                value:
+                  {
+                    "name": "Advanced Policy",
+                    "policy_type_name": "patch",
+                    "organization_id": 9999,
+                    "schedule_days": 42,
+                    "schedule_weeks_of_month": 20,
+                    "schedule_months": 4680,
+                    "schedule_time": "00:00",
+                    "configuration":
+                      {
+                        "auto_patch": true,
+                        "auto_reboot": true,
+                        "patch_rule": "advanced",
+                        "advanced_filter":
+                          [
+                            {
+                              "left": "patch-os",
+                              "right": "windows",
+                              "condition": "is",
+                            },
+                            {
+                              "left": "patch-source",
+                              "right": "windowsupdate",
+                              "condition": "is",
+                            },
+                          ],
+                        "missed_patch_window": false,
+                        "device_filters_enabled": true,
+                        "device_filters":
+                          [
+                            {
+                              "field": "tag",
+                              "op": "in",
+                              "value": ["Windows", "Win10"],
+                            },
+                          ],
+                        "include_optional": true,
+                        "notify_reboot_user": true,
+                        "notify_deferred_reboot_user": true,
+                        "custom_notification_patch_message": "Important updates are going to be installed!",
+                        "custom_notification_patch_message_mac": "Important updates are going to be installed!",
+                        "custom_notification_reboot_message": "Reboot needed to finish installing updates!",
+                        "custom_notification_reboot_message_mac": "Reboot needed to finish installing updates!",
+                        "custom_notification_max_delays": 3,
+                        "custom_notification_deferment_periods": [1, 4, 8],
+                        "custom_pending_reboot_notification_message": "Your computer needs to reboot to install updates!",
+                        "custom_pending_reboot_notification_message_mac": "Your computer needs to reboot to install updates!",
+                        "custom_pending_reboot_notification_deferment_periods":
+                          [1, 4, 8],
+                        "notify_user_message_timeout": 15,
+                        "notify_deferred_reboot_user_message_timeout": 15,
+                        "notify_user_auto_deferral_enabled": true,
+                        "notify_deferred_reboot_user_auto_deferral_enabled": true,
+                        "notify_user": true,
+                      },
+                    "server_groups": [250624, 90125],
+                    "notes": "Here are some notes",
+                  }
+              ManualPolicy:
+                summary: Manual Approval Policy
+                value:
+                  {
+                    "name": "Manual Approval",
+                    "policy_type_name": "patch",
+                    "organization_id": 9999,
+                    "schedule_days": 42,
+                    "schedule_weeks_of_month": 20,
+                    "schedule_months": 4680,
+                    "schedule_time": "12:00",
+                    "configuration":
+                      {
+                        "auto_patch": true,
+                        "patch_rule": "manual",
+                        "auto_reboot": true,
+                        "notify_user": true,
+                        "evaluation_code": null,
+                        "include_optional": false,
+                        "remediation_code": null,
+                        "installation_code": null,
+                        "notify_reboot_user": true,
+                        "use_scheduled_timezone": false,
+                        "notify_deferred_reboot_user": true,
+                        "custom_notification_max_delays": 3,
+                        "custom_notification_patch_message": "System Update: An important update will be installed.",
+                        "custom_notification_reboot_message": "An important update will be installed; reboot may be required.",
+                        "custom_notification_deferment_periods": [1, 4, 8],
+                        "custom_notification_patch_message_mac": "System Update: An important update will be installed.",
+                        "custom_notification_reboot_message_mac": "An important update will be installed; reboot may be required.",
+                        "custom_pending_reboot_notification_message": "Updates require reboot: Please save your work.",
+                        "notify_deferred_reboot_user_message_timeout": 15,
+                        "custom_pending_reboot_notification_max_delays": 3,
+                        "custom_pending_reboot_notification_message_mac": "Updates require reboot: Please save your work.",
+                        "notify_deferred_reboot_user_auto_deferral_enabled": false,
+                        "custom_pending_reboot_notification_deferment_periods":
+                          [1, 4, 8],
+                      },
+                    "server_groups": [250624, 90125],
+                    "notes": "Here are some notes",
+                  }
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{
                 "Authorization" = "Bearer $apiKey"
                 "Content-Type" = "application/json"
             }
-            $url = "https://console.automox.com/api/policies/12345?o=0000"
+
+            $url = "https://console.automox.com/api/policies?o=9999"
+
             $body = @"
-              {
-                "name": "API Created",
-                "policy_type_name": "patch",
-                "organization_id": 0000,
-                "configuration": {
-                  "auto_patch": false,
-                  "auto_reboot": true,
-                  "notify_reboot_user": true,
+            {
+              "name": "Patch All Policy",
+              "policy_type_name": "patch",
+              "organization_id": 9999,
+              "schedule_days": 42,
+              "schedule_weeks_of_month": 20,
+              "schedule_months": 4680,
+              "schedule_time": "12:00",
+              "configuration": {
+                  "auto_patch": true,
                   "notify_user": true,
-                  "missed_patch_window": true,
-                  "patch_rule": "advanced",
-                  "filters": ["*KB2267602*","*Exclude This Too*"],
-                  "severity_filter": ["low","medium","high","critical","none","unknown"],
+                  "auto_reboot": true,
+                  "patch_rule": "all",
+                  "filter_type": "all",
+                  "missed_patch_window": false,
+                  "device_filters_enabled": true,
+                  "device_filters": [
+                      {
+                          "field": "tag",
+                          "op": "in",
+                          "value": [
+                              "Windows",
+                              "Win10"
+                          ]
+                      }
+                  ],
                   "include_optional": true,
-                  "custom_notification_patch_message": "Notification Text before normal patch - Windows - Max 125 Char",
-                  "custom_notification_reboot_message": "Notification Text before reboot patch - Windows - Max 125 Char",
-                  "custom_notification_patch_message_mac": "Notification Text before normal patch - Mac - Max 70 Char",
-                  "custom_notification_reboot_message_mac": "Notification Text before reboot patch - Mac - Max 70 Char",
+                  "notify_reboot_user": true,
+                  "notify_deferred_reboot_user": true,
+                  "custom_notification_patch_message": "Important updates are going to be installed!",
+                  "custom_notification_patch_message_mac": "Important updates are going to be installed!",
+                  "custom_notification_reboot_message": "Reboot needed to finish installing updates!",
+                  "custom_notification_reboot_message_mac": "Reboot needed to finish installing updates!",
                   "custom_notification_max_delays": 3,
-                  "custom_notification_deferment_periods": [1, 4, 8],
-                  "notify_user_message_timeout": 120,
-                  "notify_user_auto_deferral_enabled": false,
-                  "notify_deferred_reboot_user_message_timeout": 120,
-                  "notify_deferred_reboot_user_auto_deferral_enabled": true,
-                  "advanced_filter": [
-                          {
-                              "left": "patch-source",
-                              "right": "windowsupdate",
-                              "condition": "is"
-                          },
-                          {
-                              "left": "severity",
-                              "right": "medium",
-                              "condition": "greater-than-or-equal-to"
-                          }
-                      ]
-                    "device_filters": [
-                          {
-                              "field": "os_family",
-                              "op": "in",
-                              "value": ["Windows"]
-                          },
-                          {
-                              "field": "hostname",
-                              "op": "like_any",
-                              "value": ["WinDev2104Eval"]
-                          }
-                        ],
-                },
-                "schedule_days": 146,
-                "schedule_weeks_of_month": 42,
-                "schedule_months": 4162,
-                "schedule_time": "01:00",
-                "notes": "Patch every Mon,Thu,Fri\n1st,3rd,5th Week\nJan,Jun,Dec",
-                "server_groups": [23500]
-              }
-              "@
+                  "custom_notification_deferment_periods": [
+                      1,
+                      4,
+                      8
+                  ],
+                  "custom_pending_reboot_notification_message": "Your computer needs to reboot to install updates!",
+                  "custom_pending_reboot_notification_message_mac": "Your computer needs to reboot to install updates!",
+                  "custom_pending_reboot_notification_deferment_periods": [
+                      1,
+                      4,
+                      8
+                  ],
+                  "notify_user_message_timeout": 15,
+                  "notify_deferred_reboot_user_message_timeout": 15,
+                  "notify_user_auto_deferral_enabled": true,
+                  "notify_deferred_reboot_user_auto_deferral_enabled": true
+              },
+              "notify_user": true,
+              "server_groups": [
+                  250624,
+                  90125
+              ],
+              "notes": "Here are some notes"
+            }
+            "@
+
             Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body
       responses:
-        "200":
-          description: Successful Operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Policy"
+        "201":
+          description: Created
         "400":
           $ref: "#/components/responses/Error"
         "401":
@@ -3628,7 +4449,7 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /policies/{id}:
+  "/policies/{id}":
     get:
       tags:
         - Policies
@@ -3650,10 +4471,13 @@ paths:
             type: integer
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/policies/12345?o=0000"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -3662,7 +4486,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Policy"
+                anyOf:
+                  - $ref: "#/components/schemas/PatchPolicy"
+                  - $ref: "#/components/schemas/CustomPolicy"
+                  - $ref: "#/components/schemas/RequiredSoftwarePolicy"
         "400":
           $ref: "#/components/responses/Error"
         "401":
@@ -3677,7 +4504,10 @@ paths:
       tags:
         - Policies
       summary: Updates a specific policy object for the authenticated user.
-      description: Updates a specific policy object for the authenticated user. For more info on filter types and scheduling, see [Policy and Device Filters, and Scheduling](/developer-portal/policy_filters_schedule).
+      description:
+        Updates a specific policy object for the authenticated user. For
+        more info on filter types and scheduling, see [Policy and Device
+        Filters, and Scheduling](/developer-portal/policy_filters_schedule).
       operationId: updatePolicy
       parameters:
         - name: id
@@ -3697,16 +4527,199 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Policy"
+              discriminator:
+                propertyName: policy_type_name
+                mapping:
+                  patch: "#/components/schemas/PatchPolicy"
+                  custom: "#/components/schemas/CustomPolicy"
+                  required_software: "#/components/schemas/RequiredSoftwarePolicy"
+            examples:
+              PatchAll:
+                summary: A Patch All Policy
+                value:
+                  {
+                    "name": "Test Patch All Policy",
+                    "policy_type_name": "patch",
+                    "organization_id": 9999,
+                    "schedule_days": 42,
+                    "schedule_weeks_of_month": 20,
+                    "schedule_months": 4680,
+                    "schedule_time": "12:00",
+                    "configuration":
+                      {
+                        "auto_patch": true,
+                        "notify_user": true,
+                        "auto_reboot": true,
+                        "patch_rule": "all",
+                        "filter_type": "all",
+                        "missed_patch_window": false,
+                        "device_filters_enabled": true,
+                        "device_filters":
+                          [
+                            {
+                              "field": "tag",
+                              "op": "in",
+                              "value": ["Windows", "Win10"],
+                            },
+                          ],
+                        "include_optional": true,
+                        "notify_reboot_user": true,
+                        "notify_deferred_reboot_user": true,
+                        "custom_notification_patch_message": "Important updates are going to be installed!",
+                        "custom_notification_patch_message_mac": "Important updates are going to be installed!",
+                        "custom_notification_reboot_message": "Reboot needed to finish installing updates!",
+                        "custom_notification_reboot_message_mac": "Reboot needed to finish installing updates!",
+                        "custom_notification_max_delays": 3,
+                        "custom_notification_deferment_periods": [1, 4, 8],
+                        "custom_pending_reboot_notification_message": "Your computer needs to reboot to install updates!",
+                        "custom_pending_reboot_notification_message_mac": "Your computer needs to reboot to install updates!",
+                        "custom_pending_reboot_notification_deferment_periods":
+                          [1, 4, 8],
+                        "notify_user_message_timeout": 15,
+                        "notify_deferred_reboot_user_message_timeout": 15,
+                        "notify_user_auto_deferral_enabled": true,
+                        "notify_deferred_reboot_user_auto_deferral_enabled": true,
+                      },
+                    "server_groups": [250624, 90125],
+                    "notes": "Here are some notes",
+                  }
+              RequiredSoftwarePolicy:
+                summary: A Required Software Policy
+                value:
+                  {
+                    "name": "Test Required Software Policy",
+                    "policy_type_name": "required_software",
+                    "organization_id": 9999,
+                    "schedule_days": 42,
+                    "schedule_weeks_of_month": 20,
+                    "schedule_months": 4680,
+                    "schedule_time": "12:00",
+                    "configuration":
+                      {
+                        "os_family": "Windows",
+                        "package_name": "NotePadPlusPlus",
+                        "package_version": "7.8.4",
+                        "evaluation_code": null,
+                        "remediation_code": null,
+                        "installation_code": ".\\npp.7.8.4.Installer.x64.exe /S",
+                      },
+                    "notify_user": true,
+                    "server_groups": [250624, 90125],
+                    "notes": "Here are some notes",
+                  }
+              PatchAdvancedFilterPolicy:
+                summary: A Patch Policy using Advanced Filters
+                value:
+                  {
+                    "name": "Advanced Policy",
+                    "policy_type_name": "patch",
+                    "organization_id": 9999,
+                    "schedule_days": 42,
+                    "schedule_weeks_of_month": 20,
+                    "schedule_months": 4680,
+                    "schedule_time": "00:00",
+                    "configuration":
+                      {
+                        "auto_patch": true,
+                        "auto_reboot": true,
+                        "patch_rule": "advanced",
+                        "advanced_filter":
+                          [
+                            {
+                              "left": "patch-os",
+                              "right": "windows",
+                              "condition": "is",
+                            },
+                            {
+                              "left": "patch-source",
+                              "right": "windowsupdate",
+                              "condition": "is",
+                            },
+                          ],
+                        "missed_patch_window": false,
+                        "device_filters_enabled": true,
+                        "device_filters":
+                          [
+                            {
+                              "field": "tag",
+                              "op": "in",
+                              "value": ["Windows", "Win10"],
+                            },
+                          ],
+                        "include_optional": true,
+                        "notify_reboot_user": true,
+                        "notify_deferred_reboot_user": true,
+                        "custom_notification_patch_message": "Important updates are going to be installed!",
+                        "custom_notification_patch_message_mac": "Important updates are going to be installed!",
+                        "custom_notification_reboot_message": "Reboot needed to finish installing updates!",
+                        "custom_notification_reboot_message_mac": "Reboot needed to finish installing updates!",
+                        "custom_notification_max_delays": 3,
+                        "custom_notification_deferment_periods": [1, 4, 8],
+                        "custom_pending_reboot_notification_message": "Your computer needs to reboot to install updates!",
+                        "custom_pending_reboot_notification_message_mac": "Your computer needs to reboot to install updates!",
+                        "custom_pending_reboot_notification_deferment_periods":
+                          [1, 4, 8],
+                        "notify_user_message_timeout": 15,
+                        "notify_deferred_reboot_user_message_timeout": 15,
+                        "notify_user_auto_deferral_enabled": true,
+                        "notify_deferred_reboot_user_auto_deferral_enabled": true,
+                        "notify_user": true,
+                      },
+                    "server_groups": [250624, 90125],
+                    "notes": "Here are some notes",
+                  }
+              ManualPolicy:
+                summary: Manual Approval Policy
+                value:
+                  {
+                    "name": "Manual Approval",
+                    "policy_type_name": "patch",
+                    "organization_id": 9999,
+                    "schedule_days": 42,
+                    "schedule_weeks_of_month": 20,
+                    "schedule_months": 4680,
+                    "schedule_time": "12:00",
+                    "configuration":
+                      {
+                        "auto_patch": true,
+                        "patch_rule": "manual",
+                        "auto_reboot": true,
+                        "notify_user": true,
+                        "evaluation_code": null,
+                        "include_optional": false,
+                        "remediation_code": null,
+                        "installation_code": null,
+                        "notify_reboot_user": true,
+                        "use_scheduled_timezone": false,
+                        "notify_deferred_reboot_user": true,
+                        "custom_notification_max_delays": 3,
+                        "custom_notification_patch_message": "System Update: An important update will be installed.",
+                        "custom_notification_reboot_message": "An important update will be installed; reboot may be required.",
+                        "custom_notification_deferment_periods": [1, 4, 8],
+                        "custom_notification_patch_message_mac": "System Update: An important update will be installed.",
+                        "custom_notification_reboot_message_mac": "An important update will be installed; reboot may be required.",
+                        "custom_pending_reboot_notification_message": "Updates require reboot: Please save your work.",
+                        "notify_deferred_reboot_user_message_timeout": 15,
+                        "custom_pending_reboot_notification_max_delays": 3,
+                        "custom_pending_reboot_notification_message_mac": "Updates require reboot: Please save your work.",
+                        "notify_deferred_reboot_user_auto_deferral_enabled": false,
+                        "custom_pending_reboot_notification_deferment_periods":
+                          [1, 4, 8],
+                      },
+                    "server_groups": [250624, 90125],
+                    "notes": "Here are some notes",
+                  }
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{
                 "Authorization" = "Bearer $apiKey"
                 "Content-Type" = "application/json"
               }
             $url = "https://console.automox.com/api/policies/12345?o=0000"
+
             $body = @"
               {
                 "name": "API Created",
@@ -3762,7 +4775,10 @@ paths:
                 "schedule_months": 4162,
                 "schedule_time": "01:00",
                 "notes": "Patch every Mon,Thu,Fri\n1st,3rd,5th Week\nJan,Jun,Dec",
-                "server_groups": [23500]
+                "server_groups": [
+                  250624,
+                  90125
+                ]
               }
               "@
             Invoke-WebRequest -Method Put -Uri $url -Headers $headers -Body $body
@@ -3796,9 +4812,11 @@ paths:
             type: integer
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/policies/12345?o=0000"
 
             $response = (Invoke-WebRequest -Method Delete -Uri $url -Headers $headers).Content
@@ -3815,7 +4833,55 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /policies/{id}/action:
+  "/policies/{id}/files":
+    post:
+      tags:
+        - Policies
+      summary: Upload installation file to a Required Software policy.
+      description: Upload file to a Required Software policy.
+      operationId: uploadPolicyFile
+      parameters:
+        - name: id
+          in: path
+          description: "The policy ID for the target policy."
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+      x-codeSamples:
+        - lang: PowerShell
+          source: |
+            $apiKey = 'your_automox_api_key'
+            $headers = @{
+              "Authorization" = "Bearer $apiKey"
+              "Content-Type" = "multipart/form-data"
+            }
+            $url = "https://console.automox.com/api/policies/{id}/files"
+            $form = @{
+              file = Get-Item -Path 'the path to your file goes here'
+            }
+
+            $response = (Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Form $form").Content
+      responses:
+        "201":
+          description: Successful Operation
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/UnauthorizedAction"
+  "/policies/{id}/action":
     post:
       tags:
         - Policies
@@ -3837,7 +4903,9 @@ paths:
             type: integer
         - name: action
           in: query
-          description: "Specify the action to be taken. Possible values: `remediateAll`, `remediateServer` Format: `action=remediateServer`"
+          description:
+            "Specify the action to be taken. Possible values: `remediateAll`,
+            `remediateServer` Format: `action=remediateServer`"
           required: true
           schema:
             type: string
@@ -3846,16 +4914,21 @@ paths:
               - remediateServer
         - name: serverId
           in: query
-          description: 'Specify the specific Server to run the policy for. Only applicable when action is set to "remediateServer" Format: serverId=123456'
+          description:
+            'Specify the specific Server to run the policy for. Only applicable
+            when action is set to "remediateServer" Format: serverId=123456'
           required: false
           schema:
             type: integer
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/policies/12345/action?o=0000&action=remediateServer&serverId=123456"
+
 
             Invoke-WebRequest -Method POST -Uri $url -Headers $headers
       responses:
@@ -3876,25 +4949,36 @@ paths:
       tags:
         - Policies
       summary: Policy Device Filters Preview
-      description: Generate a preview of the list of devices that matches the provided device filter set. For more information, see [Policy and Device Filters, and Scheduling](/developer-portal/policy_filters_schedule).
+      description:
+        Generate a preview of the list of devices that matches the provided
+        device filter set. For more information, see [Policy and Device Filters,
+        and Scheduling](/developer-portal/policy_filters_schedule).
       operationId: generatePolicyDeviceFilterPreview
       parameters:
         - name: o
           in: query
-          description: Organization ID. If omitted, results will include all organizations for the authenticated user.
+          description:
+            Organization ID. If omitted, results will include all organizations
+            for the authenticated user.
           required: true
           schema:
             type: integer
         - name: page
           in: query
-          description: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
           schema:
             type: integer
             default: 0
         - name: limit
           in: query
-          description: A limit on the number of results to be returned, between 1 and 200 with a default of 25. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+          description:
+            A limit on the number of results to be returned, between 1 and 200
+            with a default of 25. Use with `page` parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
           required: false
           schema:
             type: integer
@@ -3909,13 +4993,16 @@ paths:
               $ref: "#/components/schemas/PolicyDeviceFiltersPreview"
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{
                 "Authorization" = "Bearer $apiKey"
                 "Content-Type" = "application/json"
             }
+
             $url = "https://console.automox.com/api/policies/device-filters-preview?o=9237&page=0&limit=25"
+
             $body = @”
               {
                   "device_filters": [
@@ -3964,7 +5051,10 @@ paths:
       parameters:
         - name: o
           in: query
-          description: Organization ID for retrieving policy stats. Omit this to retrieve stats for policies in all organizations that the authenticated user can access
+          description:
+            Organization ID for retrieving policy stats. Omit this to retrieve
+            stats for policies in all organizations that the authenticated user
+            can access
           required: true
           schema:
             type: integer
@@ -4006,7 +5096,9 @@ paths:
       parameters:
         - name: o
           in: query
-          description: Organization ID. If omitted, results will include all organizations for the authenticated user.
+          description:
+            Organization ID. If omitted, results will include all organizations
+            for the authenticated user.
           required: true
           schema:
             type: integer
@@ -4018,7 +5110,9 @@ paths:
             type: integer
         - name: limit
           in: query
-          description: Limit number of results returned per page. Typically used in combination with offset
+          description:
+            Limit number of results returned per page. Typically used in
+            combination with offset
           required: false
           schema:
             type: integer
@@ -4026,17 +5120,22 @@ paths:
             default: 250
         - name: offset
           in: query
-          description: Specifies the offset. For example, if you are paging 250 at a time, you could specify 250 for the 2nd page and 500 for the 3rd, etc.
+          description:
+            Specifies the offset. For example, if you are paging 250 at a time,
+            you could specify 250 for the 2nd page and 500 for the 3rd, etc.
           required: false
           schema:
             type: integer
             default: 250
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = 'https://console.automox.com/api/reports/prepatch?o=0000&groupId=12345&limit=10&offset=20'
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -4061,25 +5160,34 @@ paths:
       tags:
         - Reports
       summary: Non-Compliance Report
-      description: Retrieve the non-compliant devices report. This endpoint is deprecated. Please use [GET /reports/needs-attention](/openapi/reference/operation/getNeedsAttentionReport) instead.
+      description: Retrieve the non-compliant devices report. This endpoint is
+        deprecated. Please use [GET
+        /reports/needs-attention](/openapi/axconsole/operation/getNeedsAttentionReport)
+        instead.
       operationId: getNonComplianceReport
       deprecated: true
       parameters:
         - name: o
           in: query
-          description: Organization ID. If omitted, results will include all organizations for the authenticated user.
+          description:
+            Organization ID. If omitted, results will include all organizations
+            for the authenticated user.
           required: true
           schema:
             type: integer
         - name: groupId
           in: query
-          description: Group ID. If omitted, results will include all groups for the authenticated user.
+          description:
+            Group ID. If omitted, results will include all groups for the
+            authenticated user.
           required: false
           schema:
             type: integer
         - name: limit
           in: query
-          description: Limit number of results returned per page. Typically used in combination with offset
+          description:
+            Limit number of results returned per page. Typically used in
+            combination with offset
           required: false
           schema:
             type: integer
@@ -4087,17 +5195,22 @@ paths:
             default: 250
         - name: offset
           in: query
-          description: Specifies the offset. For example, if you are paging 250 at a time, you could specify 250 for the 2nd page and 500 for the 3rd, etc.
+          description:
+            Specifies the offset. For example, if you are paging 250 at a time,
+            you could specify 250 for the 2nd page and 500 for the 3rd, etc.
           required: false
           schema:
             type: integer
             default: 250
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = 'https://console.automox.com/api/reports/noncompliance?o=0000&groupId=12345&limit=10&offset=20'
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -4129,19 +5242,25 @@ paths:
       parameters:
         - name: o
           in: query
-          description: Organization ID. If omitted, results will include all organizations for the authenticated user.
+          description:
+            Organization ID. If omitted, results will include all organizations
+            for the authenticated user.
           required: true
           schema:
             type: integer
         - name: groupId
           in: query
-          description: Group ID. If omitted, results will include all groups for the authenticated user.
+          description:
+            Group ID. If omitted, results will include all groups for the
+            authenticated user.
           required: false
           schema:
             type: integer
         - name: limit
           in: query
-          description: Limit number of results returned per page. Typically used in combination with offset
+          description:
+            Limit number of results returned per page. Typically used in
+            combination with offset
           required: false
           schema:
             type: integer
@@ -4149,17 +5268,22 @@ paths:
             default: 250
         - name: offset
           in: query
-          description: Specifies the offset. For example, if you are paging 250 at a time, you could specify 250 for the 2nd page and 500 for the 3rd, etc.
+          description:
+            Specifies the offset. For example, if you are paging 250 at a time,
+            you could specify 250 for the 2nd page and 500 for the 3rd, etc.
           required: false
           schema:
             type: integer
             default: 250
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = 'https://console.automox.com/api/reports/needs-attention?o=0000&groupId=12345&limit=10&offset=20'
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -4181,17 +5305,21 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /approvals/{id}:
+  "/approvals/{id}":
     put:
       tags:
         - Approvals
       summary: Update a Manual Approval Record
-      description: Update a manual approval record. Set the `manual_approval` attribute of approval object to `true` to approve a patch; set it to `false` to reject a patch.
+      description: Update a manual approval record. Set the `manual_approval`
+        attribute of approval object to `true` to approve a patch; set it to
+        `false` to reject a patch.
       operationId: updateApprovals
       parameters:
         - name: id
           in: path
-          description: Approval ID. Contact [Automox Support](mailto:support@automox.com) for further assistance.
+          description:
+            Approval ID. Contact [Automox Support](mailto:support@automox.com)
+            for further assistance.
           required: true
           schema:
             type: integer
@@ -4229,7 +5357,10 @@ paths:
       parameters:
         - name: o
           in: query
-          description: The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization.
+          description:
+            The Organization whose users you wish to list. If you omit this
+            value, the application will detect and use your default
+            Organization.
           required: true
           schema:
             type: integer
@@ -4238,7 +5369,10 @@ paths:
             default: 0
           in: query
           name: page
-          description: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)
         - schema:
             type: integer
             default: 500
@@ -4246,7 +5380,10 @@ paths:
             maximum: 500
           in: query
           name: limit
-          description: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+          description:
+            A limit on the number of results to be returned, between 1 and 500
+            with a default of 500. Use with `page` parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
       x-codeSamples:
         - lang: PowerShell
           source: |
@@ -4277,7 +5414,7 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /users/{userId}:
+  "/users/{userId}":
     get:
       tags:
         - Users
@@ -4293,7 +5430,10 @@ paths:
             type: integer
         - name: o
           in: query
-          description: The Organization whose users you wish to list. If you omit this value, the application will detect and use your default Organization.
+          description:
+            The Organization whose users you wish to list. If you omit this
+            value, the application will detect and use your default
+            Organization.
           required: true
           schema:
             type: integer
@@ -4327,12 +5467,15 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /users/{userId}/api_keys:
+  "/users/{userId}/api_keys":
     get:
       tags:
         - API Keys
       summary: Retrieves a list of API key objects for a user
-      description: Returns a list of API keys for the given user under the requested organization. This response does not include the encrypted portion of the key.
+      description:
+        Returns a list of API keys for the given user under the requested
+        organization. This response does not include the encrypted portion of
+        the key.
       operationId: getUserApiKeys
       parameters:
         - name: userId
@@ -4352,7 +5495,10 @@ paths:
             default: 0
           in: query
           name: page
-          description: The page of results you wish to be returned with page numbers starting at 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)
         - schema:
             type: integer
             default: 500
@@ -4360,14 +5506,20 @@ paths:
             maximum: 500
           in: query
           name: limit
-          description: A limit on the number of results to be returned, between 1 and 500 with a default of 500. Use with page parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+          description:
+            A limit on the number of results to be returned, between 1 and 500
+            with a default of 500. Use with page parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
 
+
             $url = "https://console.automox.com/api/users/{98765}/api_keys?o=0000&page=0&limit=25"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -4398,7 +5550,9 @@ paths:
       tags:
         - API Keys
       summary: Creates an API key for a user
-      description: "**Note:** A user is only allowed to have a maximum of 10 active keys per organization at any given time."
+      description:
+        "**Note:** A user is only allowed to have a maximum of 10 active
+        keys per organization at any given time."
       operationId: createUserApiKey
       parameters:
         - name: userId
@@ -4421,21 +5575,42 @@ paths:
                 - name
               properties:
                 name:
-                  description: A unique name for this key. Users are not allowed to have two keys with the same name under a given organization.
+                  description:
+                    A unique name for this key. Users are not allowed to have two keys
+                    with the same name under a given organization.
                   type: string
                 expires_at:
-                  description: "The time at which (in UTC) the key should automatically expire. Format is ISO8601. Example: 2020-08-05T18:21:47+0000"
+                  description:
+                    "The time at which (in UTC) the key should automatically expire.
+                    Format is ISO8601. Example: 2020-08-05T18:21:47+0000"
                   type: string
-                  format: datetime
+                  format: date-time
+            examples:
+              createKey:
+                summary: Create an API key for a given User in a given Organization
+                value:
+                  {
+                    "name": "My Test API Key",
+                    "expires_at": "2021-12-05T18:21:47+0000",
+                  }
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
 
-            $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000&page=0&limit=25'
+            $body = @"
+              {
+                "name": "My Test API Key",
+                "expires_at": "2021-12-05T18:21:47+0000"
+              }
+              "@
 
-            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
+            $url = 'https://console.automox.com/api/users/{98765}/api_keys/?o=0000'
+
+
+            $response = (Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body -ContentType "application/json").Content
       responses:
         "200":
           description: Successful Operation
@@ -4453,12 +5628,15 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /users/{userId}/api_keys/{id}:
+  "/users/{userId}/api_keys/{id}":
     get:
       tags:
         - API Keys
       summary: Retrieves an API key object by ID
-      description: "Note: The response does not contain the encrypted portion of the key. See [Decrypt User API Key](/openapi/reference/operation/decryptUserApiKey/)  "
+      description:
+        "Note: The response does not contain the encrypted portion of the
+        key. See [Decrypt User API
+        Key](/openapi/axconsole/operation/decryptUserApiKey/)  "
       operationId: getUserApiKey
       parameters:
         - name: userId
@@ -4481,11 +5659,14 @@ paths:
             type: integer
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
 
-            $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000&page=0&limit=25'
+
+            $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000'
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
       responses:
@@ -4542,16 +5723,22 @@ paths:
                   type: boolean
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $body = @"
+
             {
                 "is_enabled": "False"
             }
+
             "@
 
+
             $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000&page=0&limit=25'
+
 
             $response = (Invoke-WebRequest -Method Put -Uri $url -Body $body -Headers $headers -ContentType "application/json").Content
       responses:
@@ -4598,11 +5785,14 @@ paths:
             type: integer
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
 
+
             $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999?o=0000'
+
 
             $response = (Invoke-WebRequest -Method Delete -Uri $url -Headers $headers -ContentType "application/json").Content
       responses:
@@ -4618,13 +5808,14 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /users/{userId}/api_keys/{id}/decrypt:
+  "/users/{userId}/api_keys/{id}/decrypt":
     post:
       tags:
         - API Keys
         - Users
       summary: Decrypt User API Key
-      description: This endpoint allows you to decrypt the API key for an authenticated user.
+      description: This endpoint allows you to decrypt the API key for an
+        authenticated user.
       operationId: decryptUserApiKey
       parameters:
         - name: userId
@@ -4647,13 +5838,16 @@ paths:
             type: integer
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
 
             $url = 'https://console.automox.com/api/users/{98765}/api_keys/999999/decrypt?o=0000'
 
-            $response = (Invoke-WebRequest -Method Delete -Uri $url -Headers $headers -ContentType "application/json").Content
+
+            $response = (Invoke-WebRequest -Method Post -Uri $url -Headers $headers -ContentType "application/json").Content
       responses:
         "200":
           description: Successful Operation
@@ -4686,7 +5880,9 @@ paths:
             type: integer
             default: 0
           in: query
-          description: The page of results you wish to be returned with page numbers starting at 0.
+          description:
+            The page of results you wish to be returned with page numbers
+            starting at 0.
         - name: limit
           schema:
             type: integer
@@ -4694,14 +5890,19 @@ paths:
             minimum: 1
             maximum: 500
           in: query
-          description: A limit on the number of results to be returned, between 1 and 500 with a default of 25. Use with page parameter.
+          description:
+            A limit on the number of results to be returned, between 1 and 500
+            with a default of 25. Use with page parameter.
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
 
+
             $url = "https://console.automox.com/api/community-worklets?page=0&limit=25"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
       responses:
@@ -4721,7 +5922,7 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /community-worklets/{id}:
+  "/community-worklets/{id}":
     get:
       tags:
         - Worklets
@@ -4737,11 +5938,14 @@ paths:
             type: integer
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
 
+
             $url = "https://console.automox.com/api/community-worklets/123456"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
       responses:
@@ -4766,7 +5970,9 @@ paths:
       tags:
         - Extracts
       summary: List all Data Extracts for an Organization
-      description: List all Data extracts for an organization with ability to filter and sort results.
+      description:
+        List all Data extracts for an organization with ability to filter
+        and sort results.
       operationId: getDataExtracts
       parameters:
         - name: o
@@ -4778,7 +5984,10 @@ paths:
         - name: limit
           in: query
           required: false
-          description: A limit on the number of results to be returned, between 1 and 500, with a default of 25. Use with `page` parameter. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)
+          description:
+            A limit on the number of results to be returned, between 1 and 500,
+            with a default of 25. Use with `page` parameter. See [About Automox
+            API - Pagination](/developer-portal/about-ax-api/#pagination)
           schema:
             type: integer
             minimum: 1
@@ -4787,25 +5996,30 @@ paths:
         - name: page
           in: query
           required: false
-          description: "The page of results you wish to be returned with page numbers starting at 0. Default: 0. See [About Automox API - Pagination](/developer-portal/about-ax-api/#pagination)"
+          description:
+            "The page of results you wish to be returned with page numbers
+            starting at 0. Default: 0. See [About Automox API -
+            Pagination](/developer-portal/about-ax-api/#pagination)"
           schema:
             type: integer
             default: 0
         - name: sort
           in: query
           required: false
-          description: "The sort for the results. Options: `created_at:desc/asc` and `status:desc/asc`. Default: `created_at:desc`"
+          description:
+            "The sort for the results. Options: `created_at:desc/asc` and
+            `status:desc/asc`. Default: `created_at:desc`"
           schema:
             type: array
             items:
               type: string
               enum:
-                - "created_at:desc"
-                - "created_at:asc"
-                - "status:desc"
-                - "status:asc"
-              default: "created_at:desc"
-        - name: "type:equals"
+                - created_at:desc
+                - created_at:asc
+                - status:desc
+                - status:asc
+              default: created_at:desc
+        - name: type:equals
           in: query
           required: false
           description: "The type of Data Extracts to list. Options: `patch-history`."
@@ -4814,38 +6028,50 @@ paths:
             enum:
               - patch-history
             default: patch-history
-        - name: "created_at:greater_than"
+        - name: created_at:greater_than
           in: query
           required: false
-          description: Created at date is greater than the value submitted. If a time is not specified, greater_than will have a time of start of day.
+          description:
+            Created at date is greater than the value submitted. If a time is
+            not specified, greater_than will have a time of start of day.
           schema:
             type: string
             format: date-time
-        - name: "created_at:lesser_than"
+        - name: created_at:lesser_than
           in: query
           required: false
-          description: Created at date is less than the value submitted. If a time is not specified, less_than will have a time of end of day.
+          description:
+            Created at date is less than the value submitted. If a time is not
+            specified, less_than will have a time of end of day.
           schema:
             type: string
             format: date-time
-        - name: "created_at:greater_than_or_equals"
+        - name: created_at:greater_than_or_equals
           in: query
           required: false
-          description: Created at date is greater than or equals the value submitted. If a time is not specified, greater_than_or_equals will have a time of start of day.
+          description:
+            Created at date is greater than or equals the value submitted. If a
+            time is not specified, greater_than_or_equals will have a time of
+            start of day.
           schema:
             type: string
             format: date-time
-        - name: "created_at:lesser_than_or_equals"
+        - name: created_at:lesser_than_or_equals
           in: query
           required: false
-          description: Created at date is lesser than or equals the value submitted. If a time is not specified, less_than_or_equals will have a time of end of day.
+          description:
+            Created at date is lesser than or equals the value submitted. If a
+            time is not specified, less_than_or_equals will have a time of end
+            of day.
           schema:
             type: string
             format: date-time
-        - name: "status:equals"
+        - name: status:equals
           in: query
           required: false
-          description: "Find jobs with a specific status. Options: queued, running, complete, failed, canceled, expired"
+          description:
+            "Find jobs with a specific status. Options: queued, running,
+            complete, failed, canceled, expired"
           schema:
             type: string
             enum:
@@ -4855,7 +6081,7 @@ paths:
               - failed
               - canceled
               - expired
-        - name: "status:in"
+        - name: status:in
           in: query
           required: false
           description: Find jobs with one or more of these statuses.
@@ -4872,10 +6098,13 @@ paths:
                 - expired
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
-            $url = "https://console.automox.com/api/data-extracts?o=0000&limit=25&page=0"
+
+            $url = "https://console.automox.com/api/data-extracts?o=0000&limit=25&page=0&status:in=queued"
+
 
             $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
       responses:
@@ -4934,33 +6163,55 @@ paths:
                     - end_time
                   properties:
                     start_time:
-                      description: "The start date and time for the report. Validation: Previous 90 days, starting yesterday."
+                      description:
+                        "The start date and time for the report. Validation: Previous 90
+                        days, starting yesterday."
                       type: string
                       minLength: 1
                       format: date-time
                     end_time:
-                      description: "The end date and time for the report. Validation: Previous 90 days, starting yesterday and must be after start_time."
+                      description:
+                        "The end date and time for the report. Validation: Previous 90
+                        days, starting yesterday and must be after start_time."
                       type: string
                       minLength: 1
                       format: date-time
+            examples:
+              createDataExtract:
+                summary: Create a new Data Extract
+                value:
+                  {
+                    "type": "patch-history",
+                    "parameters":
+                      {
+                        "start_time": "2021-05-28T13:31:57.510Z",
+                        "end_time": "2021-05-30T06:42:12.117Z",
+                      },
+                  }
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{
               "Authorization" = "Bearer $apiKey"
               "Content-Type" = "application/json"
             }
+
             $url = "https://console.automox.com/api/data-extracts?o=0000"
+
             $body = @”
-            {
-              “type”: “patch-history”,
-              “parameters”: {
-                “start_time”: "2021-05-28T13:31:57.510Z",
-                “end_time”:  "2021-05-30T06:42:12.117Z"
-                }
-            }
-            ”@
+
+                    {
+                      "type": "patch-history",
+                      "parameters": {
+                        "start_time": '2021-05-28T13:31:57.510Z',
+                        "end_time": '2021-05-30T06:42:12.117Z'
+                      }
+                    }
+
+                  ”@
+
 
             $response = (Invoke-WebRequest -Method Post -Uri $url -Headers $headers -Body $body -ContentType "application/json").Content
       responses:
@@ -4982,7 +6233,7 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /data-extracts/{id}:
+  "/data-extracts/{id}":
     get:
       tags:
         - Extracts
@@ -4999,12 +6250,15 @@ paths:
             format: int64
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = "https://console.automox.com/api/data-extracts/000"
 
-            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers).Content
+
+            $response = (Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/json").Content
       responses:
         "200":
           description: Successful Operation
@@ -5024,12 +6278,14 @@ paths:
           $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
-  /data-extracts/{id}/download:
+  "/data-extracts/{id}/download":
     get:
       tags:
         - Extracts
       summary: Download the CSV for a completed Data Extract job.
-      description: Downloads the CSV for a completed Data Extract job. Triggers an automatic download of the CSV file.
+      description:
+        Downloads the CSV for a completed Data Extract job. Triggers an
+        automatic download of the CSV file.
       operationId: DownloadDataExtract
       parameters:
         - name: id
@@ -5048,15 +6304,18 @@ paths:
             format: int64
       x-codeSamples:
         - lang: PowerShell
-          source: |
+          source: >
             $apiKey = 'your_automox_api_key'
+
             $headers = @{ "Authorization" = "Bearer $apiKey" }
+
             $url = 'https://console.automox.com/api/data-extracts/000/download?o=0000'
 
-            Invoke-WebRequest -Method Get -Uri $url -Headers $headers -OutFile "$env:userprofile\Downloads\patch-history_report.csv"
+
+            Invoke-WebRequest -Method Get -Uri $url -Headers $headers -ContentType "application/octet-stream" -OutFile "$env:userprofile\Downloads\patch-history_report.csv"
       responses:
         "200":
-          description: "Downloads the extract file automatically."
+          description: Downloads the extract file automatically.
           content:
             application/octet-stream:
               examples: {}

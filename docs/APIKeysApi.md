@@ -66,7 +66,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **decrypt_user_api_key**
-> InlineResponse2002 decrypt_user_api_key(user_id, id, o)
+> InlineResponse2003 decrypt_user_api_key(user_id, id, o)
 
 Decrypt User API Key
 
@@ -105,7 +105,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2002**](InlineResponse2002.md)
+[**InlineResponse2003**](InlineResponse2003.md)
 
 ### Authorization
 
@@ -228,7 +228,7 @@ Name | Type | Description  | Notes
 
 Retrieves an API key object by ID
 
-Note: The response does not contain the encrypted portion of the key. See [Decrypt User API Key](/openapi/reference/operation/decryptUserApiKey/)  
+Note: The response does not contain the encrypted portion of the key. See [Decrypt User API Key](/openapi/axconsole/operation/decryptUserApiKey/)  
 
 ### Example
 ```python
@@ -277,7 +277,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_user_api_keys**
-> InlineResponse2001 get_user_api_keys(user_id, o, page=page, limit=limit)
+> InlineResponse2002 get_user_api_keys(user_id, o, page=page, limit=limit)
 
 Retrieves a list of API key objects for a user
 
@@ -318,7 +318,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2001**](InlineResponse2001.md)
+[**InlineResponse2002**](InlineResponse2002.md)
 
 ### Authorization
 
