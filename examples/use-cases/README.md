@@ -8,3 +8,4 @@ Use Case Scripts:
 - [Updating Automox Devices based on a CSV file](update_devices_by_csv)
 - [Group Automox Devices based on ServiceNow CMDB](group_devices_by_servicenow_cmdb)
 - [Group and Tag Devices based on Active Directory](group_devices_by_activedirectory_ou)
+- [Pull Automox Console events and publish to syslog listener for SIEM](push_events_to_syslog)
