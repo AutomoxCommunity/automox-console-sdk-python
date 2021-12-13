@@ -27,7 +27,7 @@ def getRecentEvents(event_id=None):
 
             page += 1
     except Exception as e:
-        print(f"Could not retrieve events: {e}")
+        print(f"Error - Could not retrieve events: {e}")
 
 def createSyslogPayload(recent_events):
     payload_string = ""
@@ -56,12 +56,19 @@ try:
     client.default_headers['Authorization'] = f"Bearer {api_secret}"
 
     events_api = EventsApi(client)
-    events     = events_api.get_events(o=organization, page=0, limit=1)
-    top_id     = events[0].id
 
+    # Initial placeholder value. Gets overwritten in the main loop.
+    top_id = None
 
     # Our main loop will run every 10 seconds to check for new events
     while True:
+        try:
+            if not top_id:
+                events = events_api.get_events(o=organization, page=0, limit=1)
+                top_id = events[0].id
+        except Exception as e:
+            print(f"Error - Could not retrieve events: {e}")
+
         print("Getting recent events...")
         recent_events = getRecentEvents(top_id)
 
