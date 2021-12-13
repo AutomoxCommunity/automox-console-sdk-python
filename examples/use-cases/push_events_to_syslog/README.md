@@ -1,5 +1,5 @@
 # Push Events to Syslog Daemon
-The push events to syslog daemon example provides the base for users to view a history of [events](https://developer.automox.com/openapi/axconsole/operation/getEvents/) happening on their Automox instance in their preferred syslog environments.
+The push events to syslog daemon example provides the base for users to view a history of [events](https://developer.automox.com/openapi/axconsole/operation/getEvents/) happening on their Automox instance in their preferred syslog environments. This use case is intended to provide an example of how to use the SDK with Automox events, track them, and send off to a third-party. Due to the varying ways to send data to a SIEM this script will likely need modified to meet environment and/or data needs.
 
 There are two components that need to be ran:
 1. Automox Events Client ([`pull_events.py`](./pull_events.py))
