@@ -2,8 +2,7 @@ import os
 import socketserver
 
 HOST = os.getenv("HOST") or "0.0.0.0"
-PORT = os.getenv("PORT") or 514
-
+PORT = int(os.getenv("PORT")) or 514
 class UDPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         data = bytes.decode(self.request[0].strip())

@@ -7,7 +7,10 @@ import json
 from automox_console_sdk import EventsApi
 from getpass import getpass
 
-def getRecentEvents(event_id=None):
+HOST = os.getenv("HOST") or "127.0.0.1"
+PORT = int(os.getenv("PORT")) or 514
+
+def get_recent_events(event_id=None):
     try:
         page = 0
 
@@ -29,7 +32,7 @@ def getRecentEvents(event_id=None):
     except Exception as e:
         print(f"Error - Could not retrieve events: {e}")
 
-def createSyslogPayload(recent_events):
+def create_syslog_payload(recent_events):
     payload_string = ""
 
     for event in recent_events:
@@ -70,7 +73,7 @@ try:
             print(f"Error - Could not retrieve events: {e}")
 
         print("Getting recent events...")
-        recent_events = getRecentEvents(top_id)
+        recent_events = get_recent_events(top_id)
 
         print(f"Found {len(recent_events)} new event(s)")
 
@@ -79,12 +82,17 @@ try:
             top_id = recent_events[0].id
 
             # Prepare the data for the syslog service
-            payload = createSyslogPayload(recent_events)
+            payload = create_syslog_payload(recent_events)
 
-            # Send data to the listening syslog server.
-            udp_client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-            udp_client_socket.sendto(payload, ("127.0.0.1", 514))
+            try:
+                # Send data to the listening syslog server.
+                udp_client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+                udp_client_socket.sendto(payload, (HOST, PORT))
+            except socket.error as e:
+                print(f"Could not establish connection to socket: {e}")
 
         time.sleep(10)
 except Exception as e:
     print(f"Error: {e}")
+except KeyboardInterrupt:
+    print ("Crtl+C Pressed. Shutting down.")
