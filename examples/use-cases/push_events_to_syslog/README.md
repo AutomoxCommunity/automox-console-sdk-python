@@ -3,7 +3,7 @@ The push events to syslog daemon example provides the base for users to view a h
 
 To test this use case with a dummy syslog listener locally, there are two components that need to be ran:
 1. Automox Events Client ([`pull_events.py`](./pull_events.py)) - Pulls events from the Automox API and sends them to the syslog server. (This script is a good starting point if you want to go a step further and integrate Automox events into your syslog environment of choice, though some manipulation of the data payload sent to syslog might be necessary).
-2. Syslog Server ([`syslog.py`](./syslog.py)) - Listens for UDP traffic from the events script.
+2. Syslog Server ([`syslog.py`](./syslog.py)) - Listens for UDP traffic from the events script. This script is used during testing and is not necessary if a syslog server already exists for receiving events for your SIEM.
 
 ## Running the Scripts
 To run the scripts, first make sure Python 3 is installed on the host system and clone this repository locally then
