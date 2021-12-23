@@ -42,7 +42,7 @@ vuln.csv has been uploaded.
 Moving vuln.csv to /automox-console-sdk-python/examples/use-cases/vuln_sync_csv_upload/cve_queue/processed/vuln.csv
 ```
 
-Once the script has iterated over all of the elgibile files for upload, it will poll the API for the build status of the batches sent, and when all the batches are marked as "Awaiting Approval", a pre-task report for each batch will be outputted.
+Once the script has iterated over all of the eligible files for upload, it will poll the API for the build status of the batches sent, and when all the batches are marked as "Awaiting Approval", a pre-task report for each batch will be outputted.
 ```
 Batches are still building... Checking for updates...
 Batches are done processing!

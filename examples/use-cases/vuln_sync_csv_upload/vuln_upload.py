@@ -1,4 +1,5 @@
 """Use case for automating the ingestion of CVE reports"""
+import glob
 import os
 import sys
 import time
@@ -8,7 +9,7 @@ from io import FileIO
 import requests
 
 
-def upload_cve(file: FileIO):
+def upload_cve(file: FileIO) -> dict:
     """ Uploads vulnerability list to Automox Vulnerability Sync endpoint.
 
     Args:
@@ -44,12 +45,12 @@ def upload_cve(file: FileIO):
             msg = msg.join(response_data['errors'])
 
             raise Exception(msg)
-    except requests.RequestException as error:
+    except (requests.RequestException, Exception) as error:
         print(f"Error: Unable to complete CSV upload request. ({error})")
 
     return response_data
 
-def get_unprocessed_cves(directory: str):
+def get_unprocessed_cves(directory: str) -> list:
     """Returns a list of CSV files to upload and process.
 
     Args:
@@ -61,15 +62,11 @@ def get_unprocessed_cves(directory: str):
 
     cve_files = []
 
-    paths = os.listdir(directory)
+    paths = glob.glob(f"{directory}/*.csv")
 
     for path in paths:
         try:
-            # To only query CSV files
-            if not path.endswith(".csv"):
-                continue
-
-            cve_file = open(f"{directory}/{path}", "rb")
+            cve_file = open(path, "rb")
 
             cve_files.append(cve_file)
         except (OSError, IOError) as error:
@@ -79,11 +76,14 @@ def get_unprocessed_cves(directory: str):
 
     return cve_files
 
-def process_cves(unprocessed_cve_list: list):
+def process_cves(unprocessed_cve_list: list) -> dict:
     """Handles uploading and moving the CSV file to the processed directory.
 
     Args:
         unprocessed_cve_list (list): List of files to process.
+
+    Returns:
+        uploaded_batches (dict): Dictionary of batch ids correlated to API batch upload responses.
     """
 
     uploaded_batches = {}
@@ -120,7 +120,7 @@ def process_cves(unprocessed_cve_list: list):
 
     return uploaded_batches
 
-def update_batches(uploaded_batches: dict):
+def update_batches(uploaded_batches: dict) -> dict:
     """Polls the Automox API for the status of batches contained in this dictionary.
 
     When CSV files containing CVE information is uploaded to the Automox Vulnerability Sync API, a task list is built
@@ -129,18 +129,29 @@ def update_batches(uploaded_batches: dict):
         uploaded_batches (dict): A dictionary of the latest responses from the Automox API about the status of a batch.
 
     Returns:
-        uploaded_batches: An updated dictionary of the latest responses from the Automox API about the status of a batch.
+        uploaded_batches (dict): An updated dictionary of the latest responses from the Automox API about the status of a batch.
     """
 
     for batch_id, batch in uploaded_batches.items():
-        if uploaded_batches[batch_id]['status'] != "awaiting_approval":
-            headers = {
-                "Authorization": f"Bearer {api_secret}",
-            }
+        try:
+            if batch['status'] != "awaiting_approval":
+                headers = {
+                    "Authorization": f"Bearer {api_secret}",
+                }
 
-            response = requests.get(f"https://console.automox.com/api/orgs/{organization}/tasks/batches/{batch['id']}", headers=headers)
+                response = requests.get(f"https://console.automox.com/api/orgs/{organization}/tasks/batches/{batch['id']}", headers=headers)
 
-            batches[batch_id] = response.json()
+                response_data = response.json()
+
+                if "errors" in response_data and len(response_data['errors']) > 0:
+                    msg = ""
+                    msg = msg.join(response_data['errors'])
+
+                    raise Exception(msg)
+
+                uploaded_batches[batch_id] = response_data
+        except (requests.RequestException, Exception) as error:
+            print(f"Error: Unable to update batch {batch_id} status. ({error})")
 
     return uploaded_batches
 
@@ -194,4 +205,4 @@ except Exception as e:
     print(f"Error: {e}\n")
     raise
 except KeyboardInterrupt:
-    print ("Crtl+C Pressed. Shutting down.")
+    print ("Ctrl+C Pressed. Shutting down.")
