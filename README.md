@@ -2,6 +2,8 @@
 
 # Automox SDK for Python
 
+### THIS IS CURRENTLY UNSUPPORTED DUE TO RECENT CHANGES IN OUR API!
+
 [![Continuous Integration](https://github.com/AutomoxCommunity/automox-console-sdk-python/actions/workflows/ci.yml/badge.svg)](https://github.com/AutomoxCommunity/automox-console-sdk-python/actions/workflows/ci.yml)
 [![Release](https://github.com/AutomoxCommunity/automox-console-sdk-python/actions/workflows/release.yml/badge.svg)](https://github.com/AutomoxCommunity/automox-console-sdk-python/actions/workflows/release.yml)
 
@@ -114,6 +116,10 @@ All functionality provided by the Automox Console SDK for Python is based on the
 is publicly published. If there is functionality that is incomplete or does not yet exist, please reached out to your 
 Customer Success Manager or [contact support](https://support.automox.com/help/contacting-automox-support) along with
 the details of what you would like to see in future releases of the SDK.
+
+## To Do
+
+- [ ] Possible future update
 
 [//]: # "Link anchor definitions"
 [Automox Logo]: https://raw.githubusercontent.com/AutomoxCommunity/automox-console-sdk-python/main/assets/AX-Horiz-Logo.png
